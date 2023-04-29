@@ -1,0 +1,40 @@
+overwrite: true
+schema: ./src/schemas/*.schema.ts
+documents: ../client/src/api/graphql/*.graphql
+
+generates:
+  ./src/gqlTypes.ts:
+    plugins:
+      - "typescript"
+      - "typescript-resolvers"
+      - "typescript-mongodb"
+    config:
+      contextType: ./contextFns#ApolloServerContextFn
+      dbTypeSuffix: Db
+      enumsAsString: false
+      useIndexSignature: true
+      gqlImport: urql#gql
+      mappers:
+        Aircraft: AircraftDb
+        Flight: FlightDb
+        Pilot: PilotDb
+
+  ../client/src/api/gqlTypes.ts:
+    plugins:
+      - "typescript"
+      - "typescript-operations"
+      - "typescript-urql"
+      - "typescript-urql-graphcache"
+    config:
+      documentMode: "documentNode"
+      scalars:
+        Date: Date
+    documents:
+      - "query"
+      - "mutation"
+      - "subscription"
+      - "fragment"
+
+  ../client/src/api/introspection.json:
+    plugins:
+      - introspection

@@ -1,0 +1,21 @@
+mutation SignIn($email: String!, $pwdHash: String!) {
+  signIn(login: $email, pwdHash: $pwdHash)
+}
+
+mutation SignUp(
+  $username: String!
+  $firstName: String!
+  $lastName: String!
+  $email: String!
+  $pwdHash: String!
+  $pwdHash2: String!
+) {
+  signUp(
+    username: $username
+    firstName: $firstName
+    lastName: $lastName
+    email: $email
+    pwdHash: $pwdHash
+    pwdHash2: $pwdHash2
+  )
+}
