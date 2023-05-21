@@ -1,34 +1,57 @@
 import React from "react";
 import {
+  Anchor,
+  Box,
   Container,
   DefaultMantineColor,
   Group,
   Header as MantineHeader,
+  HeaderProps,
   Text,
   ThemeIcon,
-  UnstyledButton,
 } from "@mantine/core";
+import { Link } from "react-router-dom";
 import {
   IconBrandGithubCopilot,
+  IconChartDots,
   IconPlane,
   IconPlaneDeparture,
 } from "@tabler/icons-react";
+import { UserMenu } from "../pages/components/UserMenu";
+import { MAX_WIDTH } from "./MainLayout";
+import { UrlRoutes } from "../routes";
 
-export const Header = () => (
-  <MantineHeader height={60} p="xs">
-    <Container w={1000}>
+export const Header = (props: Omit<HeaderProps, "children">) => (
+  <MantineHeader height={props.height} p="xs">
+    <Container maw={MAX_WIDTH}>
       <Group>
+        <HeaderButton
+          color="indigo"
+          icon={<IconChartDots />}
+          label="Home"
+          to="/"
+        />
         <HeaderButton
           color="violet"
           icon={<IconPlaneDeparture />}
-          label="Vols"
+          label="Flights"
+          to={UrlRoutes.flights}
         />
         <HeaderButton
           color="green"
           icon={<IconBrandGithubCopilot />}
-          label="Pilotes"
+          label="Pilots"
+          to={UrlRoutes.pilots}
         />
-        <HeaderButton color="blue" icon={<IconPlane />} label="Aéronefs" />
+
+        <HeaderButton
+          color="blue"
+          icon={<IconPlane />}
+          label="Aircrafts"
+          to={UrlRoutes.aircrafts}
+        />
+        <Box sx={{ flexGrow: 1 }} />
+        <UserMenu />
       </Group>
     </Container>
   </MantineHeader>
@@ -38,9 +61,12 @@ type HeaderButtonProps = {
   color: DefaultMantineColor;
   icon: React.ReactNode;
   label: string;
+  to: UrlRoutes | "/";
 };
-export const HeaderButton = ({ color, icon, label }: HeaderButtonProps) => (
-  <UnstyledButton
+export const HeaderButton = ({ color, icon, label, to }: HeaderButtonProps) => (
+  <Anchor
+    component={Link}
+    to={to}
     sx={(t) => ({
       display: "block",
       padding: t.spacing.xs,
@@ -60,5 +86,5 @@ export const HeaderButton = ({ color, icon, label }: HeaderButtonProps) => (
 
       <Text size="sm">{label}</Text>
     </Group>
-  </UnstyledButton>
+  </Anchor>
 );

@@ -5,6 +5,7 @@ export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
+export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
 export type RequireFields<T, K extends keyof T> = Omit<T, K> & { [P in K]-?: NonNullable<T[P]> };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
@@ -16,13 +17,59 @@ export type Scalars = {
   Date: any;
 };
 
+export type AddAircraftInput = {
+  brand: Scalars['String'];
+  capabilities: Array<AircraftCapabilities>;
+  model: Scalars['String'];
+  registration: Scalars['String'];
+};
+
+export type AddFlightInput = {
+  aircraft?: InputMaybe<Scalars['ID']>;
+  aircraftClass: AircraftClass;
+  arrival: JunctureInput;
+  departure: JunctureInput;
+  ifrApproaches: Scalars['Int'];
+  landings: LandingsInput;
+  operationalTime: OperationalTimeInput;
+  pic: Scalars['ID'];
+  pilotFunctionTime: PilotFunctionTimeInput;
+  remarks: Scalars['String'];
+  simulatorType?: InputMaybe<Scalars['String']>;
+  totalFlightTime: Scalars['Int'];
+};
+
+export type AddPilotInput = {
+  email: Scalars['String'];
+  firstName: Scalars['String'];
+  lastName: Scalars['String'];
+  username: Scalars['String'];
+};
+
 export type Aircraft = {
   __typename?: 'Aircraft';
   brand: Scalars['String'];
+  capabilities: Array<AircraftCapabilities>;
   id: Scalars['ID'];
-  isIFR: Scalars['Boolean'];
-  isMultiEngine: Scalars['Boolean'];
   model: Scalars['String'];
+  registration: Scalars['String'];
+};
+
+export enum AircraftCapabilities {
+  IsIfr = 'isIFR',
+  IsMultiEngine = 'isMultiEngine'
+}
+
+export enum AircraftClass {
+  MultiEngine = 'multiEngine',
+  MultiPilot = 'multiPilot',
+  SingleEngine = 'singleEngine'
+}
+
+export type AircraftsPage = {
+  __typename?: 'AircraftsPage';
+  items: Array<Aircraft>;
+  total: Scalars['Int'];
 };
 
 export type Credential = {
@@ -42,31 +89,47 @@ export type Email = {
 
 export type Flight = {
   __typename?: 'Flight';
+  aircraft?: Maybe<Aircraft>;
+  aircraftClass: AircraftClass;
   arrival: Juncture;
-  date: Scalars['Date'];
   departure: Juncture;
-  flightTime: FlightTime;
   id: Scalars['ID'];
   ifrApproaches: Scalars['Int'];
   landings: Landings;
   operationalTime: OperationalTime;
-  picName: Scalars['ID'];
+  pic: Pilot;
+  pilot: Pilot;
   pilotFunctionTime: PilotFunctionTime;
   remarks: Scalars['String'];
-  simulationTraining: SimulationTraining;
+  simulatorType?: Maybe<Scalars['String']>;
   totalFlightTime: Scalars['Int'];
 };
 
-export type FlightTime = {
-  __typename?: 'FlightTime';
-  multiPilot: Scalars['Int'];
-  singlePilot: SinglePilotFlightTime;
+export type FlightStats = {
+  __typename?: 'FlightStats';
+  flightAmount: Scalars['Int'];
+  totalCOPI: Scalars['Int'];
+  totalDC: Scalars['Int'];
+  totalFlightTime: Scalars['Int'];
+  totalInstructor: Scalars['Int'];
+  totalPIC: Scalars['Int'];
+};
+
+export type FlightsPage = {
+  __typename?: 'FlightsPage';
+  items: Array<Flight>;
+  total: Scalars['Int'];
 };
 
 export type Juncture = {
   __typename?: 'Juncture';
+  date: Scalars['Date'];
   place: Scalars['String'];
-  time: Scalars['Date'];
+};
+
+export type JunctureInput = {
+  date: Scalars['Date'];
+  place: Scalars['String'];
 };
 
 export type Landings = {
@@ -75,17 +138,37 @@ export type Landings = {
   night: Scalars['Int'];
 };
 
-export type ListFiltersInput = {
-  pagination?: InputMaybe<PaginationInput>;
-  search?: InputMaybe<Scalars['String']>;
-  sorts?: InputMaybe<Array<SortInput>>;
+export type LandingsInput = {
+  day: Scalars['Int'];
+  night: Scalars['Int'];
 };
 
 export type Mutation = {
   __typename?: 'Mutation';
+  addAircraft: Aircraft;
+  addFlight: Flight;
+  addPilot: Pilot;
   signIn: Scalars['String'];
   signOut: Scalars['Boolean'];
   signUp: Scalars['String'];
+  updateAircraft: Aircraft;
+  updateFlight: Flight;
+  updatePilot: Pilot;
+};
+
+
+export type MutationAddAircraftArgs = {
+  aircraft: AddAircraftInput;
+};
+
+
+export type MutationAddFlightArgs = {
+  input: AddFlightInput;
+};
+
+
+export type MutationAddPilotArgs = {
+  pilot: AddPilotInput;
 };
 
 
@@ -104,10 +187,40 @@ export type MutationSignUpArgs = {
   username: Scalars['String'];
 };
 
+
+export type MutationUpdateAircraftArgs = {
+  aircraft: UpdateAircraftInput;
+  id: Scalars['ID'];
+};
+
+
+export type MutationUpdateFlightArgs = {
+  id: Scalars['ID'];
+  input: UpdateFlightInput;
+};
+
+
+export type MutationUpdatePilotArgs = {
+  id: Scalars['ID'];
+  pilot: UpdatePilotInput;
+};
+
 export type OperationalTime = {
   __typename?: 'OperationalTime';
   ifr: Scalars['Int'];
   night: Scalars['Int'];
+};
+
+export type OperationalTimeInput = {
+  ifr: Scalars['Int'];
+  night: Scalars['Int'];
+};
+
+export type PagerInput = {
+  fieldSearches?: InputMaybe<Array<SearchInput>>;
+  globalSearch?: InputMaybe<Scalars['String']>;
+  pagination?: InputMaybe<PaginationInput>;
+  sorts?: InputMaybe<Array<SortInput>>;
 };
 
 export type PaginationInput = {
@@ -139,11 +252,31 @@ export type PilotFunctionTime = {
   pic: Scalars['Int'];
 };
 
+export type PilotFunctionTimeInput = {
+  coPilot: Scalars['Int'];
+  dualCommand: Scalars['Int'];
+  instructor: Scalars['Int'];
+  pic: Scalars['Int'];
+};
+
+export type PilotsPage = {
+  __typename?: 'PilotsPage';
+  items: Array<Pilot>;
+  total: Scalars['Int'];
+};
+
 export type Query = {
   __typename?: 'Query';
   aircraft: Aircraft;
-  aircrafts: Array<Aircraft>;
-  me?: Maybe<Pilot>;
+  aircrafts: AircraftsPage;
+  currentPilot?: Maybe<Pilot>;
+  flight: Flight;
+  flightStats: FlightStats;
+  lastFlightDate?: Maybe<Scalars['Date']>;
+  ocaiCodes: Array<Scalars['String']>;
+  ownFlights: FlightsPage;
+  pilot: Pilot;
+  pilots: PilotsPage;
 };
 
 
@@ -151,15 +284,43 @@ export type QueryAircraftArgs = {
   id: Scalars['ID'];
 };
 
-export type SimulationTraining = {
-  __typename?: 'SimulationTraining';
-  date: Scalars['Date'];
-  duration: Scalars['Int'];
-  type: Scalars['String'];
+
+export type QueryAircraftsArgs = {
+  pager?: InputMaybe<PagerInput>;
+};
+
+
+export type QueryFlightArgs = {
+  id: Scalars['ID'];
+};
+
+
+export type QueryOwnFlightsArgs = {
+  pager?: InputMaybe<PagerInput>;
+};
+
+
+export type QueryPilotArgs = {
+  id: Scalars['ID'];
+};
+
+
+export type QueryPilotsArgs = {
+  pager?: InputMaybe<PagerInput>;
+};
+
+export type SearchInput = {
+  field: Scalars['String'];
+  value: Scalars['String'];
 };
 
 export type SinglePilotFlightTime = {
   __typename?: 'SinglePilotFlightTime';
+  multiEngine: Scalars['Int'];
+  singleEngine: Scalars['Int'];
+};
+
+export type SinglePilotFlightTimeInput = {
   multiEngine: Scalars['Int'];
   singleEngine: Scalars['Int'];
 };
@@ -173,6 +334,35 @@ export enum SortOrder {
   Asc = 'ASC',
   Desc = 'DESC'
 }
+
+export type UpdateAircraftInput = {
+  brand?: InputMaybe<Scalars['String']>;
+  capabilities?: InputMaybe<Array<AircraftCapabilities>>;
+  model?: InputMaybe<Scalars['String']>;
+  registration?: InputMaybe<Scalars['String']>;
+};
+
+export type UpdateFlightInput = {
+  aircraft?: InputMaybe<Scalars['ID']>;
+  aircraftClass?: InputMaybe<AircraftClass>;
+  arrival?: InputMaybe<JunctureInput>;
+  departure?: InputMaybe<JunctureInput>;
+  ifrApproaches?: InputMaybe<Scalars['Int']>;
+  landings?: InputMaybe<LandingsInput>;
+  operationalTime?: InputMaybe<OperationalTimeInput>;
+  pic?: InputMaybe<Scalars['ID']>;
+  pilotFunctionTime?: InputMaybe<PilotFunctionTimeInput>;
+  remarks?: InputMaybe<Scalars['String']>;
+  simulatorType?: InputMaybe<Scalars['String']>;
+  totalFlightTime?: InputMaybe<Scalars['Int']>;
+};
+
+export type UpdatePilotInput = {
+  email?: InputMaybe<Scalars['String']>;
+  firstName?: InputMaybe<Scalars['String']>;
+  lastName?: InputMaybe<Scalars['String']>;
+  username?: InputMaybe<Scalars['String']>;
+};
 
 export type AdditionalEntityFields = {
   path?: InputMaybe<Scalars['String']>;
@@ -251,58 +441,88 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = ResolversObject<{
-  Aircraft: ResolverTypeWrapper<AircraftDb>;
+  AddAircraftInput: AddAircraftInput;
   String: ResolverTypeWrapper<Scalars['String']>;
+  AddFlightInput: AddFlightInput;
   ID: ResolverTypeWrapper<Scalars['ID']>;
-  Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
+  Int: ResolverTypeWrapper<Scalars['Int']>;
+  AddPilotInput: AddPilotInput;
+  Aircraft: ResolverTypeWrapper<AircraftDb>;
+  AircraftCapabilities: AircraftCapabilities;
+  AircraftClass: AircraftClass;
+  AircraftsPage: ResolverTypeWrapper<Omit<AircraftsPage, 'items'> & { items: Array<ResolversTypes['Aircraft']> }>;
   Credential: ResolverTypeWrapper<Credential>;
+  Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
   Date: ResolverTypeWrapper<Scalars['Date']>;
   Email: ResolverTypeWrapper<Email>;
   Flight: ResolverTypeWrapper<FlightDb>;
-  Int: ResolverTypeWrapper<Scalars['Int']>;
-  FlightTime: ResolverTypeWrapper<FlightTime>;
+  FlightStats: ResolverTypeWrapper<FlightStats>;
+  FlightsPage: ResolverTypeWrapper<Omit<FlightsPage, 'items'> & { items: Array<ResolversTypes['Flight']> }>;
   Juncture: ResolverTypeWrapper<Juncture>;
-  Landings: ResolverTypeWrapper<Landings>;
-  ListFiltersInput: ListFiltersInput;
+  JunctureInput: JunctureInput;
+  Landings: ResolverTypeWrapper<LandingsDb>;
+  LandingsInput: LandingsInput;
   Mutation: ResolverTypeWrapper<{}>;
-  OperationalTime: ResolverTypeWrapper<OperationalTime>;
+  OperationalTime: ResolverTypeWrapper<OperationalTimeDb>;
+  OperationalTimeInput: OperationalTimeInput;
+  PagerInput: PagerInput;
   PaginationInput: PaginationInput;
   Password: ResolverTypeWrapper<Password>;
   Pilot: ResolverTypeWrapper<PilotDb>;
-  PilotFunctionTime: ResolverTypeWrapper<PilotFunctionTime>;
+  PilotFunctionTime: ResolverTypeWrapper<PilotFunctionTimeDb>;
+  PilotFunctionTimeInput: PilotFunctionTimeInput;
+  PilotsPage: ResolverTypeWrapper<Omit<PilotsPage, 'items'> & { items: Array<ResolversTypes['Pilot']> }>;
   Query: ResolverTypeWrapper<{}>;
-  SimulationTraining: ResolverTypeWrapper<SimulationTraining>;
+  SearchInput: SearchInput;
   SinglePilotFlightTime: ResolverTypeWrapper<SinglePilotFlightTime>;
+  SinglePilotFlightTimeInput: SinglePilotFlightTimeInput;
   SortInput: SortInput;
   SortOrder: SortOrder;
+  UpdateAircraftInput: UpdateAircraftInput;
+  UpdateFlightInput: UpdateFlightInput;
+  UpdatePilotInput: UpdatePilotInput;
   AdditionalEntityFields: AdditionalEntityFields;
 }>;
 
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = ResolversObject<{
-  Aircraft: AircraftDb;
+  AddAircraftInput: AddAircraftInput;
   String: Scalars['String'];
+  AddFlightInput: AddFlightInput;
   ID: Scalars['ID'];
-  Boolean: Scalars['Boolean'];
+  Int: Scalars['Int'];
+  AddPilotInput: AddPilotInput;
+  Aircraft: AircraftDb;
+  AircraftsPage: Omit<AircraftsPage, 'items'> & { items: Array<ResolversParentTypes['Aircraft']> };
   Credential: Credential;
+  Boolean: Scalars['Boolean'];
   Date: Scalars['Date'];
   Email: Email;
   Flight: FlightDb;
-  Int: Scalars['Int'];
-  FlightTime: FlightTime;
+  FlightStats: FlightStats;
+  FlightsPage: Omit<FlightsPage, 'items'> & { items: Array<ResolversParentTypes['Flight']> };
   Juncture: Juncture;
-  Landings: Landings;
-  ListFiltersInput: ListFiltersInput;
+  JunctureInput: JunctureInput;
+  Landings: LandingsDb;
+  LandingsInput: LandingsInput;
   Mutation: {};
-  OperationalTime: OperationalTime;
+  OperationalTime: OperationalTimeDb;
+  OperationalTimeInput: OperationalTimeInput;
+  PagerInput: PagerInput;
   PaginationInput: PaginationInput;
   Password: Password;
   Pilot: PilotDb;
-  PilotFunctionTime: PilotFunctionTime;
+  PilotFunctionTime: PilotFunctionTimeDb;
+  PilotFunctionTimeInput: PilotFunctionTimeInput;
+  PilotsPage: Omit<PilotsPage, 'items'> & { items: Array<ResolversParentTypes['Pilot']> };
   Query: {};
-  SimulationTraining: SimulationTraining;
+  SearchInput: SearchInput;
   SinglePilotFlightTime: SinglePilotFlightTime;
+  SinglePilotFlightTimeInput: SinglePilotFlightTimeInput;
   SortInput: SortInput;
+  UpdateAircraftInput: UpdateAircraftInput;
+  UpdateFlightInput: UpdateFlightInput;
+  UpdatePilotInput: UpdatePilotInput;
   AdditionalEntityFields: AdditionalEntityFields;
 }>;
 
@@ -355,10 +575,16 @@ export type MapDirectiveResolver<Result, Parent, ContextType = ApolloServerConte
 
 export type AircraftResolvers<ContextType = ApolloServerContextFn, ParentType extends ResolversParentTypes['Aircraft'] = ResolversParentTypes['Aircraft']> = ResolversObject<{
   brand?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  capabilities?: Resolver<Array<ResolversTypes['AircraftCapabilities']>, ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
-  isIFR?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
-  isMultiEngine?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   model?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  registration?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
+export type AircraftsPageResolvers<ContextType = ApolloServerContextFn, ParentType extends ResolversParentTypes['AircraftsPage'] = ResolversParentTypes['AircraftsPage']> = ResolversObject<{
+  items?: Resolver<Array<ResolversTypes['Aircraft']>, ParentType, ContextType>;
+  total?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
@@ -382,31 +608,42 @@ export type EmailResolvers<ContextType = ApolloServerContextFn, ParentType exten
 }>;
 
 export type FlightResolvers<ContextType = ApolloServerContextFn, ParentType extends ResolversParentTypes['Flight'] = ResolversParentTypes['Flight']> = ResolversObject<{
+  aircraft?: Resolver<Maybe<ResolversTypes['Aircraft']>, ParentType, ContextType>;
+  aircraftClass?: Resolver<ResolversTypes['AircraftClass'], ParentType, ContextType>;
   arrival?: Resolver<ResolversTypes['Juncture'], ParentType, ContextType>;
-  date?: Resolver<ResolversTypes['Date'], ParentType, ContextType>;
   departure?: Resolver<ResolversTypes['Juncture'], ParentType, ContextType>;
-  flightTime?: Resolver<ResolversTypes['FlightTime'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   ifrApproaches?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   landings?: Resolver<ResolversTypes['Landings'], ParentType, ContextType>;
   operationalTime?: Resolver<ResolversTypes['OperationalTime'], ParentType, ContextType>;
-  picName?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  pic?: Resolver<ResolversTypes['Pilot'], ParentType, ContextType>;
+  pilot?: Resolver<ResolversTypes['Pilot'], ParentType, ContextType>;
   pilotFunctionTime?: Resolver<ResolversTypes['PilotFunctionTime'], ParentType, ContextType>;
   remarks?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  simulationTraining?: Resolver<ResolversTypes['SimulationTraining'], ParentType, ContextType>;
+  simulatorType?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   totalFlightTime?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
-export type FlightTimeResolvers<ContextType = ApolloServerContextFn, ParentType extends ResolversParentTypes['FlightTime'] = ResolversParentTypes['FlightTime']> = ResolversObject<{
-  multiPilot?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  singlePilot?: Resolver<ResolversTypes['SinglePilotFlightTime'], ParentType, ContextType>;
+export type FlightStatsResolvers<ContextType = ApolloServerContextFn, ParentType extends ResolversParentTypes['FlightStats'] = ResolversParentTypes['FlightStats']> = ResolversObject<{
+  flightAmount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  totalCOPI?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  totalDC?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  totalFlightTime?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  totalInstructor?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  totalPIC?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
+export type FlightsPageResolvers<ContextType = ApolloServerContextFn, ParentType extends ResolversParentTypes['FlightsPage'] = ResolversParentTypes['FlightsPage']> = ResolversObject<{
+  items?: Resolver<Array<ResolversTypes['Flight']>, ParentType, ContextType>;
+  total?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
 export type JunctureResolvers<ContextType = ApolloServerContextFn, ParentType extends ResolversParentTypes['Juncture'] = ResolversParentTypes['Juncture']> = ResolversObject<{
+  date?: Resolver<ResolversTypes['Date'], ParentType, ContextType>;
   place?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  time?: Resolver<ResolversTypes['Date'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
@@ -417,9 +654,15 @@ export type LandingsResolvers<ContextType = ApolloServerContextFn, ParentType ex
 }>;
 
 export type MutationResolvers<ContextType = ApolloServerContextFn, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = ResolversObject<{
+  addAircraft?: Resolver<ResolversTypes['Aircraft'], ParentType, ContextType, RequireFields<MutationAddAircraftArgs, 'aircraft'>>;
+  addFlight?: Resolver<ResolversTypes['Flight'], ParentType, ContextType, RequireFields<MutationAddFlightArgs, 'input'>>;
+  addPilot?: Resolver<ResolversTypes['Pilot'], ParentType, ContextType, RequireFields<MutationAddPilotArgs, 'pilot'>>;
   signIn?: Resolver<ResolversTypes['String'], ParentType, ContextType, RequireFields<MutationSignInArgs, 'login' | 'pwdHash'>>;
   signOut?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   signUp?: Resolver<ResolversTypes['String'], ParentType, ContextType, RequireFields<MutationSignUpArgs, 'email' | 'firstName' | 'lastName' | 'pwdHash' | 'pwdHash2' | 'username'>>;
+  updateAircraft?: Resolver<ResolversTypes['Aircraft'], ParentType, ContextType, RequireFields<MutationUpdateAircraftArgs, 'aircraft' | 'id'>>;
+  updateFlight?: Resolver<ResolversTypes['Flight'], ParentType, ContextType, RequireFields<MutationUpdateFlightArgs, 'id' | 'input'>>;
+  updatePilot?: Resolver<ResolversTypes['Pilot'], ParentType, ContextType, RequireFields<MutationUpdatePilotArgs, 'id' | 'pilot'>>;
 }>;
 
 export type OperationalTimeResolvers<ContextType = ApolloServerContextFn, ParentType extends ResolversParentTypes['OperationalTime'] = ResolversParentTypes['OperationalTime']> = ResolversObject<{
@@ -452,17 +695,23 @@ export type PilotFunctionTimeResolvers<ContextType = ApolloServerContextFn, Pare
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
-export type QueryResolvers<ContextType = ApolloServerContextFn, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = ResolversObject<{
-  aircraft?: Resolver<ResolversTypes['Aircraft'], ParentType, ContextType, RequireFields<QueryAircraftArgs, 'id'>>;
-  aircrafts?: Resolver<Array<ResolversTypes['Aircraft']>, ParentType, ContextType>;
-  me?: Resolver<Maybe<ResolversTypes['Pilot']>, ParentType, ContextType>;
+export type PilotsPageResolvers<ContextType = ApolloServerContextFn, ParentType extends ResolversParentTypes['PilotsPage'] = ResolversParentTypes['PilotsPage']> = ResolversObject<{
+  items?: Resolver<Array<ResolversTypes['Pilot']>, ParentType, ContextType>;
+  total?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
-export type SimulationTrainingResolvers<ContextType = ApolloServerContextFn, ParentType extends ResolversParentTypes['SimulationTraining'] = ResolversParentTypes['SimulationTraining']> = ResolversObject<{
-  date?: Resolver<ResolversTypes['Date'], ParentType, ContextType>;
-  duration?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  type?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+export type QueryResolvers<ContextType = ApolloServerContextFn, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = ResolversObject<{
+  aircraft?: Resolver<ResolversTypes['Aircraft'], ParentType, ContextType, RequireFields<QueryAircraftArgs, 'id'>>;
+  aircrafts?: Resolver<ResolversTypes['AircraftsPage'], ParentType, ContextType, Partial<QueryAircraftsArgs>>;
+  currentPilot?: Resolver<Maybe<ResolversTypes['Pilot']>, ParentType, ContextType>;
+  flight?: Resolver<ResolversTypes['Flight'], ParentType, ContextType, RequireFields<QueryFlightArgs, 'id'>>;
+  flightStats?: Resolver<ResolversTypes['FlightStats'], ParentType, ContextType>;
+  lastFlightDate?: Resolver<Maybe<ResolversTypes['Date']>, ParentType, ContextType>;
+  ocaiCodes?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType>;
+  ownFlights?: Resolver<ResolversTypes['FlightsPage'], ParentType, ContextType, Partial<QueryOwnFlightsArgs>>;
+  pilot?: Resolver<ResolversTypes['Pilot'], ParentType, ContextType, RequireFields<QueryPilotArgs, 'id'>>;
+  pilots?: Resolver<ResolversTypes['PilotsPage'], ParentType, ContextType, Partial<QueryPilotsArgs>>;
 }>;
 
 export type SinglePilotFlightTimeResolvers<ContextType = ApolloServerContextFn, ParentType extends ResolversParentTypes['SinglePilotFlightTime'] = ResolversParentTypes['SinglePilotFlightTime']> = ResolversObject<{
@@ -473,11 +722,13 @@ export type SinglePilotFlightTimeResolvers<ContextType = ApolloServerContextFn, 
 
 export type Resolvers<ContextType = ApolloServerContextFn> = ResolversObject<{
   Aircraft?: AircraftResolvers<ContextType>;
+  AircraftsPage?: AircraftsPageResolvers<ContextType>;
   Credential?: CredentialResolvers<ContextType>;
   Date?: GraphQLScalarType;
   Email?: EmailResolvers<ContextType>;
   Flight?: FlightResolvers<ContextType>;
-  FlightTime?: FlightTimeResolvers<ContextType>;
+  FlightStats?: FlightStatsResolvers<ContextType>;
+  FlightsPage?: FlightsPageResolvers<ContextType>;
   Juncture?: JunctureResolvers<ContextType>;
   Landings?: LandingsResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
@@ -485,8 +736,8 @@ export type Resolvers<ContextType = ApolloServerContextFn> = ResolversObject<{
   Password?: PasswordResolvers<ContextType>;
   Pilot?: PilotResolvers<ContextType>;
   PilotFunctionTime?: PilotFunctionTimeResolvers<ContextType>;
+  PilotsPage?: PilotsPageResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
-  SimulationTraining?: SimulationTrainingResolvers<ContextType>;
   SinglePilotFlightTime?: SinglePilotFlightTimeResolvers<ContextType>;
 }>;
 
@@ -504,10 +755,10 @@ export type DirectiveResolvers<ContextType = ApolloServerContextFn> = ResolversO
 import { ObjectId } from 'mongodb';
 export type AircraftDb = {
   brand: string,
+  capabilities: Array<AircraftCapabilities>,
   _id: ObjectId,
-  isIFR: boolean,
-  isMultiEngine: boolean,
   model: string,
+  registration: string,
 };
 
 export type CredentialDb = {
@@ -524,33 +775,33 @@ export type EmailDb = {
 };
 
 export type FlightDb = {
+  aircraft?: Maybe<AircraftDb['_id']>,
+  aircraftClass: AircraftClass,
   arrival: JunctureDb,
-  date: any,
   departure: JunctureDb,
-  flightTime: FlightTimeDb,
   _id: ObjectId,
   ifrApproaches: number,
   landings: LandingsDb,
   operationalTime: OperationalTimeDb,
-  picName: IdDb['_id'],
+  pic: PilotDb['_id'],
+  pilot: PilotDb['_id'],
   pilotFunctionTime: PilotFunctionTimeDb,
   remarks: string,
-  simulationTraining: SimulationTrainingDb,
   totalFlightTime: number,
 };
 
-export type FlightTimeDb = {
-  multiPilot: number,
-  singlePilot: SinglePilotFlightTimeDb,
-};
-
 export type JunctureDb = {
+  date: any,
   place: string,
-  time: any,
 };
 
 export type LandingsDb = {
   day: number,
+  night: number,
+};
+
+export type OperationalTimeDb = {
+  ifr: number,
   night: number,
 };
 
@@ -569,10 +820,11 @@ export type PilotDb = {
   username: string,
 };
 
-export type SimulationTrainingDb = {
-  date: any,
-  duration: number,
-  type: string,
+export type PilotFunctionTimeDb = {
+  coPilot: number,
+  dualCommand: number,
+  instructor: number,
+  pic: number,
 };
 
 export type SinglePilotFlightTimeDb = {

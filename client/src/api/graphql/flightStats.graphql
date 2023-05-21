@@ -1,0 +1,8 @@
+query FlightStats {
+  flightStats {
+    totalFlightTime
+    totalDC
+    totalPIC
+    flightAmount
+  }
+}

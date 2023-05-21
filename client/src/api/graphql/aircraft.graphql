@@ -1,0 +1,44 @@
+query Aircraft($id: ID!) @live {
+  aircraft(id: $id) {
+    id
+    brand
+    model
+    registration
+    capabilities
+  }
+}
+
+query Aircrafts($pager: PagerInput) @live {
+  aircrafts(pager: $pager) {
+    total
+    items {
+      id
+      brand
+      model
+      registration
+      capabilities
+    }
+  }
+}
+
+query AircaftsRegs @live {
+  aircrafts {
+    items {
+      id
+      registration
+      model
+    }
+  }
+}
+
+mutation AddAircraft($aircraft: AddAircraftInput!) {
+  addAircraft(aircraft: $aircraft) {
+    id
+  }
+}
+
+mutation UpdateAircraft($id: ID!, $aircraft: UpdateAircraftInput!) {
+  updateAircraft(id: $id, aircraft: $aircraft) {
+    id
+  }
+}

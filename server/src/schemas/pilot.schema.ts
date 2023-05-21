@@ -6,7 +6,14 @@ import { hash, compare } from "bcrypt";
 import { Pilots } from "../db/db.js";
 import { live } from "../gqlLive.js";
 import { Resolvers } from "../gqlTypes.js";
-import { authMsg, emailRegex, signIn } from "../gqlHelpers.js";
+import {
+  authMsg,
+  castNonNullable,
+  emailRegex,
+  omitNil,
+  signIn,
+} from "../serverHelpers.js";
+import { castId } from "../db/helpers.js";
 
 export const typeDefs = gql`
   type Email @entity {
@@ -38,8 +45,29 @@ export const typeDefs = gql`
     email: Email! @embedded
   }
 
+  input AddPilotInput {
+    username: String!
+    firstName: String!
+    lastName: String!
+    email: String!
+  }
+
+  input UpdatePilotInput {
+    username: String
+    firstName: String
+    lastName: String
+    email: String
+  }
+
+  type PilotsPage {
+    total: Int!
+    items: [Pilot!]!
+  }
+
   type Query {
-    me: Pilot
+    currentPilot: Pilot
+    pilot(id: ID!): Pilot!
+    pilots(pager: PagerInput): PilotsPage!
   }
 
   type Mutation {
@@ -54,14 +82,71 @@ export const typeDefs = gql`
 
     signIn(login: String!, pwdHash: String!): String!
     signOut: Boolean!
+
+    addPilot(pilot: AddPilotInput!): Pilot!
+    updatePilot(id: ID!, pilot: UpdatePilotInput!): Pilot!
   }
 `;
 
 export const resolvers: Resolvers = {
+  Pilot: {
+    id: ({ _id }) => _id.toHexString(),
+  },
+
   Query: {
-    me: () => Pilots.findAll({}).then((r) => r[0]),
+    currentPilot: (parent, args, { requester }) =>
+      requester?._id ? Pilots.findById(requester?._id) : null,
+    pilot: (parent, { id }, { requester }) => {
+      if (!requester) throw new AuthenticationError(authMsg.userReq);
+      return Pilots.findById(id).then((pilot) => {
+        if (!pilot) throw new UserInputError("Pilote introuvable");
+        return pilot;
+      });
+    },
+
+    pilots: async (parent, { pager }, { requester }) => {
+      if (!requester) throw new AuthenticationError(authMsg.userReq);
+      return Pilots.findList({}, pager);
+    },
   },
   Mutation: {
+    addPilot: async (parent, { pilot }, { requester }) => {
+      if (!requester) throw new AuthenticationError(authMsg.userReq);
+      const { email, ...restPilot } = pilot;
+      const newPilot = await Pilots.create({
+        ...restPilot,
+        email: { address: email, verified: false },
+        credentials: [],
+        passwords: [],
+      });
+
+      live.invalidate([`Pilot:${newPilot._id.toHexString()}`, `Query.pilots`]);
+      return newPilot;
+    },
+
+    updatePilot: async (parent, { id, pilot }, { requester }) => {
+      if (!requester) throw new AuthenticationError(authMsg.userReq);
+      const { email, ...restPilot } = pilot;
+
+      const shouldUpdateEmail =
+        email === (await Pilots.findById(id))?.email.address;
+
+      const updated = await Pilots.findOneAndUpdate(
+        { _id: castId(id) },
+        {
+          $set: omitNil({
+            ...restPilot,
+            ...(shouldUpdateEmail && {
+              email: { address: email, verified: false },
+            }),
+          }),
+        }
+      );
+      if (!updated.value) throw new UserInputError("Pilot not found");
+      live.invalidate([`Pilot:${id}`]);
+      return updated.value;
+    },
+
     signUp: async (parent, args, { requester, clientInfo }) => {
       if (requester) throw new AuthenticationError(authMsg.guestReq);
 

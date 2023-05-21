@@ -1,13 +1,18 @@
 import gql from "graphql-tag";
 import { Resolvers } from "../gqlTypes";
-import { GraphQLScalarType } from "graphql/type";
-import { Kind } from "graphql/language";
+import { GraphQLScalarType, Kind } from "graphql";
 
 export const typeDefs = gql`
   scalar Date
 
-  input ListFiltersInput {
-    search: String
+  input SearchInput {
+    field: String!
+    value: String!
+  }
+
+  input PagerInput {
+    globalSearch: String
+    fieldSearches: [SearchInput!]
     pagination: PaginationInput
     sorts: [SortInput!]
   }

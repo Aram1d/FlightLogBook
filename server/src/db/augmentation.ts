@@ -18,7 +18,7 @@ import {
   values,
 } from "lodash-es";
 import { castId } from "./helpers.js";
-import { ListFiltersInput, SortOrder } from "../gqlTypes.js";
+import { PagerInput, PaginationInput, SortOrder } from "../gqlTypes.js";
 
 declare module "mongodb" {
   export type PageResult<TSchema extends Document> = {
@@ -81,7 +81,7 @@ declare module "mongodb" {
 
     findList(
       filter: Filter<TSchema>,
-      filters?: ListFiltersInput | null
+      filters?: PagerInput | null
     ): Promise<PageResult<TSchema>>;
   }
 }
@@ -158,12 +158,13 @@ Collection.prototype.mappedFindById = function (id, key) {
     : this.mappedFindOne({ _id: castId(id) }, key);
 };
 
-Collection.prototype.findList = async function (filter, filters) {
-  const search = filters?.search ?? "";
-  const pagination = filters?.pagination;
-  const sorts = filters?.sorts ?? [];
+Collection.prototype.findList = async function (filter, pager: PagerInput) {
+  const globalSearch = pager?.globalSearch ?? "";
+  const fieldSearches = pager?.fieldSearches ?? [];
+  const pagination = pager?.pagination;
+  const sorts = pager?.sorts ?? [];
 
-  const words = compact(search.split(/\s+/));
+  const words = compact(globalSearch.split(/\s+/));
   const activeWords = words.filter((word) => word.length > 2);
   if (!isEmpty(words) && isEmpty(activeWords)) {
     return { total: 0, items: [] };
@@ -180,6 +181,14 @@ Collection.prototype.findList = async function (filter, filters) {
             })),
           })),
         },
+
+      !isEmpty(fieldSearches) &&
+        fieldSearches.reduce((accum, { field, value }) => {
+          return {
+            ...accum,
+            [field]: { $regex: value, $options: "i" },
+          };
+        }, {}),
     ]),
   };
 

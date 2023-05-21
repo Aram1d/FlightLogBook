@@ -16,6 +16,8 @@ import { applyLiveQueryJSONPatchGenerator } from "@n1ru4l/graphql-live-query-pat
 import { live } from "./gqlLive.js";
 import { checkMongoIntegrity, enforceMongoSchema } from "./db/integrity.js";
 import { allCollections } from "./db/db.js";
+import * as util from "util";
+util.inspect.defaultOptions.depth = null;
 
 config();
 
@@ -62,7 +64,6 @@ registerSocketIOGraphQLServer({
 });
 
 app.use(
-  // @ts-ignore
   cors({
     origin: true,
     credentials: true,

@@ -1,0 +1,78 @@
+query OcaiCodes {
+  ocaiCodes
+}
+
+fragment FullFLight on Flight {
+  id
+  departure {
+    date
+    place
+  }
+  arrival {
+    date
+    place
+  }
+  totalFlightTime
+  pilot {
+    id
+    firstName
+    lastName
+  }
+  pic {
+    id
+    firstName
+    lastName
+  }
+  aircraft {
+    id
+    registration
+  }
+  aircraftClass
+  ifrApproaches
+  landings {
+    day
+    night
+  }
+  operationalTime {
+    ifr
+    night
+  }
+  pilotFunctionTime {
+    pic
+    instructor
+    coPilot
+    dualCommand
+  }
+  remarks
+}
+
+query LastFlightDate @live {
+  lastFlightDate
+}
+
+query Flight($id: ID!) @live {
+  flight(id: $id) {
+    ...FullFLight
+  }
+}
+
+query OwnFlights($pager: PagerInput) @live {
+  ownFlights(pager: $pager) {
+    items {
+      ...FullFLight
+    }
+    total
+  }
+}
+
+mutation AddFlight($flight: AddFlightInput!) {
+  addFlight(input: $flight) {
+    id
+  }
+}
+
+mutation UpdateFlight($id: ID!, $flight: UpdateFlightInput!) {
+  updateFlight(id: $id, input: $flight) {
+    id
+  }
+}

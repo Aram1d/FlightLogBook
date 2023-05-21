@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import {
   createClient,
-  dedupExchange,
   ExecutionResult,
   Provider,
   subscriptionExchange,
   Client,
+  mapExchange,
 } from "urql";
 import { cacheExchange, CacheExchangeOpts } from "@urql/exchange-graphcache";
 import customScalarsExchange from "urql-custom-scalars-exchange";
@@ -31,13 +31,25 @@ export const createUrqlClient = () =>
     url: "noop",
     requestPolicy: "cache-and-network",
     exchanges: [
-      dedupExchange,
+      mapExchange({
+        onError(error) {
+          console.log(error);
+        },
+      }),
       cacheExchange(
         identity<
           GraphCacheConfig & Omit<CacheExchangeOpts, keyof GraphCacheConfig>
         >({
           schema: schema as any,
-          keys: {},
+          keys: {
+            Email: ({ address }) => address ?? null,
+            PilotsPage: () => null,
+            AircraftsPage: () => null,
+            OperationalTime: () => null,
+            PilotFunctionTime: () => null,
+            Landings: () => null,
+            Juncture: () => null,
+          },
         })
       ),
       customScalarsExchange({

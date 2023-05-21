@@ -12,10 +12,10 @@ import {
   Title,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
-import { PasswordField } from "./components/PasswordField";
-import { useSignUpMutation } from "../api/gqlTypes";
+import { PasswordField } from "./pages/components/PasswordField";
+import { useSignUpMutation } from "./api/gqlTypes";
 import { sha256 } from "js-sha256";
-import { useStore } from "../utils/useStore";
+import { useStore } from "./utils/useStore";
 import { useNavigate } from "react-router-dom";
 
 export const simpleGridBreakpoints: SimpleGridBreakpoint[] = [

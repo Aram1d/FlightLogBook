@@ -1,3 +1,70 @@
+query CurrentPilot {
+  currentPilot {
+    id
+    username
+    firstName
+    lastName
+    email {
+      address
+      verified
+    }
+    lastName
+  }
+}
+
+query Pilot($id: ID!) @live {
+  pilot(id: $id) {
+    id
+    username
+    firstName
+    lastName
+    email {
+      address
+      verified
+    }
+    lastName
+  }
+}
+
+query Pilots($pager: PagerInput) @live {
+  pilots(pager: $pager) {
+    items {
+      id
+      username
+      firstName
+      lastName
+      email {
+        address
+        verified
+      }
+      lastName
+    }
+    total
+  }
+}
+
+query PilotsList @live {
+  pilots {
+    items {
+      id
+      firstName
+      lastName
+    }
+  }
+}
+
+mutation AddPilot($pilot: AddPilotInput!) {
+  addPilot(pilot: $pilot) {
+    id
+  }
+}
+
+mutation updatePilot($id: ID!, $pilot: UpdatePilotInput!) {
+  updatePilot(id: $id, pilot: $pilot) {
+    id
+  }
+}
+
 mutation SignIn($email: String!, $pwdHash: String!) {
   signIn(login: $email, pwdHash: $pwdHash)
 }
@@ -18,4 +85,8 @@ mutation SignUp(
     pwdHash: $pwdHash
     pwdHash2: $pwdHash2
   )
+}
+
+mutation signOut {
+  signOut
 }

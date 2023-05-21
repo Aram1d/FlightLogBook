@@ -17,6 +17,11 @@ generates:
       mappers:
         Aircraft: AircraftDb
         Flight: FlightDb
+        SimulationTraining: SimulationTrainingDb
+        PilotFunctionTime: PilotFunctionTimeDb
+        OperationalTime: OperationalTimeDb
+        Landings: LandingsDb
+        FlightTime: FlightTimeDb
         Pilot: PilotDb
 
   ../client/src/api/gqlTypes.ts:
@@ -28,7 +33,7 @@ generates:
     config:
       documentMode: "documentNode"
       scalars:
-        Date: Date
+        Date: Date | null
     documents:
       - "query"
       - "mutation"

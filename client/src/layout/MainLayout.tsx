@@ -1,12 +1,14 @@
-import { AppShell } from "@mantine/core";
+import { AppShell, Container } from "@mantine/core";
 import { Outlet } from "react-router-dom";
 import { Header } from "./Header";
+
+export const MAX_WIDTH = "100rem";
 
 export const MainLayout = () => {
   return (
     <AppShell
       padding="md"
-      header={<Header />}
+      header={<Header height={60} />}
       styles={(theme) => ({
         main: {
           backgroundColor:
@@ -16,7 +18,9 @@ export const MainLayout = () => {
         },
       })}
     >
-      <Outlet />
+      <Container maw={MAX_WIDTH}>
+        <Outlet />
+      </Container>
     </AppShell>
   );
 };
