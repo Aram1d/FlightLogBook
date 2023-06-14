@@ -84,6 +84,13 @@ const apolloServer = new ApolloServer({
 await apolloServer.start();
 apolloServer.applyMiddleware({ app: app, path: "/api" });
 
+if (process.env.NODE_ENV === "production") {
+  app.use("/", express.static("public"));
+  app.get("*", (req, res) => {
+    res.sendFile("index.html", { root: "public" });
+  });
+}
+
 server.listen({ port: process.env.SERVER_PORT }, () => {
   console.info(
     "🚀 FLB graphQl server ready on port " + process.env.SERVER_PORT + " !"
