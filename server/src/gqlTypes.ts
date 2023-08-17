@@ -105,6 +105,19 @@ export type Flight = {
   totalFlightTime: Scalars['Int'];
 };
 
+export type FlightPageTotals = {
+  __typename?: 'FlightPageTotals';
+  copilot: FlightTotals;
+  dualCommand: FlightTotals;
+  id: Scalars['ID'];
+  instructor: FlightTotals;
+  landings: LandingTotals;
+  multiEngine: FlightTotals;
+  pic: FlightTotals;
+  singleEngine: FlightTotals;
+  totalFlightTime: FlightTotals;
+};
+
 export type FlightStats = {
   __typename?: 'FlightStats';
   flightAmount: Scalars['Int'];
@@ -113,6 +126,13 @@ export type FlightStats = {
   totalFlightTime: Scalars['Int'];
   totalInstructor: Scalars['Int'];
   totalPIC: Scalars['Int'];
+};
+
+export type FlightTotals = {
+  __typename?: 'FlightTotals';
+  actual: Scalars['Float'];
+  page: Scalars['Float'];
+  preceding: Scalars['Float'];
 };
 
 export type FlightsPage = {
@@ -130,6 +150,12 @@ export type Juncture = {
 export type JunctureInput = {
   date: Scalars['Date'];
   place: Scalars['String'];
+};
+
+export type LandingTotals = {
+  __typename?: 'LandingTotals';
+  day: FlightTotals;
+  night: FlightTotals;
 };
 
 export type Landings = {
@@ -275,6 +301,7 @@ export type Query = {
   lastFlightDate?: Maybe<Scalars['Date']>;
   ocaiCodes: Array<Scalars['String']>;
   ownFlights: FlightsPage;
+  ownFlightsTotals: FlightPageTotals;
   pilot: Pilot;
   pilots: PilotsPage;
 };
@@ -296,6 +323,11 @@ export type QueryFlightArgs = {
 
 
 export type QueryOwnFlightsArgs = {
+  pager?: InputMaybe<PagerInput>;
+};
+
+
+export type QueryOwnFlightsTotalsArgs = {
   pager?: InputMaybe<PagerInput>;
 };
 
@@ -456,10 +488,14 @@ export type ResolversTypes = ResolversObject<{
   Date: ResolverTypeWrapper<Scalars['Date']>;
   Email: ResolverTypeWrapper<Email>;
   Flight: ResolverTypeWrapper<FlightDb>;
+  FlightPageTotals: ResolverTypeWrapper<FlightPageTotals>;
   FlightStats: ResolverTypeWrapper<FlightStats>;
+  FlightTotals: ResolverTypeWrapper<FlightTotals>;
+  Float: ResolverTypeWrapper<Scalars['Float']>;
   FlightsPage: ResolverTypeWrapper<Omit<FlightsPage, 'items'> & { items: Array<ResolversTypes['Flight']> }>;
   Juncture: ResolverTypeWrapper<Juncture>;
   JunctureInput: JunctureInput;
+  LandingTotals: ResolverTypeWrapper<LandingTotals>;
   Landings: ResolverTypeWrapper<LandingsDb>;
   LandingsInput: LandingsInput;
   Mutation: ResolverTypeWrapper<{}>;
@@ -499,10 +535,14 @@ export type ResolversParentTypes = ResolversObject<{
   Date: Scalars['Date'];
   Email: Email;
   Flight: FlightDb;
+  FlightPageTotals: FlightPageTotals;
   FlightStats: FlightStats;
+  FlightTotals: FlightTotals;
+  Float: Scalars['Float'];
   FlightsPage: Omit<FlightsPage, 'items'> & { items: Array<ResolversParentTypes['Flight']> };
   Juncture: Juncture;
   JunctureInput: JunctureInput;
+  LandingTotals: LandingTotals;
   Landings: LandingsDb;
   LandingsInput: LandingsInput;
   Mutation: {};
@@ -625,6 +665,19 @@ export type FlightResolvers<ContextType = ApolloServerContextFn, ParentType exte
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
+export type FlightPageTotalsResolvers<ContextType = ApolloServerContextFn, ParentType extends ResolversParentTypes['FlightPageTotals'] = ResolversParentTypes['FlightPageTotals']> = ResolversObject<{
+  copilot?: Resolver<ResolversTypes['FlightTotals'], ParentType, ContextType>;
+  dualCommand?: Resolver<ResolversTypes['FlightTotals'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  instructor?: Resolver<ResolversTypes['FlightTotals'], ParentType, ContextType>;
+  landings?: Resolver<ResolversTypes['LandingTotals'], ParentType, ContextType>;
+  multiEngine?: Resolver<ResolversTypes['FlightTotals'], ParentType, ContextType>;
+  pic?: Resolver<ResolversTypes['FlightTotals'], ParentType, ContextType>;
+  singleEngine?: Resolver<ResolversTypes['FlightTotals'], ParentType, ContextType>;
+  totalFlightTime?: Resolver<ResolversTypes['FlightTotals'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
 export type FlightStatsResolvers<ContextType = ApolloServerContextFn, ParentType extends ResolversParentTypes['FlightStats'] = ResolversParentTypes['FlightStats']> = ResolversObject<{
   flightAmount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   totalCOPI?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
@@ -632,6 +685,13 @@ export type FlightStatsResolvers<ContextType = ApolloServerContextFn, ParentType
   totalFlightTime?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   totalInstructor?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   totalPIC?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
+export type FlightTotalsResolvers<ContextType = ApolloServerContextFn, ParentType extends ResolversParentTypes['FlightTotals'] = ResolversParentTypes['FlightTotals']> = ResolversObject<{
+  actual?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
+  page?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
+  preceding?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
@@ -644,6 +704,12 @@ export type FlightsPageResolvers<ContextType = ApolloServerContextFn, ParentType
 export type JunctureResolvers<ContextType = ApolloServerContextFn, ParentType extends ResolversParentTypes['Juncture'] = ResolversParentTypes['Juncture']> = ResolversObject<{
   date?: Resolver<ResolversTypes['Date'], ParentType, ContextType>;
   place?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
+export type LandingTotalsResolvers<ContextType = ApolloServerContextFn, ParentType extends ResolversParentTypes['LandingTotals'] = ResolversParentTypes['LandingTotals']> = ResolversObject<{
+  day?: Resolver<ResolversTypes['FlightTotals'], ParentType, ContextType>;
+  night?: Resolver<ResolversTypes['FlightTotals'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
@@ -710,6 +776,7 @@ export type QueryResolvers<ContextType = ApolloServerContextFn, ParentType exten
   lastFlightDate?: Resolver<Maybe<ResolversTypes['Date']>, ParentType, ContextType>;
   ocaiCodes?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType>;
   ownFlights?: Resolver<ResolversTypes['FlightsPage'], ParentType, ContextType, Partial<QueryOwnFlightsArgs>>;
+  ownFlightsTotals?: Resolver<ResolversTypes['FlightPageTotals'], ParentType, ContextType, Partial<QueryOwnFlightsTotalsArgs>>;
   pilot?: Resolver<ResolversTypes['Pilot'], ParentType, ContextType, RequireFields<QueryPilotArgs, 'id'>>;
   pilots?: Resolver<ResolversTypes['PilotsPage'], ParentType, ContextType, Partial<QueryPilotsArgs>>;
 }>;
@@ -727,9 +794,12 @@ export type Resolvers<ContextType = ApolloServerContextFn> = ResolversObject<{
   Date?: GraphQLScalarType;
   Email?: EmailResolvers<ContextType>;
   Flight?: FlightResolvers<ContextType>;
+  FlightPageTotals?: FlightPageTotalsResolvers<ContextType>;
   FlightStats?: FlightStatsResolvers<ContextType>;
+  FlightTotals?: FlightTotalsResolvers<ContextType>;
   FlightsPage?: FlightsPageResolvers<ContextType>;
   Juncture?: JunctureResolvers<ContextType>;
+  LandingTotals?: LandingTotalsResolvers<ContextType>;
   Landings?: LandingsResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
   OperationalTime?: OperationalTimeResolvers<ContextType>;

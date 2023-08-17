@@ -1,6 +1,6 @@
 import { ObjectId } from "mongodb";
 import jwt from "jsonwebtoken";
-import { AddFlightInput, PilotDb } from "./gqlTypes";
+import {AddFlightInput, PaginationInput, PilotDb} from "./gqlTypes";
 import { live } from "./gqlLive.js";
 import { ApolloServerContextFn } from "./contextFns.js";
 import { Pilots } from "./db/db.js";
@@ -59,6 +59,13 @@ export const castNonNullable =
     if (!arg) throw new ApolloError(errorMsg);
     return arg;
   };
+
+//Pagniation helper function
+export function paginate(pagination: PaginationInput | undefined | null) {
+  if (!pagination?.page) return {};
+  const limit = pagination?.limit ?? 10;
+  return { skip: (pagination?.page ?? 1) * limit - limit, limit };
+}
 
 export const flightValidator = (
   input: Pick<

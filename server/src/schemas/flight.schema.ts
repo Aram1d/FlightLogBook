@@ -1,18 +1,17 @@
 import gql from "graphql-tag";
 import { AuthenticationError, UserInputError } from "apollo-server-express";
-import { z } from "zod";
-import dayjs from "dayjs";
 import { Resolvers } from "../gqlTypes";
 import {
   authMsg,
-  castNonNullable,
   flightValidator,
   nulResolverHandler,
   omitNil,
+  paginate,
 } from "../serverHelpers.js";
 import { Aircrafts, Flights, Pilots } from "../db/db.js";
 import { castId } from "../db/helpers.js";
 import { live } from "../gqlLive.js";
+import { ObjectId } from "mongodb";
 
 export const typeDefs = gql`
   enum AircraftClass {
@@ -63,6 +62,29 @@ export const typeDefs = gql`
     pilotFunctionTime: PilotFunctionTime! @embedded #11
     simulatorType: String #12
     remarks: String! @column #13
+  }
+
+  type FlightTotals {
+    page: Float!
+    preceding: Float!
+    actual: Float!
+  }
+
+  type LandingTotals {
+    day: FlightTotals!
+    night: FlightTotals!
+  }
+
+  type FlightPageTotals {
+    id: ID!
+    singleEngine: FlightTotals!
+    multiEngine: FlightTotals!
+    totalFlightTime: FlightTotals!
+    landings: LandingTotals!
+    pic: FlightTotals!
+    copilot: FlightTotals!
+    dualCommand: FlightTotals!
+    instructor: FlightTotals!
   }
 
   type FlightsPage {
@@ -132,6 +154,7 @@ export const typeDefs = gql`
     lastFlightDate: Date
     flight(id: ID!): Flight!
     ownFlights(pager: PagerInput): FlightsPage!
+    ownFlightsTotals(pager: PagerInput): FlightPageTotals!
   }
 
   extend type Mutation {
@@ -202,6 +225,143 @@ export const resolvers: Resolvers = {
         },
         pager
       );
+    },
+    ownFlightsTotals: async (parent, { pager }, { requester }) => {
+      if (!requester) throw new AuthenticationError(authMsg.userReq);
+      const { skip, limit } = paginate(pager?.pagination);
+
+      if (typeof skip !== "number" || typeof limit !== "number")
+        throw new UserInputError("Invalid pagination input");
+
+      const matchStage = {
+        $match: {
+          $or: [
+            { pilot: castId(requester._id) },
+            { pic: castId(requester._id) },
+          ],
+        },
+      } as const;
+
+      const makeSumStage = (id: string) => ({
+        $group: {
+          _id: id,
+          singleEngine: {
+            $sum: {
+              $switch: {
+                branches: [
+                  {
+                    case: { $eq: ["$aircraftClass", "singleEngine"] },
+                    then: "$totalFlightTime",
+                  },
+                ],
+                default: 0,
+              },
+            },
+          },
+          multiEngine: {
+            $sum: {
+              $switch: {
+                branches: [
+                  {
+                    case: { $eq: ["$aircraftClass", "multiEngine"] },
+                    then: "$totalFlightTime",
+                  },
+                ],
+                default: 0,
+              },
+            },
+          },
+          totalFlightTime: { $sum: "$totalFlightTime" },
+          dayLandings: { $sum: "$landings.day" },
+          nightLandings: { $sum: "landing.night" },
+
+          pic: { $sum: "$pilotFunctionTime.pic" },
+          coPilot: { $sum: "$pilotFunctionTime.coPilot" },
+          dualCommand: { $sum: "$pilotFunctionTime.dualCommand" },
+          instructor: { $sum: "$pilotFunctionTime.instructor" },
+        },
+      });
+
+      const previousCumulativeTotals = skip
+        ? (
+            await Flights.aggregate([
+              matchStage,
+              { $limit: skip },
+              makeSumStage("previousCumulativeTotals"),
+            ]).toArray()
+          )[0]
+        : null;
+
+      const pageTotals = (
+        await Flights.aggregate([
+          matchStage,
+          { $skip: skip },
+          { $limit: limit },
+          makeSumStage("pageTotals"),
+        ]).toArray()
+      )[0];
+
+      const actualTotals = (
+        await Flights.aggregate([
+          matchStage,
+          {
+            $limit:
+              (pager?.pagination?.limit ?? 20) * (pager?.pagination?.page ?? 1),
+          },
+          makeSumStage("actualTotals"),
+        ]).toArray()
+      )[0];
+
+      return {
+        id: new ObjectId().toHexString(),
+        singleEngine: {
+          preceding: previousCumulativeTotals?.singleEngine ?? 0,
+          page: pageTotals?.singleEngine ?? 0,
+          actual: actualTotals?.singleEngine ?? 0,
+        },
+        multiEngine: {
+          preceding: previousCumulativeTotals?.multiEngine ?? 0,
+          page: pageTotals?.multiEngine ?? 0,
+          actual: actualTotals?.multiEngine ?? 0,
+        },
+        totalFlightTime: {
+          preceding: previousCumulativeTotals?.totalFlightTime ?? 0,
+          page: pageTotals?.totalFlightTime ?? 0,
+          actual: actualTotals?.totalFlightTime ?? 0,
+        },
+        landings: {
+          day: {
+            preceding: previousCumulativeTotals?.dayLandings ?? 0,
+            page: pageTotals?.dayLandings ?? 0,
+            actual: actualTotals?.dayLandings ?? 0,
+          },
+          night: {
+            preceding: previousCumulativeTotals?.nightLandings ?? 0,
+            page: pageTotals?.nightLandings ?? 0,
+            actual: actualTotals?.nightLandings ?? 0,
+          },
+        },
+        pic: {
+          preceding: previousCumulativeTotals?.pic ?? 0,
+          page: pageTotals?.pic ?? 0,
+          actual: actualTotals?.pic ?? 0,
+        },
+        copilot: {
+          preceding: previousCumulativeTotals?.coPilot ?? 0,
+          page: pageTotals?.coPilot ?? 0,
+          actual: actualTotals?.coPilot ?? 0,
+        },
+        dualCommand: {
+          preceding: previousCumulativeTotals?.dualCommand ?? 0,
+          page: pageTotals?.dualCommand ?? 0,
+          actual: actualTotals?.dualCommand ?? 0,
+        },
+        instructor: {
+          preceding: previousCumulativeTotals?.instructor ?? 0,
+          page: pageTotals?.instructor ?? 0,
+          actual: actualTotals?.instructor ?? 0,
+        },
+      };
     },
   },
   Mutation: {

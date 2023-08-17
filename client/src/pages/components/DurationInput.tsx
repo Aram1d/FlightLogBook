@@ -43,7 +43,7 @@ export const DurationInput = (props: DurationInputProps) => {
 };
 
 export const timeFormatter = (n: string | number | null | undefined) => {
-  if (!n) return "--:--";
+  if (!n) return "-- : --";
   const minutes = typeof n === "number" ? n : parseFloat(n);
   const hours = Math.abs(~~(minutes / 60));
 

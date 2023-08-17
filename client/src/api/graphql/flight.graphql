@@ -4,6 +4,7 @@ query OcaiCodes {
 
 fragment FullFLight on Flight {
   id
+  __typename
   departure {
     date
     place
@@ -62,6 +63,57 @@ query OwnFlights($pager: PagerInput) @live {
       ...FullFLight
     }
     total
+  }
+  ownFlightsTotals(pager: $pager) {
+    id
+    __typename
+    singleEngine{
+      preceding
+      actual
+      page
+    }
+    multiEngine{
+      preceding
+      actual
+      page
+    }
+    totalFlightTime{
+      preceding
+      actual
+      page
+    }
+    landings{
+      day{
+        preceding
+        actual
+        page
+      }
+      night{
+        preceding
+        actual
+        page
+      }
+    }
+    pic{
+        preceding
+      actual
+        page
+    }
+    copilot{
+        preceding
+      actual
+        page
+    }
+    dualCommand{
+      preceding
+      actual
+      page
+    }
+    instructor{
+      preceding
+      actual
+      page
+    }
   }
 }
 

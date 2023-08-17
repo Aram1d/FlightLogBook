@@ -202,6 +202,7 @@ export const useFlightRecordState = () => {
       setFieldValue("aircraft", null);
       acftList.setSelectedModel(null);
     },
+    // @eslint-disable-next-line react-hooks/exhaustive-deps acftType passed as arg
     [setFieldValue, acftList.setSelectedModel]
   );
 
