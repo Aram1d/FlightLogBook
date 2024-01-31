@@ -23,6 +23,10 @@ generates:
         Landings: LandingsDb
         FlightTime: FlightTimeDb
         Pilot: PilotDb
+        FlightStats: FlightStatsDb
+        ByAircraftStats: ByAircraftStatsDb
+        ByAircraftModelStats: ByAircraftModelStatsDb
+        ByInstructorStats: ByInstructorStatsDb
 
   ../client/src/api/gqlTypes.ts:
     plugins:

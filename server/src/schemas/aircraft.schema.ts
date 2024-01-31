@@ -52,7 +52,10 @@ export const typeDefs = gql`
 
 export const resolvers: Resolvers = {
   Aircraft: {
-    id: (parent) => parent._id.toHexString(),
+    id: (parent) =>
+      parent.registration
+        ? parent._id.toHexString()
+        : `${parent.brand}__${parent.model}`,
   },
   Query: {
     aircraft: async (parent, { id }) => {
@@ -61,7 +64,7 @@ export const resolvers: Resolvers = {
       return aircraft;
     },
 
-    aircrafts: async (parent, { pager }, ctx) => {
+    aircrafts: async (parent, { pager }) => {
       return Aircrafts.findList({}, pager);
     },
   },

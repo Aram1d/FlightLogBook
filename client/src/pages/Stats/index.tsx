@@ -1,41 +1,47 @@
-import { Card, Stack, Title, Text, Grid } from "@mantine/core";
-import { useFlightStatsQuery } from "../../api/gqlTypes";
-import { timeFormatter } from "../components/DurationInput";
+import { Card, Group, Tabs } from "@mantine/core";
+import { useNavigate, useParams } from "react-router-dom";
+import {
+  useFlightStatsQuery,
+  useLast3MonthsStatsQuery,
+} from "../../api/gqlTypes";
+import { FlightsSummary } from "./FlightsSummary";
+import { AcftStat } from "./AcftStat";
 
 export const FlightStats = () => {
+  const navigate = useNavigate();
+  const { tabId } = useParams();
   const [{ data }] = useFlightStatsQuery();
+  const [{ data: last3Months }] = useLast3MonthsStatsQuery();
 
   return (
     <Card>
-      <Stack>
-        <Title>Récap</Title>
-        <Grid columns={3} sx={{ maxWidth: "20rem" }}>
-          <Grid.Col span={2}>
-            <Text color="dimmed">Total flight time:</Text>{" "}
-          </Grid.Col>
-          <Grid.Col span={1}>
-            <Text>{timeFormatter(data?.flightStats.totalFlightTime)}</Text>
-          </Grid.Col>
-          <Grid.Col span={2}>
-            <Text color="dimmed">Total D.C flight time:</Text>{" "}
-          </Grid.Col>
-          <Grid.Col span={1}>
-            <Text>{timeFormatter(data?.flightStats.totalDC)}</Text>
-          </Grid.Col>
-          <Grid.Col span={2}>
-            <Text color="dimmed">Total P.I.C flight time:</Text>{" "}
-          </Grid.Col>
-          <Grid.Col span={1}>
-            <Text>{timeFormatter(data?.flightStats.totalPIC)}</Text>
-          </Grid.Col>
-          <Grid.Col span={2}>
-            <Text color="dimmed">Flights amount:</Text>{" "}
-          </Grid.Col>
-          <Grid.Col span={1}>
-            <Text>{data?.flightStats.flightAmount}</Text>
-          </Grid.Col>
-        </Grid>
-      </Stack>
+      <Tabs
+        value={tabId}
+        onTabChange={(tabId) =>
+          navigate(
+            "/" + (["sum", "dc", "acft"].includes(tabId || "") ? tabId : "sum")
+          )
+        }
+      >
+        <Tabs.List>
+          <Tabs.Tab value="sum">Summary</Tabs.Tab>
+          <Tabs.Tab value="dc">DC stats</Tabs.Tab>
+          <Tabs.Tab value="acft">Acft stats</Tabs.Tab>
+        </Tabs.List>
+
+        <Tabs.Panel value="sum">
+          <Group>
+            <FlightsSummary stats={data?.flightStats} title="Global Summary" />
+            <FlightsSummary
+              stats={last3Months?.last3MonthsFlightStats}
+              title="Last 3 months"
+            />
+          </Group>
+        </Tabs.Panel>
+        <Tabs.Panel value="acft">
+          <AcftStat />
+        </Tabs.Panel>
+      </Tabs>
     </Card>
   );
 };

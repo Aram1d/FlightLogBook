@@ -215,8 +215,6 @@ export const FlightTable = ({ setForm }: EntityTableProps) => {
     [setForm]
   );
 
-  console.log({ loadedFlights });
-
   return (
     <Card>
       <Stack>

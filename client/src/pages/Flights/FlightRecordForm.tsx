@@ -158,7 +158,7 @@ export const FlightRecordForm = ({ form, setForm, isAdd }: EntityFormProps) => {
             <Stack>
               <FlightRecordTitle>Aircraft</FlightRecordTitle>
               <Select
-                label="modèle"
+                label="Model"
                 allowDeselect
                 data={acftModels}
                 value={selectedModel}
@@ -211,7 +211,7 @@ export const FlightRecordForm = ({ form, setForm, isAdd }: EntityFormProps) => {
             <Stack>
               <FlightRecordTitle>Landings</FlightRecordTitle>
               <NumberInput
-                label="Days landings"
+                label="Day landings"
                 {...getInputProps("landings.day")}
               />
               <NumberInput

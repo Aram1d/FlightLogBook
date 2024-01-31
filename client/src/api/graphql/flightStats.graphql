@@ -1,8 +1,41 @@
+fragment AllStats on BaseFlightStats {
+  id
+  totalFlightTime
+  totalDC
+  totalPIC
+  totalCOPI
+  totalInstructor
+  flightAmount
+}
+
 query FlightStats {
   flightStats {
-    totalFlightTime
-    totalDC
-    totalPIC
-    flightAmount
+    ...AllStats
   }
 }
+
+query Last3MonthsStats {
+  last3MonthsFlightStats {
+    ...AllStats
+  }
+}
+
+query byAircraftStats {
+  flightStats {
+    id
+    byAircraft{
+      aircraft{
+        id
+        brand
+        model
+        registration
+      }
+      ...AllStats
+    }
+    byAircraftModel{
+      aircraftModel
+      ...AllStats
+    }
+  }
+}
+

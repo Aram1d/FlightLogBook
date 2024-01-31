@@ -72,6 +72,62 @@ export type AircraftsPage = {
   total: Scalars['Int'];
 };
 
+export type BaseFlightStats = {
+  flightAmount: Scalars['Int'];
+  id: Scalars['ID'];
+  totalCOPI: Scalars['Int'];
+  totalDC: Scalars['Int'];
+  totalFlightTime: Scalars['Int'];
+  totalInstructor: Scalars['Int'];
+  totalPIC: Scalars['Int'];
+};
+
+export type ByAcftStatsInput = {
+  mergeByModel?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type ByAircraftModelStats = BaseFlightStats & {
+  __typename?: 'ByAircraftModelStats';
+  aircraftModel: Scalars['String'];
+  byAircraft: Array<ByAircraftStats>;
+  byInstructor: Array<ByInstructorStats>;
+  flightAmount: Scalars['Int'];
+  id: Scalars['ID'];
+  totalCOPI: Scalars['Int'];
+  totalDC: Scalars['Int'];
+  totalFlightTime: Scalars['Int'];
+  totalInstructor: Scalars['Int'];
+  totalPIC: Scalars['Int'];
+};
+
+export type ByAircraftStats = BaseFlightStats & {
+  __typename?: 'ByAircraftStats';
+  aircraft: Aircraft;
+  byAircraftModel: Array<ByAircraftModelStats>;
+  byInstructor: Array<ByInstructorStats>;
+  flightAmount: Scalars['Int'];
+  id: Scalars['ID'];
+  totalCOPI: Scalars['Int'];
+  totalDC: Scalars['Int'];
+  totalFlightTime: Scalars['Int'];
+  totalInstructor: Scalars['Int'];
+  totalPIC: Scalars['Int'];
+};
+
+export type ByInstructorStats = BaseFlightStats & {
+  __typename?: 'ByInstructorStats';
+  byAircraft: Array<ByAircraftStats>;
+  byAircraftModel: Array<ByAircraftModelStats>;
+  flightAmount: Scalars['Int'];
+  id: Scalars['ID'];
+  instructor: Pilot;
+  totalCOPI: Scalars['Int'];
+  totalDC: Scalars['Int'];
+  totalFlightTime: Scalars['Int'];
+  totalInstructor: Scalars['Int'];
+  totalPIC: Scalars['Int'];
+};
+
 export type Credential = {
   __typename?: 'Credential';
   id: Scalars['ID'];
@@ -118,9 +174,13 @@ export type FlightPageTotals = {
   totalFlightTime: FlightTotals;
 };
 
-export type FlightStats = {
+export type FlightStats = BaseFlightStats & {
   __typename?: 'FlightStats';
+  byAircraft: Array<ByAircraftStats>;
+  byAircraftModel: Array<ByAircraftModelStats>;
+  byInstructor: Array<ByInstructorStats>;
   flightAmount: Scalars['Int'];
+  id: Scalars['ID'];
   totalCOPI: Scalars['Int'];
   totalDC: Scalars['Int'];
   totalFlightTime: Scalars['Int'];
@@ -298,6 +358,7 @@ export type Query = {
   currentPilot?: Maybe<Pilot>;
   flight: Flight;
   flightStats: FlightStats;
+  last3MonthsFlightStats: FlightStats;
   lastFlightDate?: Maybe<Scalars['Date']>;
   ocaiCodes: Array<Scalars['String']>;
   ownFlights: FlightsPage;
@@ -483,13 +544,18 @@ export type ResolversTypes = ResolversObject<{
   AircraftCapabilities: AircraftCapabilities;
   AircraftClass: AircraftClass;
   AircraftsPage: ResolverTypeWrapper<Omit<AircraftsPage, 'items'> & { items: Array<ResolversTypes['Aircraft']> }>;
-  Credential: ResolverTypeWrapper<Credential>;
+  BaseFlightStats: ResolversTypes['ByAircraftModelStats'] | ResolversTypes['ByAircraftStats'] | ResolversTypes['ByInstructorStats'] | ResolversTypes['FlightStats'];
+  ByAcftStatsInput: ByAcftStatsInput;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
+  ByAircraftModelStats: ResolverTypeWrapper<ByAircraftModelStatsDb>;
+  ByAircraftStats: ResolverTypeWrapper<ByAircraftStatsDb>;
+  ByInstructorStats: ResolverTypeWrapper<ByInstructorStatsDb>;
+  Credential: ResolverTypeWrapper<Credential>;
   Date: ResolverTypeWrapper<Scalars['Date']>;
   Email: ResolverTypeWrapper<Email>;
   Flight: ResolverTypeWrapper<FlightDb>;
   FlightPageTotals: ResolverTypeWrapper<FlightPageTotals>;
-  FlightStats: ResolverTypeWrapper<FlightStats>;
+  FlightStats: ResolverTypeWrapper<FlightStatsDb>;
   FlightTotals: ResolverTypeWrapper<FlightTotals>;
   Float: ResolverTypeWrapper<Scalars['Float']>;
   FlightsPage: ResolverTypeWrapper<Omit<FlightsPage, 'items'> & { items: Array<ResolversTypes['Flight']> }>;
@@ -530,13 +596,18 @@ export type ResolversParentTypes = ResolversObject<{
   AddPilotInput: AddPilotInput;
   Aircraft: AircraftDb;
   AircraftsPage: Omit<AircraftsPage, 'items'> & { items: Array<ResolversParentTypes['Aircraft']> };
-  Credential: Credential;
+  BaseFlightStats: ResolversParentTypes['ByAircraftModelStats'] | ResolversParentTypes['ByAircraftStats'] | ResolversParentTypes['ByInstructorStats'] | ResolversParentTypes['FlightStats'];
+  ByAcftStatsInput: ByAcftStatsInput;
   Boolean: Scalars['Boolean'];
+  ByAircraftModelStats: ByAircraftModelStatsDb;
+  ByAircraftStats: ByAircraftStatsDb;
+  ByInstructorStats: ByInstructorStatsDb;
+  Credential: Credential;
   Date: Scalars['Date'];
   Email: Email;
   Flight: FlightDb;
   FlightPageTotals: FlightPageTotals;
-  FlightStats: FlightStats;
+  FlightStats: FlightStatsDb;
   FlightTotals: FlightTotals;
   Float: Scalars['Float'];
   FlightsPage: Omit<FlightsPage, 'items'> & { items: Array<ResolversParentTypes['Flight']> };
@@ -628,6 +699,59 @@ export type AircraftsPageResolvers<ContextType = ApolloServerContextFn, ParentTy
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
+export type BaseFlightStatsResolvers<ContextType = ApolloServerContextFn, ParentType extends ResolversParentTypes['BaseFlightStats'] = ResolversParentTypes['BaseFlightStats']> = ResolversObject<{
+  __resolveType: TypeResolveFn<'ByAircraftModelStats' | 'ByAircraftStats' | 'ByInstructorStats' | 'FlightStats', ParentType, ContextType>;
+  flightAmount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  totalCOPI?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  totalDC?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  totalFlightTime?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  totalInstructor?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  totalPIC?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+}>;
+
+export type ByAircraftModelStatsResolvers<ContextType = ApolloServerContextFn, ParentType extends ResolversParentTypes['ByAircraftModelStats'] = ResolversParentTypes['ByAircraftModelStats']> = ResolversObject<{
+  aircraftModel?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  byAircraft?: Resolver<Array<ResolversTypes['ByAircraftStats']>, ParentType, ContextType>;
+  byInstructor?: Resolver<Array<ResolversTypes['ByInstructorStats']>, ParentType, ContextType>;
+  flightAmount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  totalCOPI?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  totalDC?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  totalFlightTime?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  totalInstructor?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  totalPIC?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
+export type ByAircraftStatsResolvers<ContextType = ApolloServerContextFn, ParentType extends ResolversParentTypes['ByAircraftStats'] = ResolversParentTypes['ByAircraftStats']> = ResolversObject<{
+  aircraft?: Resolver<ResolversTypes['Aircraft'], ParentType, ContextType>;
+  byAircraftModel?: Resolver<Array<ResolversTypes['ByAircraftModelStats']>, ParentType, ContextType>;
+  byInstructor?: Resolver<Array<ResolversTypes['ByInstructorStats']>, ParentType, ContextType>;
+  flightAmount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  totalCOPI?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  totalDC?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  totalFlightTime?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  totalInstructor?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  totalPIC?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
+export type ByInstructorStatsResolvers<ContextType = ApolloServerContextFn, ParentType extends ResolversParentTypes['ByInstructorStats'] = ResolversParentTypes['ByInstructorStats']> = ResolversObject<{
+  byAircraft?: Resolver<Array<ResolversTypes['ByAircraftStats']>, ParentType, ContextType>;
+  byAircraftModel?: Resolver<Array<ResolversTypes['ByAircraftModelStats']>, ParentType, ContextType>;
+  flightAmount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  instructor?: Resolver<ResolversTypes['Pilot'], ParentType, ContextType>;
+  totalCOPI?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  totalDC?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  totalFlightTime?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  totalInstructor?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  totalPIC?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
 export type CredentialResolvers<ContextType = ApolloServerContextFn, ParentType extends ResolversParentTypes['Credential'] = ResolversParentTypes['Credential']> = ResolversObject<{
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   ipv4?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
@@ -679,7 +803,11 @@ export type FlightPageTotalsResolvers<ContextType = ApolloServerContextFn, Paren
 }>;
 
 export type FlightStatsResolvers<ContextType = ApolloServerContextFn, ParentType extends ResolversParentTypes['FlightStats'] = ResolversParentTypes['FlightStats']> = ResolversObject<{
+  byAircraft?: Resolver<Array<ResolversTypes['ByAircraftStats']>, ParentType, ContextType>;
+  byAircraftModel?: Resolver<Array<ResolversTypes['ByAircraftModelStats']>, ParentType, ContextType>;
+  byInstructor?: Resolver<Array<ResolversTypes['ByInstructorStats']>, ParentType, ContextType>;
   flightAmount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   totalCOPI?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   totalDC?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   totalFlightTime?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
@@ -773,6 +901,7 @@ export type QueryResolvers<ContextType = ApolloServerContextFn, ParentType exten
   currentPilot?: Resolver<Maybe<ResolversTypes['Pilot']>, ParentType, ContextType>;
   flight?: Resolver<ResolversTypes['Flight'], ParentType, ContextType, RequireFields<QueryFlightArgs, 'id'>>;
   flightStats?: Resolver<ResolversTypes['FlightStats'], ParentType, ContextType>;
+  last3MonthsFlightStats?: Resolver<ResolversTypes['FlightStats'], ParentType, ContextType>;
   lastFlightDate?: Resolver<Maybe<ResolversTypes['Date']>, ParentType, ContextType>;
   ocaiCodes?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType>;
   ownFlights?: Resolver<ResolversTypes['FlightsPage'], ParentType, ContextType, Partial<QueryOwnFlightsArgs>>;
@@ -790,6 +919,10 @@ export type SinglePilotFlightTimeResolvers<ContextType = ApolloServerContextFn, 
 export type Resolvers<ContextType = ApolloServerContextFn> = ResolversObject<{
   Aircraft?: AircraftResolvers<ContextType>;
   AircraftsPage?: AircraftsPageResolvers<ContextType>;
+  BaseFlightStats?: BaseFlightStatsResolvers<ContextType>;
+  ByAircraftModelStats?: ByAircraftModelStatsResolvers<ContextType>;
+  ByAircraftStats?: ByAircraftStatsResolvers<ContextType>;
+  ByInstructorStats?: ByInstructorStatsResolvers<ContextType>;
   Credential?: CredentialResolvers<ContextType>;
   Date?: GraphQLScalarType;
   Email?: EmailResolvers<ContextType>;
@@ -831,6 +964,39 @@ export type AircraftDb = {
   registration: string,
 };
 
+export type ByAircraftModelStatsDb = {
+  aircraftModel: string,
+  flightAmount: number,
+  totalCOPI: number,
+  totalDC: number,
+  totalFlightTime: number,
+  totalInstructor: number,
+  totalPIC: number,
+  _id: string,
+};
+
+export type ByAircraftStatsDb = {
+  aircraft: AircraftDb,
+  flightAmount: number,
+  _id: ObjectId,
+  totalCOPI: number,
+  totalDC: number,
+  totalFlightTime: number,
+  totalInstructor: number,
+  totalPIC: number,
+};
+
+export type ByInstructorStatsDb = {
+  flightAmount: number,
+  _id: ObjectId,
+  instructor: PilotDb,
+  totalCOPI: number,
+  totalDC: number,
+  totalFlightTime: number,
+  totalInstructor: number,
+  totalPIC: number,
+};
+
 export type CredentialDb = {
   _id: ObjectId,
   ipv4: string,
@@ -858,6 +1024,16 @@ export type FlightDb = {
   pilotFunctionTime: PilotFunctionTimeDb,
   remarks: string,
   totalFlightTime: number,
+};
+
+export type FlightStatsDb = {
+  flightAmount: number,
+  id: string,
+  totalCOPI: number,
+  totalDC: number,
+  totalFlightTime: number,
+  totalInstructor: number,
+  totalPIC: number,
 };
 
 export type JunctureDb = {
