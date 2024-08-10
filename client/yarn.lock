@@ -2215,6 +2215,23 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@nivo/circle-packing@npm:^0.84.0":
+  version: 0.84.0
+  resolution: "@nivo/circle-packing@npm:0.84.0"
+  dependencies:
+    "@nivo/colors": 0.84.0
+    "@nivo/core": 0.84.0
+    "@nivo/tooltip": 0.84.0
+    "@react-spring/web": 9.4.5 || ^9.7.2
+    "@types/d3-hierarchy": ^1.1.8
+    d3-hierarchy: ^1.1.8
+    lodash: ^4.17.21
+  peerDependencies:
+    react: ">= 16.14.0 < 19.0.0"
+  checksum: cb94aa27402a32b8cfe2e48a920771bf1b4fea1c778ded5e68ccc490ccdb742838be2e0fdc6d2fe609ab89e168bef07ac9ae3712c301d1e04a08fad68b7875a3
+  languageName: node
+  linkType: hard
+
 "@nivo/colors@npm:0.84.0":
   version: 0.84.0
   resolution: "@nivo/colors@npm:0.84.0"
@@ -2791,6 +2808,13 @@ __metadata:
   version: 1.4.5
   resolution: "@types/d3-format@npm:1.4.5"
   checksum: f284da718785080cc3ee598c3585285c04585e4dc57631aca1051bda43bd6348e8256399b5f8a4f3af99809acedde3a74cd41aebdd4ce4c714f7cc554552e29b
+  languageName: node
+  linkType: hard
+
+"@types/d3-hierarchy@npm:^1.1.8":
+  version: 1.1.11
+  resolution: "@types/d3-hierarchy@npm:1.1.11"
+  checksum: 93b62e70efdf716c519d5ba2284fc9262bfa244d23139b31c83c9d575cacdc1a25f20c0662e257f4d630abdc61354429d94515a50144f0468eb726328e492971
   languageName: node
   linkType: hard
 
@@ -3601,6 +3625,7 @@ __metadata:
     "@n1ru4l/push-pull-async-iterable-iterator": ^3.2.0
     "@n1ru4l/socket-io-graphql-client": ^0.13.0
     "@nivo/bar": ^0.84.0
+    "@nivo/circle-packing": ^0.84.0
     "@nivo/radar": ^0.84.0
     "@nivo/radial-bar": ^0.84.0
     "@tabler/icons-react": ^2.15.0
@@ -3791,6 +3816,13 @@ __metadata:
   version: 1.4.5
   resolution: "d3-format@npm:1.4.5"
   checksum: 1b8b2c0bca182173bccd290a43e8b635a83fc8cfe52ec878c7bdabb997d47daac11f2b175cebbe73f807f782ad655f542bdfe18180ca5eb3498a3a82da1e06ab
+  languageName: node
+  linkType: hard
+
+"d3-hierarchy@npm:^1.1.8":
+  version: 1.1.9
+  resolution: "d3-hierarchy@npm:1.1.9"
+  checksum: 5fd8761c302252cb9abe9ce2a0934fc97104dd0df8d1b5de6472532903416f40e13b4b58d03ce215a0b816d7129c4ed4503bd4fdbc00a130fdcf46a63d734a52
   languageName: node
   linkType: hard
 

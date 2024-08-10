@@ -5,7 +5,7 @@ import { useByAircraftStatsQuery } from "../../api/gqlTypes";
 import { ResponsiveBar } from "@nivo/bar";
 import { useDisclosure } from "@mantine/hooks";
 
-const colors = ["#38bcb2", "#eed312", "#f00", "#0f0"];
+export const colors = ["#38bcb2", "#eed312", "#f00", "#0f0"];
 
 export const AcftStat = () => {
   const [type, setType] = useState("rad");
@@ -50,7 +50,11 @@ export const AcftStat = () => {
                 ],
               })) ?? []
             }
-            valueFormat=">-.2f"
+            valueFormat={(value) => {
+              const h = Math.floor(value);
+              const min = Math.round((value % 1) * 60);
+              return `${h ? `${h}h` : ""} ${min}min`;
+            }}
             padding={0.4}
             cornerRadius={2}
             margin={{ top: 40, right: 200, bottom: 40, left: 40 }}

@@ -28,7 +28,8 @@ export const typeDefs = gql`
     flightAmount: Int! @column
   }
 
-  type ByAircraftStats implements BaseFlightStats @entity {
+  type ByAircraftStats implements BaseFlightStats
+    @entity(additionalFields: [{ path: "flightsIds", type: "ObjectId[]" }]) {
     id: ID! @id
     aircraft: Aircraft! @embedded
     totalDC: Int! @column
@@ -43,7 +44,12 @@ export const typeDefs = gql`
   }
 
   type ByAircraftModelStats implements BaseFlightStats
-    @entity(additionalFields: [{ path: "_id", type: "string" }]) {
+    @entity(
+      additionalFields: [
+        { path: "_id", type: "string" }
+        { path: "flightsIds", type: "ObjectId[]" }
+      ]
+    ) {
     id: ID!
     aircraftModel: String! @column
     totalDC: Int! @column
@@ -57,7 +63,8 @@ export const typeDefs = gql`
     byInstructor: [ByInstructorStats!]!
   }
 
-  type ByInstructorStats implements BaseFlightStats @entity {
+  type ByInstructorStats implements BaseFlightStats
+    @entity(additionalFields: [{ path: "flightsIds", type: "ObjectId[]" }]) {
     id: ID! @id
     instructor: Pilot! @embedded
     totalDC: Int! @column
@@ -71,7 +78,8 @@ export const typeDefs = gql`
     byAircraftModel: [ByAircraftModelStats!]!
   }
 
-  type FlightStats implements BaseFlightStats @entity {
+  type FlightStats implements BaseFlightStats
+    @entity(additionalFields: [{ path: "flightsIds", type: "ObjectId[]" }]) {
     id: ID! @column
     totalDC: Int! @column
     totalPIC: Int! @column
@@ -107,7 +115,7 @@ export const resolvers: Resolvers = {
         await Flights.aggregate<ByAircraftStatsDb>(
           compact([
             mkOwnFlightMatchStage(requester, {
-              pic: parent.instructor._id,
+              _id: { $in: parent.flightsIds },
             }),
             mkFltStatsGroupStage("$aircraft"),
             {
@@ -146,7 +154,7 @@ export const resolvers: Resolvers = {
       return await Flights.aggregate<ByAircraftModelStatsDb>(
         compact([
           mkOwnFlightMatchStage(requester, {
-            instructor: parent.instructor._id,
+            pic: parent.instructor._id,
           }),
           mkFltStatsGroupStage("$aircraft"),
           {
@@ -176,6 +184,19 @@ export const resolvers: Resolvers = {
               totalInstructor: { $sum: "$totalInstructor" },
               totalFlightTime: { $sum: "$totalFlightTime" },
               flightAmount: { $sum: "$flightAmount" },
+              flightsIds: { $push: "$flightsIds" },
+            },
+          },
+          {
+            $addFields: {
+              _id: { $concat: ["$_id", parent._id.toHexString()] },
+              flightsIds: {
+                $reduce: {
+                  input: "$flightsIds",
+                  initialValue: [],
+                  in: { $concatArrays: ["$$value", "$$this"] },
+                },
+              },
             },
           },
           {
@@ -194,29 +215,11 @@ export const resolvers: Resolvers = {
       if (!requester)
         throw new Error("You must be logged in to perform this action");
 
-      const filteredAcfts = (
-        await Aircrafts.aggregate<AircraftDb>([
-          {
-            $addFields: {
-              aircraftModel: { $concat: ["$brand", "__", "$model"] },
-            },
-          },
-          {
-            $match: {
-              aircraftModel: `${parent.aircraft.brand}__${parent.aircraft.model}`,
-            },
-          },
-        ]).toArray()
-      ).map((acft) => acft._id);
-
       return await Flights.aggregate<ByAircraftModelStatsDb>(
         compact([
-          mkOwnFlightMatchStage(requester),
-          {
-            $match: {
-              aircraft: { $in: filteredAcfts },
-            },
-          },
+          mkOwnFlightMatchStage(requester, {
+            _id: { $in: parent.flightsIds },
+          }),
           mkFltStatsGroupStage("$aircraft"),
           {
             $lookup: {
@@ -245,6 +248,19 @@ export const resolvers: Resolvers = {
               totalInstructor: { $sum: "$totalInstructor" },
               totalFlightTime: { $sum: "$totalFlightTime" },
               flightAmount: { $sum: "$flightAmount" },
+              flightsIds: { $push: "$flightsIds" },
+            },
+          },
+          {
+            $addFields: {
+              _id: { $concat: ["$_id", parent._id.toHexString()] },
+              flightsIds: {
+                $reduce: {
+                  input: "$flightsIds",
+                  initialValue: [],
+                  in: { $concatArrays: ["$$value", "$$this"] },
+                },
+              },
             },
           },
           {
@@ -262,7 +278,7 @@ export const resolvers: Resolvers = {
       return await Flights.aggregate<ByInstructorStatsDb>(
         compact([
           mkOwnFlightMatchStage(requester, {
-            aircraft: parent.aircraft._id,
+            _ids: { $in: parent.flightsIds },
             $expr: { $not: { $eq: ["$pic", "$pilot"] } },
           }),
           mkFltStatsGroupStage("$pic"),
@@ -295,23 +311,10 @@ export const resolvers: Resolvers = {
       if (!requester)
         throw new Error("You must be logged in to perform this action");
 
-      const filteredAcfts = (
-        await Aircrafts.aggregate<AircraftDb>([
-          {
-            $addFields: {
-              aircraftModel: { $concat: ["$brand", "__", "$model"] },
-            },
-          },
-          {
-            $match: { aircraftModel: parent._id },
-          },
-        ]).toArray()
-      ).map((acft) => acft._id);
-
       return await Flights.aggregate<ByInstructorStatsDb>(
         compact([
           mkOwnFlightMatchStage(requester, {
-            aircraft: { $in: filteredAcfts },
+            _id: { $in: parent.flightsIds },
             $expr: { $not: { $eq: ["$pic", "$pilot"] } },
           }),
           mkFltStatsGroupStage("$pic"),
@@ -336,14 +339,16 @@ export const resolvers: Resolvers = {
         ])
       ).toArray();
     },
-    byAircraft: async (parent, args, { requester }) => {
+    byAircraft: async (parent, args, { requester }, info) => {
       if (!requester)
         throw new Error("You must be logged in to perform this action");
 
       return (
         await Flights.aggregate<ByAircraftStatsDb>(
           compact([
-            mkOwnFlightMatchStage(requester),
+            mkOwnFlightMatchStage(requester, {
+              _id: { $in: parent.flightsIds },
+            }),
             mkFltStatsGroupStage("$aircraft"),
             {
               $lookup: {
@@ -510,7 +515,7 @@ export const resolvers: Resolvers = {
       if (!requester)
         throw new Error("You must be logged in to perform this action");
       return formatFlightStats(
-        Flights.aggregate<Omit<FlightStats, "id">>([
+        Flights.aggregate<FlightStatsDb>([
           mkOwnFlightMatchStage(requester, {
             "departure.date": {
               $gte: dayjs().subtract(3, "month").toDate(),

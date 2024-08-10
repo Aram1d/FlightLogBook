@@ -351,12 +351,20 @@ export type PilotsPage = {
   total: Scalars['Int'];
 };
 
+export type PlaceTupleStat = {
+  __typename?: 'PlaceTupleStat';
+  arrival: Scalars['String'];
+  departure: Scalars['String'];
+  times: Scalars['Int'];
+};
+
 export type Query = {
   __typename?: 'Query';
   aircraft: Aircraft;
   aircrafts: AircraftsPage;
   currentPilot?: Maybe<Pilot>;
   flight: Flight;
+  flightPlaceStats: Array<PlaceTupleStat>;
   flightStats: FlightStats;
   last3MonthsFlightStats: FlightStats;
   lastFlightDate?: Maybe<Scalars['Date']>;
@@ -574,6 +582,7 @@ export type ResolversTypes = ResolversObject<{
   PilotFunctionTime: ResolverTypeWrapper<PilotFunctionTimeDb>;
   PilotFunctionTimeInput: PilotFunctionTimeInput;
   PilotsPage: ResolverTypeWrapper<Omit<PilotsPage, 'items'> & { items: Array<ResolversTypes['Pilot']> }>;
+  PlaceTupleStat: ResolverTypeWrapper<PlaceTupleStat>;
   Query: ResolverTypeWrapper<{}>;
   SearchInput: SearchInput;
   SinglePilotFlightTime: ResolverTypeWrapper<SinglePilotFlightTime>;
@@ -626,6 +635,7 @@ export type ResolversParentTypes = ResolversObject<{
   PilotFunctionTime: PilotFunctionTimeDb;
   PilotFunctionTimeInput: PilotFunctionTimeInput;
   PilotsPage: Omit<PilotsPage, 'items'> & { items: Array<ResolversParentTypes['Pilot']> };
+  PlaceTupleStat: PlaceTupleStat;
   Query: {};
   SearchInput: SearchInput;
   SinglePilotFlightTime: SinglePilotFlightTime;
@@ -895,11 +905,19 @@ export type PilotsPageResolvers<ContextType = ApolloServerContextFn, ParentType 
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
+export type PlaceTupleStatResolvers<ContextType = ApolloServerContextFn, ParentType extends ResolversParentTypes['PlaceTupleStat'] = ResolversParentTypes['PlaceTupleStat']> = ResolversObject<{
+  arrival?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  departure?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  times?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
 export type QueryResolvers<ContextType = ApolloServerContextFn, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = ResolversObject<{
   aircraft?: Resolver<ResolversTypes['Aircraft'], ParentType, ContextType, RequireFields<QueryAircraftArgs, 'id'>>;
   aircrafts?: Resolver<ResolversTypes['AircraftsPage'], ParentType, ContextType, Partial<QueryAircraftsArgs>>;
   currentPilot?: Resolver<Maybe<ResolversTypes['Pilot']>, ParentType, ContextType>;
   flight?: Resolver<ResolversTypes['Flight'], ParentType, ContextType, RequireFields<QueryFlightArgs, 'id'>>;
+  flightPlaceStats?: Resolver<Array<ResolversTypes['PlaceTupleStat']>, ParentType, ContextType>;
   flightStats?: Resolver<ResolversTypes['FlightStats'], ParentType, ContextType>;
   last3MonthsFlightStats?: Resolver<ResolversTypes['FlightStats'], ParentType, ContextType>;
   lastFlightDate?: Resolver<Maybe<ResolversTypes['Date']>, ParentType, ContextType>;
@@ -940,6 +958,7 @@ export type Resolvers<ContextType = ApolloServerContextFn> = ResolversObject<{
   Pilot?: PilotResolvers<ContextType>;
   PilotFunctionTime?: PilotFunctionTimeResolvers<ContextType>;
   PilotsPage?: PilotsPageResolvers<ContextType>;
+  PlaceTupleStat?: PlaceTupleStatResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
   SinglePilotFlightTime?: SinglePilotFlightTimeResolvers<ContextType>;
 }>;
@@ -973,6 +992,7 @@ export type ByAircraftModelStatsDb = {
   totalInstructor: number,
   totalPIC: number,
   _id: string,
+  flightsIds: ObjectId[],
 };
 
 export type ByAircraftStatsDb = {
@@ -984,6 +1004,7 @@ export type ByAircraftStatsDb = {
   totalFlightTime: number,
   totalInstructor: number,
   totalPIC: number,
+  flightsIds: ObjectId[],
 };
 
 export type ByInstructorStatsDb = {
@@ -995,6 +1016,7 @@ export type ByInstructorStatsDb = {
   totalFlightTime: number,
   totalInstructor: number,
   totalPIC: number,
+  flightsIds: ObjectId[],
 };
 
 export type CredentialDb = {
@@ -1034,6 +1056,7 @@ export type FlightStatsDb = {
   totalFlightTime: number,
   totalInstructor: number,
   totalPIC: number,
+  flightsIds: ObjectId[],
 };
 
 export type JunctureDb = {

@@ -1,3 +1,4 @@
+import React from "react";
 import { Card, Group, Tabs } from "@mantine/core";
 import { useNavigate, useParams } from "react-router-dom";
 import {
@@ -6,6 +7,7 @@ import {
 } from "../../api/gqlTypes";
 import { FlightsSummary } from "./FlightsSummary";
 import { AcftStat } from "./AcftStat";
+import { DcStats } from "./DcStats";
 
 export const FlightStats = () => {
   const navigate = useNavigate();
@@ -16,7 +18,7 @@ export const FlightStats = () => {
   return (
     <Card>
       <Tabs
-        value={tabId}
+        value={tabId ?? "sum"}
         onTabChange={(tabId) =>
           navigate(
             "/" + (["sum", "dc", "acft"].includes(tabId || "") ? tabId : "sum")
@@ -37,6 +39,9 @@ export const FlightStats = () => {
               title="Last 3 months"
             />
           </Group>
+        </Tabs.Panel>
+        <Tabs.Panel value="dc">
+          <DcStats />
         </Tabs.Panel>
         <Tabs.Panel value="acft">
           <AcftStat />

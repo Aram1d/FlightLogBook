@@ -352,12 +352,20 @@ export type PilotsPage = {
   total: Scalars['Int'];
 };
 
+export type PlaceTupleStat = {
+  __typename?: 'PlaceTupleStat';
+  arrival: Scalars['String'];
+  departure: Scalars['String'];
+  times: Scalars['Int'];
+};
+
 export type Query = {
   __typename?: 'Query';
   aircraft: Aircraft;
   aircrafts: AircraftsPage;
   currentPilot?: Maybe<Pilot>;
   flight: Flight;
+  flightPlaceStats: Array<PlaceTupleStat>;
   flightStats: FlightStats;
   last3MonthsFlightStats: FlightStats;
   lastFlightDate?: Maybe<Scalars['Date']>;
@@ -558,6 +566,11 @@ export type ByAircraftStatsQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type ByAircraftStatsQuery = { __typename?: 'Query', flightStats: { __typename?: 'FlightStats', id: string, byAircraft: Array<{ __typename?: 'ByAircraftStats', id: string, totalFlightTime: number, totalDC: number, totalPIC: number, totalCOPI: number, totalInstructor: number, flightAmount: number, aircraft: { __typename?: 'Aircraft', id: string, brand: string, model: string, registration: string } }>, byAircraftModel: Array<{ __typename?: 'ByAircraftModelStats', aircraftModel: string, id: string, totalFlightTime: number, totalDC: number, totalPIC: number, totalCOPI: number, totalInstructor: number, flightAmount: number }> } };
 
+export type ByInstructorStatsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type ByInstructorStatsQuery = { __typename?: 'Query', flightStats: { __typename?: 'FlightStats', id: string, byInstructor: Array<{ __typename?: 'ByInstructorStats', id: string, totalDC: number, instructor: { __typename?: 'Pilot', id: string, firstName: string, lastName: string }, byAircraftModel: Array<{ __typename?: 'ByAircraftModelStats', aircraftModel: string, totalDC: number, byAircraft: Array<{ __typename?: 'ByAircraftStats', totalDC: number, aircraft: { __typename?: 'Aircraft', id: string, brand: string, model: string, registration: string } }> }> }> } };
+
 export type CurrentPilotQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -694,6 +707,11 @@ export const ByAircraftStatsDocument = {"kind":"Document","definitions":[{"kind"
 export function useByAircraftStatsQuery(options?: Omit<Urql.UseQueryArgs<ByAircraftStatsQueryVariables>, 'query'>) {
   return Urql.useQuery<ByAircraftStatsQuery, ByAircraftStatsQueryVariables>({ query: ByAircraftStatsDocument, ...options });
 };
+export const ByInstructorStatsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"byInstructorStats"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"flightStats"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"byInstructor"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"instructor"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"firstName"}},{"kind":"Field","name":{"kind":"Name","value":"lastName"}}]}},{"kind":"Field","name":{"kind":"Name","value":"totalDC"}},{"kind":"Field","name":{"kind":"Name","value":"byAircraftModel"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"aircraftModel"}},{"kind":"Field","name":{"kind":"Name","value":"totalDC"}},{"kind":"Field","name":{"kind":"Name","value":"byAircraft"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"aircraft"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"brand"}},{"kind":"Field","name":{"kind":"Name","value":"model"}},{"kind":"Field","name":{"kind":"Name","value":"registration"}}]}},{"kind":"Field","name":{"kind":"Name","value":"totalDC"}}]}}]}}]}}]}}]}}]} as unknown as DocumentNode;
+
+export function useByInstructorStatsQuery(options?: Omit<Urql.UseQueryArgs<ByInstructorStatsQueryVariables>, 'query'>) {
+  return Urql.useQuery<ByInstructorStatsQuery, ByInstructorStatsQueryVariables>({ query: ByInstructorStatsDocument, ...options });
+};
 export const CurrentPilotDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"CurrentPilot"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"currentPilot"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"username"}},{"kind":"Field","name":{"kind":"Name","value":"firstName"}},{"kind":"Field","name":{"kind":"Name","value":"lastName"}},{"kind":"Field","name":{"kind":"Name","value":"email"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"address"}},{"kind":"Field","name":{"kind":"Name","value":"verified"}}]}},{"kind":"Field","name":{"kind":"Name","value":"lastName"}}]}}]}}]} as unknown as DocumentNode;
 
 export function useCurrentPilotQuery(options?: Omit<Urql.UseQueryArgs<CurrentPilotQueryVariables>, 'query'>) {
@@ -762,6 +780,7 @@ export type GraphCacheKeysConfig = {
   Pilot?: (data: WithTypename<Pilot>) => null | string,
   PilotFunctionTime?: (data: WithTypename<PilotFunctionTime>) => null | string,
   PilotsPage?: (data: WithTypename<PilotsPage>) => null | string,
+  PlaceTupleStat?: (data: WithTypename<PlaceTupleStat>) => null | string,
   SinglePilotFlightTime?: (data: WithTypename<SinglePilotFlightTime>) => null | string
 }
 
@@ -771,6 +790,7 @@ export type GraphCacheResolvers = {
     aircrafts?: GraphCacheResolver<WithTypename<Query>, QueryAircraftsArgs, WithTypename<AircraftsPage> | string>,
     currentPilot?: GraphCacheResolver<WithTypename<Query>, Record<string, never>, WithTypename<Pilot> | string>,
     flight?: GraphCacheResolver<WithTypename<Query>, QueryFlightArgs, WithTypename<Flight> | string>,
+    flightPlaceStats?: GraphCacheResolver<WithTypename<Query>, Record<string, never>, Array<WithTypename<PlaceTupleStat> | string>>,
     flightStats?: GraphCacheResolver<WithTypename<Query>, Record<string, never>, WithTypename<FlightStats> | string>,
     last3MonthsFlightStats?: GraphCacheResolver<WithTypename<Query>, Record<string, never>, WithTypename<FlightStats> | string>,
     lastFlightDate?: GraphCacheResolver<WithTypename<Query>, Record<string, never>, Scalars['Date'] | string>,
@@ -923,6 +943,11 @@ export type GraphCacheResolvers = {
   PilotsPage?: {
     items?: GraphCacheResolver<WithTypename<PilotsPage>, Record<string, never>, Array<WithTypename<Pilot> | string>>,
     total?: GraphCacheResolver<WithTypename<PilotsPage>, Record<string, never>, Scalars['Int'] | string>
+  },
+  PlaceTupleStat?: {
+    arrival?: GraphCacheResolver<WithTypename<PlaceTupleStat>, Record<string, never>, Scalars['String'] | string>,
+    departure?: GraphCacheResolver<WithTypename<PlaceTupleStat>, Record<string, never>, Scalars['String'] | string>,
+    times?: GraphCacheResolver<WithTypename<PlaceTupleStat>, Record<string, never>, Scalars['Int'] | string>
   },
   SinglePilotFlightTime?: {
     multiEngine?: GraphCacheResolver<WithTypename<SinglePilotFlightTime>, Record<string, never>, Scalars['Int'] | string>,

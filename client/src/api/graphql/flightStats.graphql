@@ -39,3 +39,31 @@ query byAircraftStats {
   }
 }
 
+query byInstructorStats {
+  flightStats {
+    id
+    byInstructor{
+      id
+      instructor{
+        id
+        firstName
+        lastName
+      }
+      totalDC
+      byAircraftModel{
+        aircraftModel
+        totalDC
+        byAircraft{
+          aircraft{
+            id
+            brand
+            model
+            registration
+          }
+          totalDC
+        }
+      }
+    }
+  }
+}
+

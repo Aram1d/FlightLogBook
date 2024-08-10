@@ -2,7 +2,6 @@ import { AggregationCursor, ObjectId } from "mongodb";
 import { PilotDb } from "../../gqlTypes";
 
 const emptyFlightStats = {
-  _id: new ObjectId(),
   id: "empty",
   totalDC: 0,
   totalPIC: 0,
@@ -10,6 +9,7 @@ const emptyFlightStats = {
   totalInstructor: 0,
   totalFlightTime: 0,
   flightAmount: 0,
+  flightsIds: [],
 };
 
 export const mkOwnFlightMatchStage = (
@@ -29,6 +29,7 @@ export const flightStatGroupStageFields = {
   totalInstructor: { $sum: "$pilotFunctionTime.instructor" },
   totalFlightTime: { $sum: "$totalFlightTime" },
   flightAmount: { $count: {} },
+  flightsIds: { $push: "$_id" },
 };
 
 export const mkFltStatsGroupStage = (groupExpr?: any) => ({
