@@ -1,6 +1,6 @@
+import { useNavigate } from "react-router-dom";
 import { Avatar, Button, Menu } from "@mantine/core";
 import { useCurrentPilotQuery, useSignOutMutation } from "../../api/gqlTypes";
-import { useNavigate } from "react-router-dom";
 import { UrlRoutes } from "../../routes";
 import { mutationPromiseHandler } from "../../utils/gqlHandlers";
 import { useStore } from "../../utils/useStore";
@@ -8,7 +8,7 @@ import { useStore } from "../../utils/useStore";
 export const UserMenu = () => {
   const navigate = useNavigate();
   const [{ data }] = useCurrentPilotQuery();
-  const setToken = useStore((state) => state.setLoginToken);
+  const setToken = useStore(state => state.setLoginToken);
 
   const currentUser = data?.currentPilot ?? null;
 
@@ -20,7 +20,7 @@ export const UserMenu = () => {
       leftIcon={<Avatar size="sm" radius="xl" />}
       radius="xl"
       sx={{ transform: "none" }}
-      onClick={() => !currentUser && navigate(UrlRoutes.singnin)}
+      onClick={() => !currentUser && navigate(UrlRoutes.signin)}
     >
       {data?.currentPilot
         ? `${data?.currentPilot.firstName} ${data?.currentPilot.lastName}`

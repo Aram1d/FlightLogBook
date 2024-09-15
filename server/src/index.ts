@@ -5,17 +5,17 @@ import { makeExecutableSchema } from "@graphql-tools/schema";
 import cors from "cors";
 import { config } from "dotenv";
 
-import { resolvers, typeDefs } from "./schema.js";
-import { apolloContext, wsServerContext } from "./contextFns.js";
+import { resolvers, typeDefs } from "./schema";
+import { apolloContext, wsServerContext } from "./contextFns";
 
 import { flowRight, isObject } from "lodash-es";
 import { execute as defaultExecute, ExecutionArgs } from "graphql";
 import { Server as IOServer } from "socket.io";
 import { registerSocketIOGraphQLServer } from "@n1ru4l/socket-io-graphql-server";
 import { applyLiveQueryJSONPatchGenerator } from "@n1ru4l/graphql-live-query-patch-json-patch";
-import { live } from "./gqlLive.js";
-import { checkMongoIntegrity, enforceMongoSchema } from "./db/integrity.js";
-import { allCollections } from "./db/db.js";
+import { live } from "./gqlLive";
+import { checkMongoIntegrity, enforceMongoSchema } from "./db/integrity";
+import { allCollections } from "./db/db";
 import * as util from "util";
 util.inspect.defaultOptions.depth = null;
 
@@ -30,7 +30,7 @@ const app = express();
 const server = createServer(app);
 const socketServer = new IOServer(server, {
   cors: { origin: "*" },
-  maxHttpBufferSize: 8e6,
+  maxHttpBufferSize: 8e6
 });
 const schema = makeExecutableSchema({ typeDefs, resolvers });
 
@@ -47,7 +47,7 @@ registerSocketIOGraphQLServer({
       applyLiveQueryJSONPatchGenerator,
       flowRight(
         live.makeExecute,
-        makeLazyContextExecute(async (previous) => {
+        makeLazyContextExecute(async previous => {
           const ctx = await wsServerContext(
             socket.handshake,
             extensions?.token,
@@ -59,14 +59,14 @@ registerSocketIOGraphQLServer({
         })
       )(defaultExecute)
     ),
-    graphQLExecutionParameter: { schema },
-  }),
+    graphQLExecutionParameter: { schema }
+  })
 });
 
 app.use(
   cors({
     origin: true,
-    credentials: true,
+    credentials: true
   })
 );
 
@@ -78,7 +78,7 @@ if (process.env.NODE_ENV === "production")
 
 const apolloServer = new ApolloServer({
   schema,
-  context: apolloContext,
+  context: apolloContext
 });
 
 await apolloServer.start();

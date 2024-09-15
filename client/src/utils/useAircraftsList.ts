@@ -1,25 +1,23 @@
-import { useAircaftsRegsQuery } from "../api/gqlTypes";
-import { uniq } from "lodash-es";
 import { useState } from "react";
+import { uniq } from "lodash-es";
+import { useAircraftsRegsQuery } from "../api/gqlTypes";
 
 export const useAircraftsList = () => {
   const [selectedModel, setSelectedModel] = useState<string | null>(null);
-  const [{ data }] = useAircaftsRegsQuery();
+  const [{ data }] = useAircraftsRegsQuery();
 
-  const acftModels = uniq(
-    data?.aircrafts.items.map((acft) => acft.model) ?? []
-  );
+  const acftModels = uniq(data?.aircrafts.items.map(acft => acft.model) ?? []);
   const acftRegs = selectedModel
-    ? data?.aircrafts.items
-        .filter((acft) => acft.model === selectedModel)
-        .map((acft) => ({
+    ? (data?.aircrafts.items
+        .filter(acft => acft.model === selectedModel)
+        .map(acft => ({
           label: acft.registration,
-          value: acft.id,
-        })) ?? []
-    : data?.aircrafts.items.map((acft) => ({
+          value: acft.id
+        })) ?? [])
+    : (data?.aircrafts.items.map(acft => ({
         label: acft.registration,
-        value: acft.id,
-      })) ?? [];
+        value: acft.id
+      })) ?? []);
 
   return {
     acftModels,
@@ -28,8 +26,8 @@ export const useAircraftsList = () => {
     setSelectedModel,
     setAircraftId: (id: string | null) => {
       setSelectedModel(
-        data?.aircrafts.items.find((acft) => acft.id === id)?.model ?? null
+        data?.aircrafts.items.find(acft => acft.id === id)?.model ?? null
       );
-    },
+    }
   };
 };

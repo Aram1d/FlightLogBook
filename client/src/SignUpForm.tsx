@@ -1,5 +1,5 @@
+import { useNavigate } from "react-router-dom";
 import {
-  Box,
   Button,
   Card,
   Group,
@@ -9,22 +9,21 @@ import {
   SimpleGridBreakpoint,
   Stack,
   TextInput,
-  Title,
+  Title
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { PasswordField } from "./pages/components/PasswordField";
 import { useSignUpMutation } from "./api/gqlTypes";
 import { sha256 } from "js-sha256";
 import { useStore } from "./utils/useStore";
-import { useNavigate } from "react-router-dom";
 
 export const simpleGridBreakpoints: SimpleGridBreakpoint[] = [
   { minWidth: 800, cols: 2, spacing: "sm" },
-  { minWidth: 600, cols: 1, spacing: "sm" },
+  { minWidth: 600, cols: 1, spacing: "sm" }
 ];
 export const SignUpForm = () => {
   const navigate = useNavigate();
-  const { values, getInputProps, errors } = useForm<{
+  const { values, getInputProps } = useForm<{
     username: string;
     firstName: string;
     lastName: string;
@@ -38,12 +37,12 @@ export const SignUpForm = () => {
       lastName: "",
       email: "",
       pwd: "",
-      pwd2: "",
-    },
+      pwd2: ""
+    }
   });
 
-  const [{ data, fetching }, signUp] = useSignUpMutation();
-  const setToken = useStore((s) => s.setLoginToken);
+  const [{ fetching }, signUp] = useSignUpMutation();
+  const setToken = useStore(s => s.setLoginToken);
 
   const onSubmit = () => {
     signUp({
@@ -52,8 +51,8 @@ export const SignUpForm = () => {
       lastName: values.lastName,
       email: values.email,
       pwdHash: sha256(values.pwd),
-      pwdHash2: sha256(values.pwd2),
-    }).then((res) => {
+      pwdHash2: sha256(values.pwd2)
+    }).then(res => {
       if (res.data?.signUp) {
         setToken(res.data.signUp);
         navigate("/");

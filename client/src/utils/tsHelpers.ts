@@ -1,10 +1,10 @@
 /** Union of primitives to skip with deep omit utilities. */
 type Primitive =
   | string
-  | Function
+  | Function //eslint-disable-line @typescript-eslint/no-unsafe-function-type
   | number
   | boolean
-  | Symbol
+  | symbol
   | undefined
   | null;
 
@@ -21,8 +21,8 @@ export type DeepOmit<T, K> = T extends Primitive
         ? TP extends Primitive
           ? TP // leave primitives and functions alone
           : TP extends any[]
-          ? DeepOmitArray<TP, K> // Array special handling
-          : DeepOmit<TP, K>
+            ? DeepOmitArray<TP, K> // Array special handling
+            : DeepOmit<TP, K>
         : never;
     };
 
@@ -39,8 +39,8 @@ export type PartialDeepOmit<T, K> = T extends Primitive
         ? TP extends Primitive
           ? TP // leave primitives and functions alone
           : TP extends any[]
-          ? PartialDeepOmitArray<TP, K> // Array special handling
-          : Partial<PartialDeepOmit<TP, K>>
+            ? PartialDeepOmitArray<TP, K> // Array special handling
+            : Partial<PartialDeepOmit<TP, K>>
         : never;
     }>;
 

@@ -1,7 +1,7 @@
-import { useOcaiCodesQuery } from "../api/gqlTypes";
+import { useCallback } from "react";
 import { useListState } from "@mantine/hooks";
 import { uniq } from "lodash-es";
-import { useCallback } from "react";
+import { useOcaiCodesQuery } from "../api/gqlTypes";
 
 export const useOcaiCodes = () => {
   const [values, { prepend }] = useListState<string>([]);

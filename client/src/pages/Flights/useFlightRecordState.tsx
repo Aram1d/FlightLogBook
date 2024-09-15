@@ -6,7 +6,7 @@ import { z } from "zod";
 import {
   AddFlightInput,
   AircraftClass,
-  useLastFlightDateQuery,
+  useLastFlightDateQuery
 } from "../../api/gqlTypes";
 import { useAircraftsList } from "../../utils/useAircraftsList";
 
@@ -18,11 +18,11 @@ export const useFlightRecordState = () => {
       initialValues: {
         departure: {
           place: "",
-          date: null,
+          date: null
         },
         arrival: {
           place: "",
-          date: null,
+          date: null
         },
         aircraft: "",
         aircraftClass: AircraftClass.SingleEngine,
@@ -30,23 +30,23 @@ export const useFlightRecordState = () => {
         pic: "",
         landings: {
           day: 0,
-          night: 0,
+          night: 0
         },
         ifrApproaches: 0,
         operationalTime: {
           night: 0,
-          ifr: 0,
+          ifr: 0
         },
         pilotFunctionTime: {
           pic: 0,
           coPilot: 0,
           dualCommand: 0,
-          instructor: 0,
+          instructor: 0
         },
         simulatorType: "",
-        remarks: "",
+        remarks: ""
       },
-      validate: (values) => {
+      validate: values => {
         const tft = dayjs(values.arrival.date).diff(
           dayjs(values.departure.date),
           "minute"
@@ -59,7 +59,7 @@ export const useFlightRecordState = () => {
                 .string()
                 .nonempty("Departure place is required")
                 .length(4, "Departure place should have 4 characters"),
-              date: z.date(),
+              date: z.date()
             }),
             arrival: z.object({
               place: z
@@ -71,7 +71,7 @@ export const useFlightRecordState = () => {
                 .min(
                   dayjs(values.departure.date).add(1, "m").toDate(),
                   "Arrival time should be after departure time"
-                ),
+                )
             }),
             aircraft: values.simulatorType
               ? z.string().nullable()
@@ -87,7 +87,7 @@ export const useFlightRecordState = () => {
               .nonempty("PIC is required"),
             landings: z.object({
               day: z.number().min(0, "Landings should be positive"),
-              night: z.number().min(0, "Landings should be positive"),
+              night: z.number().min(0, "Landings should be positive")
             }),
             operationalTime: z.object({
               night: z
@@ -103,7 +103,7 @@ export const useFlightRecordState = () => {
                 .max(
                   tft,
                   "Operational time should not be longer than total flight time"
-                ),
+                )
             }),
             pilotFunctionTime: z.object({
               pic: z
@@ -133,11 +133,11 @@ export const useFlightRecordState = () => {
                 .max(
                   tft,
                   "Instructor time should not be longer than total flight time"
-                ),
-            }),
+                )
+            })
           })
         )(values);
-      },
+      }
     });
 
   useEffect(() => {
@@ -145,10 +145,6 @@ export const useFlightRecordState = () => {
   }, [setFieldValue, data?.lastFlightDate]);
 
   const acftList = useAircraftsList();
-
-  useEffect(() => {
-    console.log(values);
-  }, [values]);
 
   const [adapter, setAdapter] = useState<"a" | "d">("a");
 
@@ -202,8 +198,9 @@ export const useFlightRecordState = () => {
       setFieldValue("aircraft", null);
       acftList.setSelectedModel(null);
     },
-    // @eslint-disable-next-line react-hooks/exhaustive-deps acftType passed as arg
-    [setFieldValue, acftList.setSelectedModel]
+
+    //acftType passed as arg
+    [setFieldValue, acftList.setSelectedModel] // eslint-disable-line react-hooks/exhaustive-deps
   );
 
   return {
@@ -219,14 +216,14 @@ export const useFlightRecordState = () => {
       setSelectedModel: (model: string | null) => {
         acftList.setSelectedModel(model);
         setFieldValue("simulatorType", null);
-      },
+      }
     },
 
     customHandlers: {
       setDepartureTime,
       setArrivalTime,
       setTotalFlightTime,
-      setSimulationAcftType,
-    },
+      setSimulationAcftType
+    }
   };
 };

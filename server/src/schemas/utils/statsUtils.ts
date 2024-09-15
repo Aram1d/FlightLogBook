@@ -1,4 +1,4 @@
-import { AggregationCursor, ObjectId } from "mongodb";
+import { AggregationCursor } from "mongodb";
 import { PilotDb } from "../../gqlTypes";
 
 const emptyFlightStats = {
@@ -9,7 +9,7 @@ const emptyFlightStats = {
   totalInstructor: 0,
   totalFlightTime: 0,
   flightAmount: 0,
-  flightsIds: [],
+  flightsIds: []
 };
 
 export const mkOwnFlightMatchStage = (
@@ -18,8 +18,8 @@ export const mkOwnFlightMatchStage = (
 ) => ({
   $match: {
     $or: [{ pilot: requester._id }, { pic: requester._id }],
-    ...additionalQuery,
-  },
+    ...additionalQuery
+  }
 });
 
 export const flightStatGroupStageFields = {
@@ -29,14 +29,14 @@ export const flightStatGroupStageFields = {
   totalInstructor: { $sum: "$pilotFunctionTime.instructor" },
   totalFlightTime: { $sum: "$totalFlightTime" },
   flightAmount: { $count: {} },
-  flightsIds: { $push: "$_id" },
+  flightsIds: { $push: "$_id" }
 };
 
 export const mkFltStatsGroupStage = (groupExpr?: any) => ({
   $group: {
     _id: groupExpr || null,
-    ...flightStatGroupStageFields,
-  },
+    ...flightStatGroupStageFields
+  }
 });
 
 export const formatFlightStats = async <T>(
@@ -47,6 +47,6 @@ export const formatFlightStats = async <T>(
 
   return {
     id: statsId,
-    ...(stats[0] ?? emptyFlightStats),
+    ...(stats[0] ?? emptyFlightStats)
   };
 };

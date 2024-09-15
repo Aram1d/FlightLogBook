@@ -1,46 +1,45 @@
 import { useEffect } from "react";
 import { Button, Group, Card, Grid, TextInput } from "@mantine/core";
+import { useForm, zodResolver } from "@mantine/form";
 import {
   AddPilotInput,
   useAddPilotMutation,
   usePilotQuery,
-  useUpdatePilotMutation,
+  useUpdatePilotMutation
 } from "../../api/gqlTypes";
-import { useForm, zodResolver } from "@mantine/form";
 import { z } from "zod";
 import { EntityFormProps } from "../../layout/managerFactory";
 import {
   mutationPromiseHandler,
-  withoutTypeName,
+  withoutTypeName
 } from "../../utils/gqlHandlers";
 
 export const PilotForm = ({ form, setForm, isAdd }: EntityFormProps) => {
-  const { getInputProps, onSubmit, setValues, reset, validate } =
-    useForm<AddPilotInput>({
-      initialValues: {
-        username: "",
-        firstName: "",
-        lastName: "",
-        email: "",
-      },
-      validate: zodResolver(
-        z.object({
-          username: z
-            .string()
-            .min(3, "username should have at least 3 characters")
-            .max(30, "username should have at most 30 characters"),
-          firstName: z
-            .string()
-            .min(2, "firstname should have at least 3 characters")
-            .max(30, "firstname should have at most 30 characters"),
-          lastName: z
-            .string()
-            .min(2, "lastname should have at least 3 characters")
-            .max(30, "lastname should have at most 30 characters"),
-          email: z.string().email("Invalid email"),
-        })
-      ),
-    });
+  const { getInputProps, onSubmit, setValues, reset } = useForm<AddPilotInput>({
+    initialValues: {
+      username: "",
+      firstName: "",
+      lastName: "",
+      email: ""
+    },
+    validate: zodResolver(
+      z.object({
+        username: z
+          .string()
+          .min(3, "username should have at least 3 characters")
+          .max(30, "username should have at most 30 characters"),
+        firstName: z
+          .string()
+          .min(2, "firstname should have at least 3 characters")
+          .max(30, "firstname should have at most 30 characters"),
+        lastName: z
+          .string()
+          .min(2, "lastname should have at least 3 characters")
+          .max(30, "lastname should have at most 30 characters"),
+        email: z.string().email("Invalid email")
+      })
+    )
+  });
 
   const [{ data }] = usePilotQuery({ variables: { id: form } });
   useEffect(() => {
@@ -48,10 +47,10 @@ export const PilotForm = ({ form, setForm, isAdd }: EntityFormProps) => {
       const { id, ...pilot } = data.pilot;
       setValues({
         ...withoutTypeName(pilot),
-        email: data.pilot.email.address,
+        email: data.pilot.email.address
       });
     }
-  }, [data?.pilot]);
+  }, [data?.pilot]); //eslint-disable-line react-hooks/exhaustive-deps
 
   const [, addPilot] = useAddPilotMutation();
   const [, updatePilot] = useUpdatePilotMutation();
@@ -59,7 +58,7 @@ export const PilotForm = ({ form, setForm, isAdd }: EntityFormProps) => {
   return (
     <Card sx={{ overflow: "visible" }}>
       <form
-        onSubmit={onSubmit((values) => {
+        onSubmit={onSubmit(values => {
           isAdd
             ? addPilot({ pilot: values }).then(
                 mutationPromiseHandler("Pilot successfully added", reset)

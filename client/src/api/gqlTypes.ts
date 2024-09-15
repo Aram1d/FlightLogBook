@@ -1,4 +1,5 @@
-import { Resolver as GraphCacheResolver, UpdateResolver as GraphCacheUpdateResolver, OptimisticMutationResolver as GraphCacheOptimisticMutationResolver, StorageAdapter as GraphCacheStorageAdapter, CacheExchangeOpts } from '@urql/exchange-graphcache';
+import { offlineExchange } from '@urql/exchange-graphcache';
+import { Resolver as GraphCacheResolver, UpdateResolver as GraphCacheUpdateResolver, OptimisticMutationResolver as GraphCacheOptimisticMutationResolver } from '@urql/exchange-graphcache';
 
 import { DocumentNode } from 'graphql';
 import * as Urql from 'urql';
@@ -480,10 +481,10 @@ export type AircraftsQueryVariables = Exact<{
 
 export type AircraftsQuery = { __typename?: 'Query', aircrafts: { __typename?: 'AircraftsPage', total: number, items: Array<{ __typename?: 'Aircraft', id: string, brand: string, model: string, registration: string, capabilities: Array<AircraftCapabilities> }> } };
 
-export type AircaftsRegsQueryVariables = Exact<{ [key: string]: never; }>;
+export type AircraftsRegsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type AircaftsRegsQuery = { __typename?: 'Query', aircrafts: { __typename?: 'AircraftsPage', items: Array<{ __typename?: 'Aircraft', id: string, registration: string, model: string }> } };
+export type AircraftsRegsQuery = { __typename?: 'Query', aircrafts: { __typename?: 'AircraftsPage', items: Array<{ __typename?: 'Aircraft', id: string, registration: string, model: string }> } };
 
 export type AddAircraftMutationVariables = Exact<{
   aircraft: AddAircraftInput;
@@ -647,10 +648,10 @@ export const AircraftsDocument = {"kind":"Document","definitions":[{"kind":"Oper
 export function useAircraftsQuery(options?: Omit<Urql.UseQueryArgs<AircraftsQueryVariables>, 'query'>) {
   return Urql.useQuery<AircraftsQuery, AircraftsQueryVariables>({ query: AircraftsDocument, ...options });
 };
-export const AircaftsRegsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"AircaftsRegs"},"directives":[{"kind":"Directive","name":{"kind":"Name","value":"live"}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"aircrafts"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"items"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"registration"}},{"kind":"Field","name":{"kind":"Name","value":"model"}}]}}]}}]}}]} as unknown as DocumentNode;
+export const AircraftsRegsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"AircraftsRegs"},"directives":[{"kind":"Directive","name":{"kind":"Name","value":"live"}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"aircrafts"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"items"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"registration"}},{"kind":"Field","name":{"kind":"Name","value":"model"}}]}}]}}]}}]} as unknown as DocumentNode;
 
-export function useAircaftsRegsQuery(options?: Omit<Urql.UseQueryArgs<AircaftsRegsQueryVariables>, 'query'>) {
-  return Urql.useQuery<AircaftsRegsQuery, AircaftsRegsQueryVariables>({ query: AircaftsRegsDocument, ...options });
+export function useAircraftsRegsQuery(options?: Omit<Urql.UseQueryArgs<AircraftsRegsQueryVariables>, 'query'>) {
+  return Urql.useQuery<AircraftsRegsQuery, AircraftsRegsQueryVariables>({ query: AircraftsRegsDocument, ...options });
 };
 export const AddAircraftDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"AddAircraft"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"aircraft"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"AddAircraftInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"addAircraft"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"aircraft"},"value":{"kind":"Variable","name":{"kind":"Name","value":"aircraft"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]} as unknown as DocumentNode;
 
@@ -982,11 +983,9 @@ export type GraphCacheUpdaters = {
   Subscription?: {},
 };
 
-export type GraphCacheConfig = {
-  schema?: CacheExchangeOpts['schema'],
+export type GraphCacheConfig = Parameters<typeof offlineExchange>[0] & {
   updates?: GraphCacheUpdaters,
   keys?: GraphCacheKeysConfig,
   optimistic?: GraphCacheOptimisticUpdaters,
   resolvers?: GraphCacheResolvers,
-  storage?: GraphCacheStorageAdapter
 };

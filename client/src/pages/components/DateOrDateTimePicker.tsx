@@ -1,12 +1,11 @@
+import { ActionIcon } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import {
   DateInput,
   DatePickerInputProps,
-  DateTimePicker,
+  DateTimePicker
 } from "@mantine/dates";
-import { ActionIcon } from "@mantine/core";
 import { IconCalendar } from "@tabler/icons-react";
-import React from "react";
 
 type DateOrDateTimePickerProps = Pick<
   DatePickerInputProps,

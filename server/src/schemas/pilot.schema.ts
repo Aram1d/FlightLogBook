@@ -11,7 +11,7 @@ import {
   castNonNullable,
   emailRegex,
   omitNil,
-  signIn,
+  signIn
 } from "../serverHelpers.js";
 import { castId } from "../db/helpers.js";
 
@@ -90,7 +90,7 @@ export const typeDefs = gql`
 
 export const resolvers: Resolvers = {
   Pilot: {
-    id: ({ _id }) => _id.toHexString(),
+    id: ({ _id }) => _id.toHexString()
   },
 
   Query: {
@@ -98,7 +98,7 @@ export const resolvers: Resolvers = {
       requester?._id ? Pilots.findById(requester?._id) : null,
     pilot: (parent, { id }, { requester }) => {
       if (!requester) throw new AuthenticationError(authMsg.userReq);
-      return Pilots.findById(id).then((pilot) => {
+      return Pilots.findById(id).then(pilot => {
         if (!pilot) throw new UserInputError("Pilote introuvable");
         return pilot;
       });
@@ -107,7 +107,7 @@ export const resolvers: Resolvers = {
     pilots: async (parent, { pager }, { requester }) => {
       if (!requester) throw new AuthenticationError(authMsg.userReq);
       return Pilots.findList({}, pager);
-    },
+    }
   },
   Mutation: {
     addPilot: async (parent, { pilot }, { requester }) => {
@@ -117,7 +117,7 @@ export const resolvers: Resolvers = {
         ...restPilot,
         email: { address: email, verified: false },
         credentials: [],
-        passwords: [],
+        passwords: []
       });
 
       live.invalidate([`Pilot:${newPilot._id.toHexString()}`, `Query.pilots`]);
@@ -137,9 +137,9 @@ export const resolvers: Resolvers = {
           $set: omitNil({
             ...restPilot,
             ...(shouldUpdateEmail && {
-              email: { address: email, verified: false },
-            }),
-          }),
+              email: { address: email, verified: false }
+            })
+          })
         }
       );
       if (!updated.value) throw new UserInputError("Pilot not found");
@@ -169,9 +169,9 @@ export const resolvers: Resolvers = {
         lastName,
         email: { address: email, verified: false },
         credentials: [
-          { _id: new ObjectId(), token, ipv4, userAgent, lastUsed: new Date() },
+          { _id: new ObjectId(), token, ipv4, userAgent, lastUsed: new Date() }
         ],
-        passwords: [{ bcrypt: await hash(pwdHash, 10), createdAt: new Date() }],
+        passwords: [{ bcrypt: await hash(pwdHash, 10), createdAt: new Date() }]
       });
 
       if (!pilot)
@@ -185,7 +185,7 @@ export const resolvers: Resolvers = {
         ? { primaryEmail: login }
         : { username: login.toLowerCase() };
 
-      return Pilots.findOne(userQuerySelector).then(async (pilot) => {
+      return Pilots.findOne(userQuerySelector).then(async pilot => {
         if (!pilot)
           throw new UserInputError("Utilisateur ou mot de passe invalide");
 
@@ -208,10 +208,10 @@ export const resolvers: Resolvers = {
       return Pilots.findOneAndUpdate(
         { _id: requester._id },
         { $pull: { credentials: { token: token } } }
-      ).then((user) => {
+      ).then(user => {
         live.invalidate(`Query.currentUser(uuid:${clientInfo.clientUUID})`);
         return !!user;
       });
-    },
-  },
+    }
+  }
 };

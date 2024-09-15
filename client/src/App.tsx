@@ -1,6 +1,6 @@
 import { useRoutes } from "react-router-dom";
-import { routes } from "./routes";
 import { MantineProvider } from "@mantine/core";
+import { routes } from "./routes";
 
 function App() {
   const routing = useRoutes(routes);
@@ -9,17 +9,17 @@ function App() {
     <MantineProvider
       theme={{
         globalStyles: () => ({
-          body: { margin: 0 },
+          body: { margin: 0 }
         }),
         components: {
           InputWrapper: {
             styles: {
               error: {
-                position: "absolute",
-              },
-            },
-          },
-        },
+                position: "absolute"
+              }
+            }
+          }
+        }
       }}
     >
       {routing}

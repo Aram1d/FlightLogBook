@@ -21,7 +21,7 @@ query Aircrafts($pager: PagerInput) @live {
   }
 }
 
-query AircaftsRegs @live {
+query AircraftsRegs @live {
   aircrafts {
     items {
       id

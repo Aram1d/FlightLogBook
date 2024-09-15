@@ -1,5 +1,5 @@
-import { DataTable, DataTableColumn } from "mantine-datatable";
-import { OwnFlightsQuery, useOwnFlightsQuery } from "../../api/gqlTypes";
+import React, { useMemo } from "react";
+
 import {
   ActionIcon,
   Button,
@@ -7,15 +7,17 @@ import {
   Group,
   Stack,
   Title,
-  Text,
+  Text
 } from "@mantine/core";
+import { DataTable, DataTableColumn } from "mantine-datatable";
+import { IconEdit } from "@tabler/icons-react";
 import { EntityTableProps } from "../../layout/managerFactory";
 import { ArrayElement } from "../../utils/gqlHandlers";
 import dayjs from "dayjs";
 import { timeFormatter } from "../components/DurationInput";
-import { IconEdit } from "@tabler/icons-react";
 import { usePagniation } from "../../utils/usePagniation";
-import React, { useMemo } from "react";
+
+import { OwnFlightsQuery, useOwnFlightsQuery } from "../../api/gqlTypes";
 
 type OwnFlight = ArrayElement<OwnFlightsQuery["ownFlights"]["items"]>;
 type CumulativeTotals = OwnFlightsQuery["ownFlightsTotals"];
@@ -25,14 +27,14 @@ export const FlightTable = ({ setForm }: EntityTableProps) => {
   const [{ data }] = useOwnFlightsQuery({
     variables: {
       pager: {
-        pagination: { page: pagination.page, limit: pagination.recordsPerPage },
-      },
-    },
+        pagination: { page: pagination.page, limit: pagination.recordsPerPage }
+      }
+    }
   });
 
   const loadedFlights = data?.ownFlights.items && [
     ...data.ownFlights.items,
-    data.ownFlightsTotals,
+    data.ownFlightsTotals
   ];
 
   const columns: DataTableColumn<OwnFlight | CumulativeTotals>[] = useMemo(
@@ -41,27 +43,27 @@ export const FlightTable = ({ setForm }: EntityTableProps) => {
         accessor: "departure",
         title: "Departure",
         render: handleRender(
-          (f) =>
+          f =>
             `${f.departure.place} ${dayjs(f.departure.date).format(
               "DD.MM.YYYY HH:mm"
             )}`
-        ),
+        )
       },
       {
         accessor: "arrival",
         title: "Arrival",
         render: handleRender(
-          (f) =>
+          f =>
             `${f.arrival.place} ${dayjs(f.arrival.date).format(
               "DD:MM:YYYY HH:mm"
             )}`
-        ),
+        )
       },
       {
         accessor: "aircraft",
         title: "Aircraft",
         render: handleRender(
-          (f) => f.aircraft?.registration,
+          f => f.aircraft?.registration,
           () => (
             <Stack>
               <Text>Previous</Text>
@@ -69,13 +71,13 @@ export const FlightTable = ({ setForm }: EntityTableProps) => {
               <Text>Cumulated</Text>
             </Stack>
           )
-        ),
+        )
       },
       {
         accessor: "aircraftClass",
         title: "Class",
         render: handleRender(
-          (f) => f.aircraftClass,
+          f => f.aircraftClass,
           ({ singleEngine, multiEngine }) => (
             <Stack>
               <Text>
@@ -92,13 +94,13 @@ export const FlightTable = ({ setForm }: EntityTableProps) => {
               </Text>
             </Stack>
           )
-        ),
+        )
       },
       {
         accessor: "totalFlightTime",
         title: "Total time",
         render: handleRender(
-          (f) => timeFormatter(f.totalFlightTime),
+          f => timeFormatter(f.totalFlightTime),
           ({ totalFlightTime }) => (
             <Stack>
               <Text>{timeFormatter(totalFlightTime.preceding)}</Text>
@@ -106,18 +108,18 @@ export const FlightTable = ({ setForm }: EntityTableProps) => {
               <Text>{timeFormatter(totalFlightTime.actual)}</Text>
             </Stack>
           )
-        ),
+        )
       },
       {
         accessor: "pic",
         title: "PIC",
-        render: handleRender((f) => `${f.pic.lastName}`),
+        render: handleRender(f => `${f.pic.lastName}`)
       },
       {
         accessor: "landings",
         title: "Landings",
         render: handleRender(
-          (f) => `${f.landings.day} D - ${f.landings.night} N `,
+          f => `${f.landings.day} D - ${f.landings.night} N `,
           ({ landings }) => (
             <Stack>
               <Text>
@@ -131,21 +133,20 @@ export const FlightTable = ({ setForm }: EntityTableProps) => {
               </Text>
             </Stack>
           )
-        ),
+        )
       },
       {
         accessor: "operationalTime",
         title: "Operational time",
         render: handleRender(
-          (f) =>
-            `${f.operationalTime.ifr} IFR - ${f.operationalTime.night} Night`
-        ),
+          f => `${f.operationalTime.ifr} IFR - ${f.operationalTime.night} Night`
+        )
       },
       {
         accessor: "picTime",
         title: "Pic",
         render: handleRender(
-          (f) => timeFormatter(f.pilotFunctionTime.pic),
+          f => timeFormatter(f.pilotFunctionTime.pic),
           ({ pic }) => (
             <Stack>
               <Text>{timeFormatter(pic.preceding)}</Text>
@@ -153,13 +154,13 @@ export const FlightTable = ({ setForm }: EntityTableProps) => {
               <Text>{timeFormatter(pic.actual)}</Text>
             </Stack>
           )
-        ),
+        )
       },
       {
         accessor: "copilotTime",
         title: "Cop",
         render: handleRender(
-          (f) => timeFormatter(f.pilotFunctionTime.coPilot),
+          f => timeFormatter(f.pilotFunctionTime.coPilot),
           ({ copilot }) => (
             <Stack>
               <Text>{timeFormatter(copilot.preceding)}</Text>
@@ -167,13 +168,13 @@ export const FlightTable = ({ setForm }: EntityTableProps) => {
               <Text>{timeFormatter(copilot.actual)}</Text>
             </Stack>
           )
-        ),
+        )
       },
       {
         accessor: "dualCommand",
         title: "D.C.",
         render: handleRender(
-          (f) => timeFormatter(f.pilotFunctionTime.dualCommand),
+          f => timeFormatter(f.pilotFunctionTime.dualCommand),
           ({ dualCommand }) => (
             <Stack>
               <Text>{timeFormatter(dualCommand.preceding)}</Text>
@@ -181,13 +182,13 @@ export const FlightTable = ({ setForm }: EntityTableProps) => {
               <Text>{timeFormatter(dualCommand.actual)}</Text>
             </Stack>
           )
-        ),
+        )
       },
       {
         accessor: "Fi",
         title: "F.I.",
         render: handleRender(
-          (f) => timeFormatter(f.pilotFunctionTime.instructor),
+          f => timeFormatter(f.pilotFunctionTime.instructor),
           ({ instructor }) => (
             <Stack>
               <Text>{timeFormatter(instructor.preceding)}</Text>
@@ -195,22 +196,22 @@ export const FlightTable = ({ setForm }: EntityTableProps) => {
               <Text>{timeFormatter(instructor.actual)}</Text>
             </Stack>
           )
-        ),
+        )
       },
       {
         accessor: "remarks",
         title: "Remarks",
-        render: handleRender((f) => `${f.remarks}`),
+        render: handleRender(f => `${f.remarks}`)
       },
       {
         accessor: "id",
         title: "Actions",
-        render: handleRender((flt) => (
+        render: handleRender(flt => (
           <ActionIcon onClick={() => setForm(flt.id)}>
             <IconEdit />
           </ActionIcon>
-        )),
-      },
+        ))
+      }
     ],
     [setForm]
   );
