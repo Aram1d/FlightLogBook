@@ -1,40 +1,39 @@
 import { ActionIcon, Button, Card, Group, Stack, Title } from "@mantine/core";
 import { DataTable, DataTableColumn } from "mantine-datatable";
 import { IconEdit } from "@tabler/icons-react";
-import { Pilot, usePilotsQuery } from "../../api/gqlTypes";
-import { EntityTableProps } from "../../layout/managerFactory";
-
-import { usePagniation } from "../../utils/usePagniation";
+import { Pilot, usePilotsQuery } from "@api";
+import { usePagination } from "@hooks";
+import { EntityTableProps } from "@lib";
 
 export const PilotsTable = ({ setForm }: EntityTableProps) => {
-  const pagination = usePagniation();
+  const pagination = usePagination();
   const [{ data }] = usePilotsQuery({
     variables: {
       pager: {
-        pagination: { page: pagination.page, limit: pagination.recordsPerPage },
-      },
-    },
+        pagination: { page: pagination.page, limit: pagination.recordsPerPage }
+      }
+    }
   });
 
   const columns: DataTableColumn<Omit<Pilot, "credentials" | "passwords">>[] = [
     {
       accessor: "lastName",
-      title: "Last name",
+      title: "Last name"
     },
     {
       accessor: "firstName",
-      title: "First name",
+      title: "First name"
     },
     { accessor: "username" },
     {
       accessor: "actions",
       title: "Actions",
-      render: (pilot) => (
+      render: pilot => (
         <ActionIcon>
           <IconEdit onClick={() => setForm(pilot.id)} />
         </ActionIcon>
-      ),
-    },
+      )
+    }
   ];
 
   return (
@@ -47,6 +46,7 @@ export const PilotsTable = ({ setForm }: EntityTableProps) => {
           </Button>
         </Group>
         <DataTable
+          recordsPerPageOptions={[5, 10, 20]}
           columns={columns}
           records={data?.pilots.items}
           totalRecords={data?.pilots.total}

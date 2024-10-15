@@ -11,23 +11,23 @@ import {
   SimpleGrid,
   Stack,
   Textarea,
-  Title,
+  Title
 } from "@mantine/core";
 import { DatePickerInput } from "@mantine/dates";
 import {
   useAddFlightMutation,
   useUpdateFlightMutation,
   useFlightQuery,
-  usePilotsListQuery,
-} from "../../api/gqlTypes";
-import { useOcaiCodes } from "../../utils/useOcaiCodes";
-import { useFlightRecordState } from "./useFlightRecordState";
-import { DurationInput } from "../components/DurationInput";
+  usePilotsListQuery
+} from "@api";
+import {
+  AircraftClassSC,
+  DateOrDateTimePicker,
+  DurationInput
+} from "@components";
+import { useFlightRecordState, useOcaiCodes } from "@hooks";
 
-import { AircraftClassSC } from "../components/FlightRecord/AircraftClassSC";
-import { mutationPromiseHandler, omitTypename } from "../../utils/gqlHandlers";
-import { DateOrDateTimePicker } from "../components/DateOrDateTimePicker";
-import { EntityFormProps } from "../../layout/managerFactory";
+import { mutationPromiseHandler, omitTypename, EntityFormProps } from "@lib";
 
 type FlightRecordFormProps = { children: React.ReactNode };
 const FlightRecordTitle = ({ children, ...rest }: FlightRecordFormProps) => (
@@ -54,7 +54,7 @@ export const FlightRecordForm = ({ form, setForm, isAdd }: EntityFormProps) => {
     getInputProps,
     onSubmit,
     customHandlers,
-    acftList,
+    acftList
   } = useFlightRecordState();
 
   const {
@@ -62,7 +62,7 @@ export const FlightRecordForm = ({ form, setForm, isAdd }: EntityFormProps) => {
     acftRegs,
     selectedModel,
     setSelectedModel,
-    setAircraftId,
+    setAircraftId
   } = acftList;
 
   const [{ data }] = useFlightQuery({ variables: { id: form }, pause: isAdd });
@@ -74,7 +74,7 @@ export const FlightRecordForm = ({ form, setForm, isAdd }: EntityFormProps) => {
       setValues({
         aircraft: aircraft?.id,
         pic: pic?.id,
-        ...omitTypename(flight),
+        ...omitTypename(flight)
       });
     }
   }, [data?.flight, setValues]);
@@ -86,13 +86,13 @@ export const FlightRecordForm = ({ form, setForm, isAdd }: EntityFormProps) => {
     <Card sx={{ overflow: "visible" }}>
       <Title order={3}>{isAdd ? "Add new flight" : "Edit flight"}</Title>
       <form
-        onSubmit={onSubmit((values) => {
+        onSubmit={onSubmit(values => {
           isAdd
             ? addFlight({ flight: values }).then(
-                mutationPromiseHandler("Flight added", reset),
+                mutationPromiseHandler("Flight added", reset)
               )
             : updateFlight({ id: form, flight: values }).then(
-                mutationPromiseHandler("Flight updated", () => setForm?.(null)),
+                mutationPromiseHandler("Flight updated", () => setForm?.(null))
               );
         })}
       >
@@ -106,11 +106,11 @@ export const FlightRecordForm = ({ form, setForm, isAdd }: EntityFormProps) => {
                 data={ocaiCodes}
                 searchable
                 creatable
-                getCreateLabel={(ocai) => `Add ${ocai.toUpperCase()}`}
+                getCreateLabel={ocai => `Add ${ocai.toUpperCase()}`}
                 onCreate={addOcai}
                 {...getInputProps("departure.place")}
                 searchValue={depSearch}
-                onSearchChange={(v) => setDepSearch(v.toUpperCase())}
+                onSearchChange={v => setDepSearch(v.toUpperCase())}
                 selectOnBlur
               />
               <DateOrDateTimePicker
@@ -129,11 +129,11 @@ export const FlightRecordForm = ({ form, setForm, isAdd }: EntityFormProps) => {
                 data={ocaiCodes}
                 searchable
                 creatable
-                getCreateLabel={(ocai) => `Add ${ocai.toUpperCase()}`}
+                getCreateLabel={ocai => `Add ${ocai.toUpperCase()}`}
                 onCreate={addOcai}
                 {...getInputProps("arrival.place")}
                 searchValue={arrSearch}
-                onSearchChange={(v) => setArrSearch(v.toUpperCase())}
+                onSearchChange={v => setArrSearch(v.toUpperCase())}
                 selectOnBlur
               />
               <DateOrDateTimePicker
@@ -147,7 +147,7 @@ export const FlightRecordForm = ({ form, setForm, isAdd }: EntityFormProps) => {
                     getInputProps("departure.date")
                   ) {
                     getInputProps("arrival.date").onChange(
-                      getInputProps("departure.date").value,
+                      getInputProps("departure.date").value
                     );
                   }
                 }}
@@ -162,7 +162,7 @@ export const FlightRecordForm = ({ form, setForm, isAdd }: EntityFormProps) => {
                 allowDeselect
                 data={acftModels}
                 value={selectedModel}
-                onChange={(v) => {
+                onChange={v => {
                   setSelectedModel(v);
                   getInputProps("aircraft").onChange(null);
                 }}
@@ -171,7 +171,7 @@ export const FlightRecordForm = ({ form, setForm, isAdd }: EntityFormProps) => {
                 label="Registration"
                 data={acftRegs}
                 {...getInputProps("aircraft")}
-                onChange={(v) => {
+                onChange={v => {
                   setAircraftId(v);
                   getInputProps("aircraft").onChange(v);
                 }}
@@ -199,8 +199,8 @@ export const FlightRecordForm = ({ form, setForm, isAdd }: EntityFormProps) => {
                   pilotsList?.pilots.items.map(
                     ({ id, firstName, lastName }) => ({
                       label: `${firstName}  ${lastName}`,
-                      value: id,
-                    }),
+                      value: id
+                    })
                   ) ?? []
                 }
                 {...getInputProps("pic")}
@@ -244,7 +244,7 @@ export const FlightRecordForm = ({ form, setForm, isAdd }: EntityFormProps) => {
                   onSync={() =>
                     setFieldValue(
                       "pilotFunctionTime.pic",
-                      values.totalFlightTime,
+                      values.totalFlightTime
                     )
                   }
                 />
@@ -254,7 +254,7 @@ export const FlightRecordForm = ({ form, setForm, isAdd }: EntityFormProps) => {
                   onSync={() =>
                     setFieldValue(
                       "pilotFunctionTime.coPilot",
-                      values.totalFlightTime,
+                      values.totalFlightTime
                     )
                   }
                 />
@@ -264,7 +264,7 @@ export const FlightRecordForm = ({ form, setForm, isAdd }: EntityFormProps) => {
                   onSync={() =>
                     setFieldValue(
                       "pilotFunctionTime.dualCommand",
-                      values.totalFlightTime,
+                      values.totalFlightTime
                     )
                   }
                 />
@@ -274,7 +274,7 @@ export const FlightRecordForm = ({ form, setForm, isAdd }: EntityFormProps) => {
                   onSync={() =>
                     setFieldValue(
                       "pilotFunctionTime.instructor",
-                      values.totalFlightTime,
+                      values.totalFlightTime
                     )
                   }
                 />
@@ -313,9 +313,9 @@ export const FlightRecordForm = ({ form, setForm, isAdd }: EntityFormProps) => {
               <SegmentedControl
                 data={[
                   { label: "Departure", value: "d" },
-                  { label: "Arrival", value: "a" },
+                  { label: "Arrival", value: "a" }
                 ]}
-                onChange={(v) => setAdapter(v as "d" | "a")}
+                onChange={v => setAdapter(v as "d" | "a")}
                 value={adapter}
               />
             </Stack>

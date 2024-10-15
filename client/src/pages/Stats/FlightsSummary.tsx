@@ -1,6 +1,6 @@
 import { Grid, Skeleton, Stack, Text, Title } from "@mantine/core";
-import { timeFormatter } from "../components/DurationInput";
-import { FlightStats } from "../../api/gqlTypes";
+import { FlightStats } from "@api";
+import { timeFormatter } from "@components";
 
 type FlightsSummaryProps = {
   stats?: Pick<

@@ -1,5 +1,5 @@
 import { Radio, RadioGroupProps, Stack } from "@mantine/core";
-import { AircraftClass } from "../../../api/gqlTypes";
+import { AircraftClass } from "@api";
 
 type AircraftClassSCProps = Omit<
   RadioGroupProps,

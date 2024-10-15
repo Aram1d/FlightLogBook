@@ -1,18 +1,15 @@
 import { useEffect } from "react";
 import { Button, Group, Card, Grid, TextInput } from "@mantine/core";
 import { useForm, zodResolver } from "@mantine/form";
+import { z } from "zod";
 import {
   AddPilotInput,
   useAddPilotMutation,
   usePilotQuery,
-  useUpdatePilotMutation,
-} from "../../api/gqlTypes";
-import { z } from "zod";
-import { EntityFormProps } from "../../layout/managerFactory";
-import {
-  mutationPromiseHandler,
-  withoutTypeName,
-} from "../../utils/gqlHandlers";
+  useUpdatePilotMutation
+} from "@api";
+
+import { EntityFormProps, mutationPromiseHandler, withoutTypeName } from "@lib";
 
 export const PilotForm = ({ form, setForm, isAdd }: EntityFormProps) => {
   const { getInputProps, onSubmit, setValues, reset } = useForm<AddPilotInput>({
@@ -20,7 +17,7 @@ export const PilotForm = ({ form, setForm, isAdd }: EntityFormProps) => {
       username: "",
       firstName: "",
       lastName: "",
-      email: "",
+      email: ""
     },
     validate: zodResolver(
       z.object({
@@ -36,9 +33,9 @@ export const PilotForm = ({ form, setForm, isAdd }: EntityFormProps) => {
           .string()
           .min(2, "lastname should have at least 3 characters")
           .max(30, "lastname should have at most 30 characters"),
-        email: z.string().email("Invalid email"),
-      }),
-    ),
+        email: z.string().email("Invalid email")
+      })
+    )
   });
 
   const [{ data }] = usePilotQuery({ variables: { id: form } });
@@ -47,7 +44,7 @@ export const PilotForm = ({ form, setForm, isAdd }: EntityFormProps) => {
       const { id, ...pilot } = data.pilot;
       setValues({
         ...withoutTypeName(pilot),
-        email: data.pilot.email.address,
+        email: data.pilot.email.address
       });
     }
   }, [data?.pilot]); //eslint-disable-line react-hooks/exhaustive-deps
@@ -58,15 +55,15 @@ export const PilotForm = ({ form, setForm, isAdd }: EntityFormProps) => {
   return (
     <Card sx={{ overflow: "visible" }}>
       <form
-        onSubmit={onSubmit((values) => {
+        onSubmit={onSubmit(values => {
           isAdd
             ? addPilot({ pilot: values }).then(
-                mutationPromiseHandler("Pilot successfully added", reset),
+                mutationPromiseHandler("Pilot successfully added", reset)
               )
             : updatePilot({ id: form, pilot: values }).then(
                 mutationPromiseHandler("Pilot successfully updated", () =>
-                  setForm?.(null),
-                ),
+                  setForm?.(null)
+                )
               );
         })}
       >

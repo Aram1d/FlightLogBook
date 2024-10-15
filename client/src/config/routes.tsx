@@ -1,11 +1,13 @@
 import { RouteObject } from "react-router";
-import { SignUpForm } from "./SignUpForm";
-import { MainLayout } from "./layout/MainLayout";
-import { AircraftsManager } from "./pages/Aircrafts/AircraftManager";
-import { PilotsManager } from "./pages/Pilots/PilotsManager";
-import { SignInForm } from "./SignInForm";
-import { FlightManager } from "./pages/Flights/FlightManager";
-import { FlightStats } from "./pages/Stats";
+import { SignUpForm } from "@components";
+import { SignInForm } from "@components";
+import { MainLayout } from "@layouts";
+import {
+  AircraftsManager,
+  FlightManager,
+  PilotsManager,
+  FlightStats
+} from "@pages";
 
 export enum UrlRoutes {
   signup = "/signup",
@@ -15,7 +17,7 @@ export enum UrlRoutes {
   aircrafts = "/aircrafts",
 
   pilots = "/pilots",
-  dummy = "/dummy",
+  dummy = "/dummy"
 }
 
 export const routes: RouteObject[] = [
@@ -26,19 +28,19 @@ export const routes: RouteObject[] = [
       { path: "/:tabId?", element: <FlightStats /> },
       {
         path: UrlRoutes.flights,
-        element: <FlightManager />,
+        element: <FlightManager />
       },
       { path: UrlRoutes.aircrafts, element: <AircraftsManager /> },
       { path: UrlRoutes.pilots, element: <PilotsManager /> },
       {
         path: UrlRoutes.signup,
-        element: <SignUpForm />,
+        element: <SignUpForm />
       },
-      { path: UrlRoutes.signin, element: <SignInForm /> },
-    ],
+      { path: UrlRoutes.signin, element: <SignInForm /> }
+    ]
   },
   {
     path: UrlRoutes.signup,
-    element: <SignUpForm />,
-  },
+    element: <SignUpForm />
+  }
 ];

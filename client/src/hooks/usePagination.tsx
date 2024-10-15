@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-export const usePagniation = () => {
+export const usePagination = () => {
   const [page, onPageChange] = useState(1);
   const [recordsPerPage, onRecordsPerPageChange] = useState(10);
 
@@ -8,6 +8,6 @@ export const usePagniation = () => {
     page,
     onPageChange,
     recordsPerPage,
-    onRecordsPerPageChange,
+    onRecordsPerPageChange
   };
 };

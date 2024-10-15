@@ -1,21 +1,18 @@
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Card, Group, Tabs } from "@mantine/core";
-import {
-  useFlightStatsQuery,
-  useFromDateFlightStatsQuery,
-} from "../../api/gqlTypes";
+import dayjs from "dayjs";
 import { FlightsSummary } from "./FlightsSummary";
 import { AcftStat } from "./AcftStat";
 import { DcStats } from "./DcStats";
-import dayjs from "dayjs";
+import { useFlightStatsQuery, useFromDateFlightStatsQuery } from "@api";
 
 export const FlightStats = () => {
   const [{ lastMonthDate, last3MonthsDate }] = useState(() => {
     const today = dayjs();
     return {
       lastMonthDate: today.subtract(3, "months").toDate(),
-      last3MonthsDate: today.subtract(1, "month").toDate(),
+      last3MonthsDate: today.subtract(1, "month").toDate()
     };
   });
 
@@ -24,20 +21,20 @@ export const FlightStats = () => {
   const [{ data }] = useFlightStatsQuery();
 
   const [{ data: lastMonth }] = useFromDateFlightStatsQuery({
-    variables: { date: lastMonthDate },
+    variables: { date: lastMonthDate }
   });
 
   const [{ data: last3Months }] = useFromDateFlightStatsQuery({
-    variables: { date: last3MonthsDate },
+    variables: { date: last3MonthsDate }
   });
 
   return (
     <Card>
       <Tabs
         value={tabId ?? "sum"}
-        onTabChange={(tabId) =>
+        onTabChange={tabId =>
           navigate(
-            "/" + (["sum", "dc", "acft"].includes(tabId || "") ? tabId : "sum"),
+            "/" + (["sum", "dc", "acft"].includes(tabId || "") ? tabId : "sum")
           )
         }
       >

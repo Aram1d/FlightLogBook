@@ -9,17 +9,17 @@ import {
   Header as MantineHeader,
   HeaderProps,
   Text,
-  ThemeIcon,
+  ThemeIcon
 } from "@mantine/core";
 import {
   IconBrandGithubCopilot,
   IconChartDots,
   IconPlane,
-  IconPlaneDeparture,
+  IconPlaneDeparture
 } from "@tabler/icons-react";
-import { UserMenu } from "../pages/components/UserMenu";
-import { MAX_WIDTH } from "./MainLayout";
-import { UrlRoutes } from "../routes";
+import { UrlRoutes } from "@config";
+import { UserMenu } from "@components";
+import { MAX_WIDTH } from "@layouts";
 
 export const Header = (props: Omit<HeaderProps, "children">) => (
   <MantineHeader height={props.height} p="xs">
@@ -67,7 +67,7 @@ export const HeaderButton = ({ color, icon, label, to }: HeaderButtonProps) => (
   <Anchor
     component={Link}
     to={to}
-    sx={(t) => ({
+    sx={t => ({
       display: "block",
       padding: t.spacing.xs,
       borderRadius: t.radius.sm,
@@ -75,8 +75,8 @@ export const HeaderButton = ({ color, icon, label, to }: HeaderButtonProps) => (
 
       "&:hover": {
         backgroundColor:
-          t.colorScheme === "dark" ? t.colors.dark[6] : t.colors.gray[0],
-      },
+          t.colorScheme === "dark" ? t.colors.dark[6] : t.colors.gray[0]
+      }
     })}
   >
     <Group>

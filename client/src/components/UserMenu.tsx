@@ -1,14 +1,14 @@
 import { useNavigate } from "react-router-dom";
 import { Avatar, Button, Menu } from "@mantine/core";
-import { useCurrentPilotQuery, useSignOutMutation } from "../../api/gqlTypes";
-import { UrlRoutes } from "../../routes";
-import { mutationPromiseHandler } from "../../utils/gqlHandlers";
-import { useStore } from "../../utils/useStore";
+import { UrlRoutes } from "@config";
+import { useCurrentPilotQuery, useSignOutMutation } from "@api";
+import { useStore } from "@hooks";
+import { mutationPromiseHandler } from "@lib";
 
 export const UserMenu = () => {
   const navigate = useNavigate();
   const [{ data }] = useCurrentPilotQuery();
-  const setToken = useStore((state) => state.setLoginToken);
+  const setToken = useStore(state => state.setLoginToken);
 
   const currentUser = data?.currentPilot ?? null;
 
@@ -35,7 +35,7 @@ export const UserMenu = () => {
         <Menu.Item
           onClick={() =>
             signOut({}).then(
-              mutationPromiseHandler("Good bye!", () => setToken("")),
+              mutationPromiseHandler("Good bye!", () => setToken(""))
             )
           }
         >

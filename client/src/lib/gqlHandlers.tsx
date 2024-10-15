@@ -1,14 +1,14 @@
 import React from "react";
 import { showNotification } from "@mantine/notifications";
 import { CombinedError, OperationResult } from "urql";
-import { DeepOmit } from "./tsHelpers";
 import { cloneDeep } from "lodash-es";
+import { DeepOmit } from "@lib";
 
 export const successNotification = (msg: React.ReactNode) =>
   showNotification({
     title: "Succès:",
     color: "green",
-    message: msg,
+    message: msg
   });
 export const urqlErrorNotification = (err: CombinedError) => {
   showNotification({
@@ -16,7 +16,7 @@ export const urqlErrorNotification = (err: CombinedError) => {
     color: "red",
     message: err?.networkError
       ? err.networkError.message
-      : err.graphQLErrors[0].message,
+      : err.graphQLErrors[0].message
   });
 };
 
@@ -36,7 +36,7 @@ export const omitTypename = <T extends Record<string, any>>(arg: T) => {
 export const mutationPromiseHandler =
   <T1, T2 extends Record<string, any>>(
     successMsg: string,
-    successCb?: (arg: T1) => void,
+    successCb?: (arg: T1) => void
   ) =>
   ({ data, error }: OperationResult<T1, T2>) => {
     if (error) {

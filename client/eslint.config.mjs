@@ -42,10 +42,13 @@ export default [
             "^mantine-.*",
             "@tabler/icons-react",
             ".*",
+            "@api$",
             "^@config/.*$",
             "^@components$",
             "^@hooks$",
-            "^@utils/.*$",
+            "@layouts$",
+            "@lib$",
+            "^@pages$",
             "^[.]{1,2}/.*.css$"
           ]
         }
