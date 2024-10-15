@@ -366,7 +366,7 @@ export type Query = {
   flight: Flight;
   flightPlaceStats: Array<PlaceTupleStat>;
   flightStats: FlightStats;
-  last3MonthsFlightStats: FlightStats;
+  fromDateFlightStats: FlightStats;
   lastFlightDate?: Maybe<Scalars['Date']>;
   ocaiCodes: Array<Scalars['String']>;
   ownFlights: FlightsPage;
@@ -388,6 +388,11 @@ export type QueryAircraftsArgs = {
 
 export type QueryFlightArgs = {
   id: Scalars['ID'];
+};
+
+
+export type QueryFromDateFlightStatsArgs = {
+  date?: InputMaybe<Scalars['Date']>;
 };
 
 
@@ -919,7 +924,7 @@ export type QueryResolvers<ContextType = ApolloServerContextFn, ParentType exten
   flight?: Resolver<ResolversTypes['Flight'], ParentType, ContextType, RequireFields<QueryFlightArgs, 'id'>>;
   flightPlaceStats?: Resolver<Array<ResolversTypes['PlaceTupleStat']>, ParentType, ContextType>;
   flightStats?: Resolver<ResolversTypes['FlightStats'], ParentType, ContextType>;
-  last3MonthsFlightStats?: Resolver<ResolversTypes['FlightStats'], ParentType, ContextType>;
+  fromDateFlightStats?: Resolver<ResolversTypes['FlightStats'], ParentType, ContextType, Partial<QueryFromDateFlightStatsArgs>>;
   lastFlightDate?: Resolver<Maybe<ResolversTypes['Date']>, ParentType, ContextType>;
   ocaiCodes?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType>;
   ownFlights?: Resolver<ResolversTypes['FlightsPage'], ParentType, ContextType, Partial<QueryOwnFlightsArgs>>;

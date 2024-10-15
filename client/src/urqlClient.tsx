@@ -49,7 +49,8 @@ export const createUrqlClient = () =>
             PilotFunctionTime: () => null,
             Landings: () => null,
             Juncture: () => null
-          }
+          },
+          storage: null as any
         })
       ),
       customScalarsExchange({

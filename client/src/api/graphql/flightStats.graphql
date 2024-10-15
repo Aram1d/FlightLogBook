@@ -14,8 +14,8 @@ query FlightStats {
   }
 }
 
-query Last3MonthsStats {
-  last3MonthsFlightStats {
+query FromDateFlightStats($date: Date!) {
+  fromDateFlightStats(date: $date) {
     ...AllStats
   }
 }
@@ -23,8 +23,8 @@ query Last3MonthsStats {
 query byAircraftStats {
   flightStats {
     id
-    byAircraft{
-      aircraft{
+    byAircraft {
+      aircraft {
         id
         brand
         model
@@ -32,7 +32,7 @@ query byAircraftStats {
       }
       ...AllStats
     }
-    byAircraftModel{
+    byAircraftModel {
       aircraftModel
       ...AllStats
     }
@@ -42,19 +42,19 @@ query byAircraftStats {
 query byInstructorStats {
   flightStats {
     id
-    byInstructor{
+    byInstructor {
       id
-      instructor{
+      instructor {
         id
         firstName
         lastName
       }
       totalDC
-      byAircraftModel{
+      byAircraftModel {
         aircraftModel
         totalDC
-        byAircraft{
-          aircraft{
+        byAircraft {
+          aircraft {
             id
             brand
             model
@@ -66,4 +66,3 @@ query byInstructorStats {
     }
   }
 }
-

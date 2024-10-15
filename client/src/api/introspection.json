@@ -3660,9 +3660,22 @@
             "deprecationReason": null
           },
           {
-            "name": "last3MonthsFlightStats",
+            "name": "fromDateFlightStats",
             "description": null,
-            "args": [],
+            "args": [
+              {
+                "name": "date",
+                "description": null,
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Date",
+                  "ofType": null
+                },
+                "defaultValue": null,
+                "isDeprecated": false,
+                "deprecationReason": null
+              }
+            ],
             "type": {
               "kind": "NON_NULL",
               "name": null,

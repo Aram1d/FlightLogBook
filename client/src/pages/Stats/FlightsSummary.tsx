@@ -3,7 +3,10 @@ import { timeFormatter } from "../components/DurationInput";
 import { FlightStats } from "../../api/gqlTypes";
 
 type FlightsSummaryProps = {
-  stats?: Omit<FlightStats, "totalCOPI" | "totalInstructor">;
+  stats?: Pick<
+    FlightStats,
+    "totalFlightTime" | "totalPIC" | "totalDC" | "flightAmount"
+  >;
   title: React.ReactNode;
 };
 

@@ -6,14 +6,14 @@ import {
   ByInstructorStatsDb,
   FlightStats,
   FlightStatsDb,
-  Resolvers,
+  Resolvers
 } from "../gqlTypes.js";
 import { Aircrafts, Flights } from "../db/db.js";
 import dayjs from "dayjs";
 import {
   formatFlightStats,
   mkFltStatsGroupStage,
-  mkOwnFlightMatchStage,
+  mkOwnFlightMatchStage
 } from "./utils/statsUtils.js";
 import { compact } from "lodash-es";
 
@@ -99,13 +99,13 @@ export const typeDefs = gql`
 
   extend type Query {
     flightStats: FlightStats!
-    last3MonthsFlightStats: FlightStats!
+    fromDateFlightStats(date: Date): FlightStats!
   }
 `;
 
 export const resolvers: Resolvers = {
   ByInstructorStats: {
-    id: (parent) => parent._id.toHexString(),
+    id: parent => parent._id.toHexString(),
 
     byAircraft: async (parent, args, { requester }) => {
       if (!requester)
@@ -115,7 +115,7 @@ export const resolvers: Resolvers = {
         await Flights.aggregate<ByAircraftStatsDb>(
           compact([
             mkOwnFlightMatchStage(requester, {
-              _id: { $in: parent.flightsIds },
+              _id: { $in: parent.flightsIds }
             }),
             mkFltStatsGroupStage("$aircraft"),
             {
@@ -123,26 +123,26 @@ export const resolvers: Resolvers = {
                 from: "Aircrafts",
                 localField: "_id",
                 foreignField: "_id",
-                as: "aircraft",
-              },
+                as: "aircraft"
+              }
             },
             {
               $set: {
-                aircraft: { $first: "$aircraft" },
-              },
+                aircraft: { $first: "$aircraft" }
+              }
             },
             {
               $sort: {
-                totalFlightTime: -1,
-              },
-            },
+                totalFlightTime: -1
+              }
+            }
           ])
         ).toArray()
       ).map(({ _id, ...rest }) => {
         return {
           _id,
           id: _id.toHexString(),
-          ...rest,
+          ...rest
         };
       });
     },
@@ -154,7 +154,7 @@ export const resolvers: Resolvers = {
       return await Flights.aggregate<ByAircraftModelStatsDb>(
         compact([
           mkOwnFlightMatchStage(requester, {
-            pic: parent.instructor._id,
+            pic: parent.instructor._id
           }),
           mkFltStatsGroupStage("$aircraft"),
           {
@@ -162,21 +162,21 @@ export const resolvers: Resolvers = {
               from: "Aircrafts",
               localField: "_id",
               foreignField: "_id",
-              as: "aircraft",
-            },
+              as: "aircraft"
+            }
           },
           {
             $set: {
-              aircraft: { $first: "$aircraft" },
-            },
+              aircraft: { $first: "$aircraft" }
+            }
           },
           {
             $group: {
               _id: { $concat: ["$aircraft.brand", "__", "$aircraft.model"] },
               aircraftModel: {
                 $first: {
-                  $concat: ["$aircraft.brand", " ", "$aircraft.model"],
-                },
+                  $concat: ["$aircraft.brand", " ", "$aircraft.model"]
+                }
               },
               totalDC: { $sum: "$totalDC" },
               totalPIC: { $sum: "$totalPIC" },
@@ -184,8 +184,8 @@ export const resolvers: Resolvers = {
               totalInstructor: { $sum: "$totalInstructor" },
               totalFlightTime: { $sum: "$totalFlightTime" },
               flightAmount: { $sum: "$flightAmount" },
-              flightsIds: { $push: "$flightsIds" },
-            },
+              flightsIds: { $push: "$flightsIds" }
+            }
           },
           {
             $addFields: {
@@ -194,23 +194,23 @@ export const resolvers: Resolvers = {
                 $reduce: {
                   input: "$flightsIds",
                   initialValue: [],
-                  in: { $concatArrays: ["$$value", "$$this"] },
-                },
-              },
-            },
+                  in: { $concatArrays: ["$$value", "$$this"] }
+                }
+              }
+            }
           },
           {
             $sort: {
-              totalFlightTime: -1,
-            },
-          },
+              totalFlightTime: -1
+            }
+          }
         ])
       ).toArray();
-    },
+    }
   },
 
   ByAircraftStats: {
-    id: (parent) => parent._id.toHexString(),
+    id: parent => parent._id.toHexString(),
     byAircraftModel: async (parent, args, { requester }) => {
       if (!requester)
         throw new Error("You must be logged in to perform this action");
@@ -218,7 +218,7 @@ export const resolvers: Resolvers = {
       return await Flights.aggregate<ByAircraftModelStatsDb>(
         compact([
           mkOwnFlightMatchStage(requester, {
-            _id: { $in: parent.flightsIds },
+            _id: { $in: parent.flightsIds }
           }),
           mkFltStatsGroupStage("$aircraft"),
           {
@@ -226,21 +226,21 @@ export const resolvers: Resolvers = {
               from: "Aircrafts",
               localField: "_id",
               foreignField: "_id",
-              as: "aircraft",
-            },
+              as: "aircraft"
+            }
           },
           {
             $set: {
-              aircraft: { $first: "$aircraft" },
-            },
+              aircraft: { $first: "$aircraft" }
+            }
           },
           {
             $group: {
               _id: { $concat: ["$aircraft.brand", "__", "$aircraft.model"] },
               aircraftModel: {
                 $first: {
-                  $concat: ["$aircraft.brand", " ", "$aircraft.model"],
-                },
+                  $concat: ["$aircraft.brand", " ", "$aircraft.model"]
+                }
               },
               totalDC: { $sum: "$totalDC" },
               totalPIC: { $sum: "$totalPIC" },
@@ -248,8 +248,8 @@ export const resolvers: Resolvers = {
               totalInstructor: { $sum: "$totalInstructor" },
               totalFlightTime: { $sum: "$totalFlightTime" },
               flightAmount: { $sum: "$flightAmount" },
-              flightsIds: { $push: "$flightsIds" },
-            },
+              flightsIds: { $push: "$flightsIds" }
+            }
           },
           {
             $addFields: {
@@ -258,16 +258,16 @@ export const resolvers: Resolvers = {
                 $reduce: {
                   input: "$flightsIds",
                   initialValue: [],
-                  in: { $concatArrays: ["$$value", "$$this"] },
-                },
-              },
-            },
+                  in: { $concatArrays: ["$$value", "$$this"] }
+                }
+              }
+            }
           },
           {
             $sort: {
-              totalFlightTime: -1,
-            },
-          },
+              totalFlightTime: -1
+            }
+          }
         ])
       ).toArray();
     },
@@ -279,7 +279,7 @@ export const resolvers: Resolvers = {
         compact([
           mkOwnFlightMatchStage(requester, {
             _ids: { $in: parent.flightsIds },
-            $expr: { $not: { $eq: ["$pic", "$pilot"] } },
+            $expr: { $not: { $eq: ["$pic", "$pilot"] } }
           }),
           mkFltStatsGroupStage("$pic"),
           {
@@ -287,26 +287,26 @@ export const resolvers: Resolvers = {
               from: "Pilots",
               localField: "_id",
               foreignField: "_id",
-              as: "instructor",
-            },
+              as: "instructor"
+            }
           },
           {
             $set: {
-              instructor: { $first: "$instructor" },
-            },
+              instructor: { $first: "$instructor" }
+            }
           },
           {
             $sort: {
-              totalFlightTime: -1,
-            },
-          },
+              totalFlightTime: -1
+            }
+          }
         ])
       ).toArray();
-    },
+    }
   },
 
   ByAircraftModelStats: {
-    id: (parent) => parent._id,
+    id: parent => parent._id,
     byInstructor: async (parent, args, { requester }) => {
       if (!requester)
         throw new Error("You must be logged in to perform this action");
@@ -315,7 +315,7 @@ export const resolvers: Resolvers = {
         compact([
           mkOwnFlightMatchStage(requester, {
             _id: { $in: parent.flightsIds },
-            $expr: { $not: { $eq: ["$pic", "$pilot"] } },
+            $expr: { $not: { $eq: ["$pic", "$pilot"] } }
           }),
           mkFltStatsGroupStage("$pic"),
           {
@@ -323,19 +323,19 @@ export const resolvers: Resolvers = {
               from: "Pilots",
               localField: "_id",
               foreignField: "_id",
-              as: "instructor",
-            },
+              as: "instructor"
+            }
           },
           {
             $set: {
-              instructor: { $first: "$instructor" },
-            },
+              instructor: { $first: "$instructor" }
+            }
           },
           {
             $sort: {
-              totalFlightTime: -1,
-            },
-          },
+              totalFlightTime: -1
+            }
+          }
         ])
       ).toArray();
     },
@@ -347,7 +347,7 @@ export const resolvers: Resolvers = {
         await Flights.aggregate<ByAircraftStatsDb>(
           compact([
             mkOwnFlightMatchStage(requester, {
-              _id: { $in: parent.flightsIds },
+              _id: { $in: parent.flightsIds }
             }),
             mkFltStatsGroupStage("$aircraft"),
             {
@@ -355,29 +355,29 @@ export const resolvers: Resolvers = {
                 from: "Aircrafts",
                 localField: "_id",
                 foreignField: "_id",
-                as: "aircraft",
-              },
+                as: "aircraft"
+              }
             },
             {
               $set: {
-                aircraft: { $first: "$aircraft" },
-              },
+                aircraft: { $first: "$aircraft" }
+              }
             },
             {
               $sort: {
-                totalFlightTime: -1,
-              },
-            },
+                totalFlightTime: -1
+              }
+            }
           ])
         ).toArray()
       ).map(({ _id, ...rest }) => {
         return {
           _id,
           id: _id.toHexString(),
-          ...rest,
+          ...rest
         };
       });
-    },
+    }
   },
 
   FlightStats: {
@@ -395,26 +395,26 @@ export const resolvers: Resolvers = {
                 from: "Aircrafts",
                 localField: "_id",
                 foreignField: "_id",
-                as: "aircraft",
-              },
+                as: "aircraft"
+              }
             },
             {
               $set: {
-                aircraft: { $first: "$aircraft" },
-              },
+                aircraft: { $first: "$aircraft" }
+              }
             },
             {
               $sort: {
-                totalFlightTime: -1,
-              },
-            },
+                totalFlightTime: -1
+              }
+            }
           ])
         ).toArray()
       ).map(({ _id, ...rest }) => {
         return {
           _id,
           id: _id.toHexString(),
-          ...rest,
+          ...rest
         };
       });
     },
@@ -432,35 +432,35 @@ export const resolvers: Resolvers = {
               from: "Aircrafts",
               localField: "_id",
               foreignField: "_id",
-              as: "aircraft",
-            },
+              as: "aircraft"
+            }
           },
           {
             $set: {
-              aircraft: { $first: "$aircraft" },
-            },
+              aircraft: { $first: "$aircraft" }
+            }
           },
           {
             $group: {
               _id: { $concat: ["$aircraft.brand", "__", "$aircraft.model"] },
               aircraftModel: {
                 $first: {
-                  $concat: ["$aircraft.brand", " ", "$aircraft.model"],
-                },
+                  $concat: ["$aircraft.brand", " ", "$aircraft.model"]
+                }
               },
               totalDC: { $sum: "$totalDC" },
               totalPIC: { $sum: "$totalPIC" },
               totalCOPI: { $sum: "$totalCOPI" },
               totalInstructor: { $sum: "$totalInstructor" },
               totalFlightTime: { $sum: "$totalFlightTime" },
-              flightAmount: { $sum: "$flightAmount" },
-            },
+              flightAmount: { $sum: "$flightAmount" }
+            }
           },
           {
             $sort: {
-              totalFlightTime: -1,
-            },
-          },
+              totalFlightTime: -1
+            }
+          }
         ])
       ).toArray();
     },
@@ -472,7 +472,7 @@ export const resolvers: Resolvers = {
       return await Flights.aggregate<ByInstructorStatsDb>(
         compact([
           mkOwnFlightMatchStage(requester, {
-            $expr: { $not: { $eq: ["$pic", "$pilot"] } },
+            $expr: { $not: { $eq: ["$pic", "$pilot"] } }
           }),
           mkFltStatsGroupStage("$pic"),
           {
@@ -480,22 +480,22 @@ export const resolvers: Resolvers = {
               from: "Pilots",
               localField: "_id",
               foreignField: "_id",
-              as: "instructor",
-            },
+              as: "instructor"
+            }
           },
           {
             $set: {
-              instructor: { $first: "$instructor" },
-            },
+              instructor: { $first: "$instructor" }
+            }
           },
           {
             $sort: {
-              totalFlightTime: -1,
-            },
-          },
+              totalFlightTime: -1
+            }
+          }
         ])
       ).toArray();
-    },
+    }
   },
 
   Query: {
@@ -506,25 +506,25 @@ export const resolvers: Resolvers = {
       return formatFlightStats(
         Flights.aggregate<FlightStatsDb>([
           mkOwnFlightMatchStage(requester),
-          mkFltStatsGroupStage(),
+          mkFltStatsGroupStage()
         ]),
         `${requester._id.toHexString()}-total`
       );
     },
-    last3MonthsFlightStats: async (parent, args, { requester }) => {
+    fromDateFlightStats: async (parent, { date }, { requester }) => {
       if (!requester)
         throw new Error("You must be logged in to perform this action");
       return formatFlightStats(
         Flights.aggregate<FlightStatsDb>([
           mkOwnFlightMatchStage(requester, {
             "departure.date": {
-              $gte: dayjs().subtract(3, "month").toDate(),
-            },
+              $gte: date
+            }
           }),
-          mkFltStatsGroupStage(),
+          mkFltStatsGroupStage()
         ]),
-        `${requester._id.toHexString()}-3months`
+        `${requester._id.toHexString()}-${date.toISOString()}`
       );
-    },
-  },
+    }
+  }
 };
