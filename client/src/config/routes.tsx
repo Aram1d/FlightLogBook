@@ -6,7 +6,7 @@ import {
   AircraftsManager,
   FlightManager,
   PilotsManager,
-  FlightStats
+  FlightStats,
 } from "@pages";
 
 export enum UrlRoutes {
@@ -17,7 +17,7 @@ export enum UrlRoutes {
   aircrafts = "/aircrafts",
 
   pilots = "/pilots",
-  dummy = "/dummy"
+  dummy = "/dummy",
 }
 
 export const routes: RouteObject[] = [
@@ -28,19 +28,19 @@ export const routes: RouteObject[] = [
       { path: "/:tabId?", element: <FlightStats /> },
       {
         path: UrlRoutes.flights,
-        element: <FlightManager />
+        element: <FlightManager />,
       },
       { path: UrlRoutes.aircrafts, element: <AircraftsManager /> },
       { path: UrlRoutes.pilots, element: <PilotsManager /> },
       {
         path: UrlRoutes.signup,
-        element: <SignUpForm />
+        element: <SignUpForm />,
       },
-      { path: UrlRoutes.signin, element: <SignInForm /> }
-    ]
+      { path: UrlRoutes.signin, element: <SignInForm /> },
+    ],
   },
   {
     path: UrlRoutes.signup,
-    element: <SignUpForm />
-  }
+    element: <SignUpForm />,
+  },
 ];

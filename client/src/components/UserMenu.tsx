@@ -8,7 +8,7 @@ import { mutationPromiseHandler } from "@lib";
 export const UserMenu = () => {
   const navigate = useNavigate();
   const [{ data }] = useCurrentPilotQuery();
-  const setToken = useStore(state => state.setLoginToken);
+  const setToken = useStore((state) => state.setLoginToken);
 
   const currentUser = data?.currentPilot ?? null;
 
@@ -35,7 +35,7 @@ export const UserMenu = () => {
         <Menu.Item
           onClick={() =>
             signOut({}).then(
-              mutationPromiseHandler("Good bye!", () => setToken(""))
+              mutationPromiseHandler("Good bye!", () => setToken("")),
             )
           }
         >

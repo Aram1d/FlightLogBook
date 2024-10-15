@@ -5,7 +5,7 @@ import {
   Card,
   Group,
   Stack,
-  Title
+  Title,
 } from "@mantine/core";
 import { DataTable, DataTableColumn } from "mantine-datatable";
 import { IconEdit } from "@tabler/icons-react";
@@ -20,38 +20,38 @@ export const AircraftsTable = ({ setForm }: EntityTableProps) => {
       pager: {
         pagination: {
           page: pagination.page,
-          limit: pagination.recordsPerPage
-        }
-      }
-    }
+          limit: pagination.recordsPerPage,
+        },
+      },
+    },
   });
 
   const columns: DataTableColumn<Aircraft>[] = [
     {
       accessor: "registration",
-      title: "Registration"
+      title: "Registration",
     },
     { accessor: "brand", title: "Brand" },
     { accessor: "model", title: "Model" },
     {
       accessor: "capabilities",
       title: "Capabilities",
-      render: acft =>
+      render: (acft) =>
         acft.capabilities.length ? (
           acft.capabilities.map((cp, index) => <Badge key={index}>{cp}</Badge>)
         ) : (
           <Badge> - </Badge>
-        )
+        ),
     },
     {
       accessor: "id",
       title: "Actions",
-      render: acft => (
+      render: (acft) => (
         <ActionIcon onClick={() => setForm(acft.id)}>
           <IconEdit />
         </ActionIcon>
-      )
-    }
+      ),
+    },
   ];
 
   return (

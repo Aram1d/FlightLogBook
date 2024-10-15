@@ -11,7 +11,7 @@ export const useOcaiCodes = () => {
       prepend(ocai.toUpperCase());
       return ocai;
     },
-    [prepend]
+    [prepend],
   );
 
   const [{ data }] = useOcaiCodesQuery();

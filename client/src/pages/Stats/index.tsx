@@ -12,7 +12,7 @@ export const FlightStats = () => {
     const today = dayjs();
     return {
       lastMonthDate: today.subtract(3, "months").toDate(),
-      last3MonthsDate: today.subtract(1, "month").toDate()
+      last3MonthsDate: today.subtract(1, "month").toDate(),
     };
   });
 
@@ -21,20 +21,20 @@ export const FlightStats = () => {
   const [{ data }] = useFlightStatsQuery();
 
   const [{ data: lastMonth }] = useFromDateFlightStatsQuery({
-    variables: { date: lastMonthDate }
+    variables: { date: lastMonthDate },
   });
 
   const [{ data: last3Months }] = useFromDateFlightStatsQuery({
-    variables: { date: last3MonthsDate }
+    variables: { date: last3MonthsDate },
   });
 
   return (
     <Card>
       <Tabs
         value={tabId ?? "sum"}
-        onTabChange={tabId =>
+        onTabChange={(tabId) =>
           navigate(
-            "/" + (["sum", "dc", "acft"].includes(tabId || "") ? tabId : "sum")
+            "/" + (["sum", "dc", "acft"].includes(tabId || "") ? tabId : "sum"),
           )
         }
       >

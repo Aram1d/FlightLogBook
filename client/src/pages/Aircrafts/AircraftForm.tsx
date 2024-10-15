@@ -7,7 +7,7 @@ import {
   AircraftCapabilities,
   useAddAircraftMutation,
   useAircraftQuery,
-  useUpdateAircraftMutation
+  useUpdateAircraftMutation,
 } from "@api";
 import { EntityFormProps, mutationPromiseHandler, withoutTypeName } from "@lib";
 
@@ -18,7 +18,7 @@ export const AircraftForm = ({ setForm, form, isAdd }: EntityFormProps) => {
         brand: "",
         model: "",
         registration: "",
-        capabilities: []
+        capabilities: [],
       },
       validate: zodResolver(
         z.object({
@@ -33,9 +33,9 @@ export const AircraftForm = ({ setForm, form, isAdd }: EntityFormProps) => {
           registration: z
             .string()
             .min(3, "brand should have at least 3 characters")
-            .max(10, "username should have at most 30 characters")
-        })
-      )
+            .max(10, "username should have at most 30 characters"),
+        }),
+      ),
     });
 
   const [{ data }] = useAircraftQuery({ variables: { id: form } });
@@ -53,18 +53,18 @@ export const AircraftForm = ({ setForm, form, isAdd }: EntityFormProps) => {
   return (
     <Card sx={{ overflow: "visible" }}>
       <form
-        onSubmit={onSubmit(values => {
+        onSubmit={onSubmit((values) => {
           isAdd
             ? addAircraft({ aircraft: values }).then(
-                mutationPromiseHandler("Aircraft successfully added", reset)
+                mutationPromiseHandler("Aircraft successfully added", reset),
               )
             : updateAircraft({
                 id: form,
-                aircraft: values
+                aircraft: values,
               }).then(
                 mutationPromiseHandler("Aircraft successfully updated", () =>
-                  setForm?.(null)
-                )
+                  setForm?.(null),
+                ),
               );
         })}
       >

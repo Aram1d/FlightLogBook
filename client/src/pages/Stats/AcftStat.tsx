@@ -34,7 +34,7 @@ export const AcftStat = () => {
             data={
               data?.flightStats[
                 mergeByModel ? "byAircraftModel" : "byAircraft"
-              ].map(acftStats => ({
+              ].map((acftStats) => ({
                 id:
                   "aircraft" in acftStats
                     ? `${acftStats.aircraft.model} ${acftStats.aircraft.registration}`
@@ -45,12 +45,12 @@ export const AcftStat = () => {
                   { x: "Hours as COPI", y: acftStats.totalCOPI / 60 },
                   {
                     x: "Hours as Instructor",
-                    y: acftStats.totalInstructor / 60
-                  }
-                ]
+                    y: acftStats.totalInstructor / 60,
+                  },
+                ],
               })) ?? []
             }
-            valueFormat={value => {
+            valueFormat={(value) => {
               const h = Math.floor(value);
               const min = Math.round((value % 1) * 60);
               return `${h ? `${h}h` : ""} ${min}min`;
@@ -62,7 +62,7 @@ export const AcftStat = () => {
             circularAxisOuter={{
               tickSize: 5,
               tickPadding: 12,
-              tickRotation: 0
+              tickRotation: 0,
             }}
             legends={[
               {
@@ -82,11 +82,11 @@ export const AcftStat = () => {
                   {
                     on: "hover",
                     style: {
-                      itemTextColor: "#000"
-                    }
-                  }
-                ]
-              }
+                      itemTextColor: "#000",
+                    },
+                  },
+                ],
+              },
             ]}
           />
         </Box>
@@ -98,7 +98,7 @@ export const AcftStat = () => {
             data={
               data?.flightStats[
                 mergeByModel ? "byAircraftModel" : "byAircraft"
-              ].map(fltStats => {
+              ].map((fltStats) => {
                 const {
                   id,
                   totalPIC,
@@ -118,7 +118,7 @@ export const AcftStat = () => {
                   COPI: totalCOPI / 60,
                   INSTR: totalInstructor / 60,
                   ...rest,
-                  aircraft: 0
+                  aircraft: 0,
                 };
               }) ?? []
             }
@@ -137,7 +137,7 @@ export const AcftStat = () => {
                 color: "#38bcb2",
                 size: 4,
                 padding: 1,
-                stagger: true
+                stagger: true,
               },
               {
                 id: "lines",
@@ -146,12 +146,12 @@ export const AcftStat = () => {
                 color: "#eed312",
                 rotation: -45,
                 lineWidth: 6,
-                spacing: 10
-              }
+                spacing: 10,
+              },
             ]}
             borderColor={{
               from: "color",
-              modifiers: [["darker", 1.6]]
+              modifiers: [["darker", 1.6]],
             }}
             axisTop={null}
             axisRight={null}
@@ -162,7 +162,7 @@ export const AcftStat = () => {
               legend: "Flight time (hours)",
               legendPosition: "middle",
               legendOffset: 32,
-              truncateTickAt: 0
+              truncateTickAt: 0,
             }}
             axisLeft={{
               tickSize: 5,
@@ -170,13 +170,13 @@ export const AcftStat = () => {
               tickRotation: 0,
               legendPosition: "start",
               legendOffset: -40,
-              truncateTickAt: 0
+              truncateTickAt: 0,
             }}
             labelSkipWidth={12}
             labelSkipHeight={12}
             labelTextColor={{
               from: "color",
-              modifiers: [["darker", 1.6]]
+              modifiers: [["darker", 1.6]],
             }}
             legends={[
               {
@@ -196,11 +196,11 @@ export const AcftStat = () => {
                   {
                     on: "hover",
                     style: {
-                      itemOpacity: 1
-                    }
-                  }
-                ]
-              }
+                      itemOpacity: 1,
+                    },
+                  },
+                ],
+              },
             ]}
             role="application"
             ariaLabel="Flight hours by aircraft"

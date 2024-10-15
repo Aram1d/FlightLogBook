@@ -4,5 +4,5 @@ import { makeTableFormManager } from "@lib";
 
 export const PilotsManager = makeTableFormManager({
   Form: PilotForm,
-  Table: PilotsTable
+  Table: PilotsTable,
 });

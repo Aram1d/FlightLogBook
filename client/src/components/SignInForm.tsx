@@ -8,7 +8,7 @@ import {
   PasswordInput,
   Stack,
   TextInput,
-  Title
+  Title,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { sha256 } from "js-sha256";
@@ -23,13 +23,13 @@ export const SignInForm = () => {
     if (data?.currentPilot) navigate("/");
   }, [data?.currentPilot]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const setLoginToken = useStore(s => s.setLoginToken);
+  const setLoginToken = useStore((s) => s.setLoginToken);
 
   const { getInputProps, onSubmit, reset } = useForm<{
     email: string;
     pwd: string;
   }>({
-    initialValues: { email: "", pwd: "" }
+    initialValues: { email: "", pwd: "" },
   });
 
   const [{ fetching }, signIn] = useSignInMutation();
@@ -38,11 +38,11 @@ export const SignInForm = () => {
     <Card shadow="sm" p="lg" sx={{ maxWidth: 800, margin: "auto" }}>
       <LoadingOverlay visible={fetching} overlayBlur={2} />
       <form
-        onSubmit={onSubmit(values => {
+        onSubmit={onSubmit((values) => {
           signIn({ email: values.email, pwdHash: sha256(values.pwd) }).then(
             mutationPromiseHandler("Welcome back", ({ signIn }) =>
-              setLoginToken(signIn)
-            )
+              setLoginToken(signIn),
+            ),
           );
         })}
       >
