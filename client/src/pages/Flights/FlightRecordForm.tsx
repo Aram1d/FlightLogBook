@@ -89,10 +89,10 @@ export const FlightRecordForm = ({ form, setForm, isAdd }: EntityFormProps) => {
         onSubmit={onSubmit((values) => {
           isAdd
             ? addFlight({ flight: values }).then(
-                mutationPromiseHandler("Flight added", reset)
+                mutationPromiseHandler("Flight added", reset),
               )
             : updateFlight({ id: form, flight: values }).then(
-                mutationPromiseHandler("Flight updated", () => setForm?.(null))
+                mutationPromiseHandler("Flight updated", () => setForm?.(null)),
               );
         })}
       >
@@ -147,7 +147,7 @@ export const FlightRecordForm = ({ form, setForm, isAdd }: EntityFormProps) => {
                     getInputProps("departure.date")
                   ) {
                     getInputProps("arrival.date").onChange(
-                      getInputProps("departure.date").value
+                      getInputProps("departure.date").value,
                     );
                   }
                 }}
@@ -200,7 +200,7 @@ export const FlightRecordForm = ({ form, setForm, isAdd }: EntityFormProps) => {
                     ({ id, firstName, lastName }) => ({
                       label: `${firstName}  ${lastName}`,
                       value: id,
-                    })
+                    }),
                   ) ?? []
                 }
                 {...getInputProps("pic")}
@@ -244,7 +244,7 @@ export const FlightRecordForm = ({ form, setForm, isAdd }: EntityFormProps) => {
                   onSync={() =>
                     setFieldValue(
                       "pilotFunctionTime.pic",
-                      values.totalFlightTime
+                      values.totalFlightTime,
                     )
                   }
                 />
@@ -254,7 +254,7 @@ export const FlightRecordForm = ({ form, setForm, isAdd }: EntityFormProps) => {
                   onSync={() =>
                     setFieldValue(
                       "pilotFunctionTime.coPilot",
-                      values.totalFlightTime
+                      values.totalFlightTime,
                     )
                   }
                 />
@@ -264,7 +264,7 @@ export const FlightRecordForm = ({ form, setForm, isAdd }: EntityFormProps) => {
                   onSync={() =>
                     setFieldValue(
                       "pilotFunctionTime.dualCommand",
-                      values.totalFlightTime
+                      values.totalFlightTime,
                     )
                   }
                 />
@@ -274,7 +274,7 @@ export const FlightRecordForm = ({ form, setForm, isAdd }: EntityFormProps) => {
                   onSync={() =>
                     setFieldValue(
                       "pilotFunctionTime.instructor",
-                      values.totalFlightTime
+                      values.totalFlightTime,
                     )
                   }
                 />

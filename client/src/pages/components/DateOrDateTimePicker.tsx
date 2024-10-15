@@ -3,7 +3,7 @@ import { useDisclosure } from "@mantine/hooks";
 import {
   DateInput,
   DatePickerInputProps,
-  DateTimePicker
+  DateTimePicker,
 } from "@mantine/dates";
 import { IconCalendar } from "@tabler/icons-react";
 

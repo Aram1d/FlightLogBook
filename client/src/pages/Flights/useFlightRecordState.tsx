@@ -6,7 +6,7 @@ import { z } from "zod";
 import {
   AddFlightInput,
   AircraftClass,
-  useLastFlightDateQuery
+  useLastFlightDateQuery,
 } from "../../api/gqlTypes";
 import { useAircraftsList } from "../../utils/useAircraftsList";
 
@@ -18,11 +18,11 @@ export const useFlightRecordState = () => {
       initialValues: {
         departure: {
           place: "",
-          date: null
+          date: null,
         },
         arrival: {
           place: "",
-          date: null
+          date: null,
         },
         aircraft: "",
         aircraftClass: AircraftClass.SingleEngine,
@@ -30,26 +30,26 @@ export const useFlightRecordState = () => {
         pic: "",
         landings: {
           day: 0,
-          night: 0
+          night: 0,
         },
         ifrApproaches: 0,
         operationalTime: {
           night: 0,
-          ifr: 0
+          ifr: 0,
         },
         pilotFunctionTime: {
           pic: 0,
           coPilot: 0,
           dualCommand: 0,
-          instructor: 0
+          instructor: 0,
         },
         simulatorType: "",
-        remarks: ""
+        remarks: "",
       },
-      validate: values => {
+      validate: (values) => {
         const tft = dayjs(values.arrival.date).diff(
           dayjs(values.departure.date),
-          "minute"
+          "minute",
         );
 
         return zodResolver(
@@ -59,7 +59,7 @@ export const useFlightRecordState = () => {
                 .string()
                 .nonempty("Departure place is required")
                 .length(4, "Departure place should have 4 characters"),
-              date: z.date()
+              date: z.date(),
             }),
             arrival: z.object({
               place: z
@@ -70,15 +70,15 @@ export const useFlightRecordState = () => {
                 .date()
                 .min(
                   dayjs(values.departure.date).add(1, "m").toDate(),
-                  "Arrival time should be after departure time"
-                )
+                  "Arrival time should be after departure time",
+                ),
             }),
             aircraft: values.simulatorType
               ? z.string().nullable()
               : z
                   .string()
                   .nonempty(
-                    "Aircraft is required unless you fill the simulation section"
+                    "Aircraft is required unless you fill the simulation section",
                   ),
             totalFlightTime: z.literal(tft),
             pic: z
@@ -87,7 +87,7 @@ export const useFlightRecordState = () => {
               .nonempty("PIC is required"),
             landings: z.object({
               day: z.number().min(0, "Landings should be positive"),
-              night: z.number().min(0, "Landings should be positive")
+              night: z.number().min(0, "Landings should be positive"),
             }),
             operationalTime: z.object({
               night: z
@@ -95,15 +95,15 @@ export const useFlightRecordState = () => {
                 .min(0, "Operational time should be positive")
                 .max(
                   tft,
-                  "Operational time should not be longer than total flight time"
+                  "Operational time should not be longer than total flight time",
                 ),
               ifr: z
                 .number()
                 .min(0, "Operational time should be positive")
                 .max(
                   tft,
-                  "Operational time should not be longer than total flight time"
-                )
+                  "Operational time should not be longer than total flight time",
+                ),
             }),
             pilotFunctionTime: z.object({
               pic: z
@@ -111,33 +111,33 @@ export const useFlightRecordState = () => {
                 .min(0, "PIC time should be positive")
                 .max(
                   tft,
-                  "PIC time should not be longer than total flight time"
+                  "PIC time should not be longer than total flight time",
                 ),
               coPilot: z
                 .number()
                 .min(0, "Co-pilot time should be positive")
                 .max(
                   tft,
-                  "Co-pilot time should not be longer than total flight time"
+                  "Co-pilot time should not be longer than total flight time",
                 ),
               dualCommand: z
                 .number()
                 .min(0, "Dual command time should be positive")
                 .max(
                   tft,
-                  "Dual command time should not be longer than total flight time"
+                  "Dual command time should not be longer than total flight time",
                 ),
               instructor: z
                 .number()
                 .min(0, "Instructor time should be positive")
                 .max(
                   tft,
-                  "Instructor time should not be longer than total flight time"
-                )
-            })
-          })
+                  "Instructor time should not be longer than total flight time",
+                ),
+            }),
+          }),
         )(values);
-      }
+      },
     });
 
   useEffect(() => {
@@ -154,11 +154,11 @@ export const useFlightRecordState = () => {
       if (values.arrival.date)
         setFieldValue(
           "totalFlightTime",
-          depDate ? dayjs(values.arrival.date).diff(depDate, "minute") : 0
+          depDate ? dayjs(values.arrival.date).diff(depDate, "minute") : 0,
         );
       else setFieldValue("arrival.date", depDate);
     },
-    [values.arrival.date, setFieldValue]
+    [values.arrival.date, setFieldValue],
   );
 
   const setArrivalTime = useCallback(
@@ -167,11 +167,11 @@ export const useFlightRecordState = () => {
       if (values.departure.date) {
         setFieldValue(
           "totalFlightTime",
-          arrDate ? dayjs(arrDate).diff(values.departure.date, "minute") : 0
+          arrDate ? dayjs(arrDate).diff(values.departure.date, "minute") : 0,
         );
       }
     },
-    [values.departure.date, setFieldValue]
+    [values.departure.date, setFieldValue],
   );
 
   const setTotalFlightTime = useCallback(
@@ -180,16 +180,16 @@ export const useFlightRecordState = () => {
       if (adapter === "a" && values.departure.date) {
         setFieldValue(
           "arrival.date",
-          dayjs(values.departure.date).add(duration, "minute").toDate()
+          dayjs(values.departure.date).add(duration, "minute").toDate(),
         );
       } else if (adapter === "d" && values.arrival.date) {
         setFieldValue(
           "departure.date",
-          dayjs(values.arrival.date).subtract(duration, "minute").toDate()
+          dayjs(values.arrival.date).subtract(duration, "minute").toDate(),
         );
       }
     },
-    [setFieldValue, values.arrival.date, values.departure.date, adapter]
+    [setFieldValue, values.arrival.date, values.departure.date, adapter],
   );
 
   const setSimulationAcftType = useCallback(
@@ -200,7 +200,7 @@ export const useFlightRecordState = () => {
     },
 
     //acftType passed as arg
-    [setFieldValue, acftList.setSelectedModel] // eslint-disable-line react-hooks/exhaustive-deps
+    [setFieldValue, acftList.setSelectedModel], // eslint-disable-line react-hooks/exhaustive-deps
   );
 
   return {
@@ -216,14 +216,14 @@ export const useFlightRecordState = () => {
       setSelectedModel: (model: string | null) => {
         acftList.setSelectedModel(model);
         setFieldValue("simulatorType", null);
-      }
+      },
     },
 
     customHandlers: {
       setDepartureTime,
       setArrivalTime,
       setTotalFlightTime,
-      setSimulationAcftType
-    }
+      setSimulationAcftType,
+    },
   };
 };

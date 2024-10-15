@@ -67,49 +67,49 @@ query OwnFlights($pager: PagerInput) @live {
   ownFlightsTotals(pager: $pager) {
     id
     __typename
-    singleEngine{
+    singleEngine {
       preceding
       actual
       page
     }
-    multiEngine{
+    multiEngine {
       preceding
       actual
       page
     }
-    totalFlightTime{
+    totalFlightTime {
       preceding
       actual
       page
     }
-    landings{
-      day{
+    landings {
+      day {
         preceding
         actual
         page
       }
-      night{
+      night {
         preceding
         actual
         page
       }
     }
-    pic{
-        preceding
-      actual
-        page
-    }
-    copilot{
-        preceding
-      actual
-        page
-    }
-    dualCommand{
+    pic {
       preceding
       actual
       page
     }
-    instructor{
+    copilot {
+      preceding
+      actual
+      page
+    }
+    dualCommand {
+      preceding
+      actual
+      page
+    }
+    instructor {
       preceding
       actual
       page

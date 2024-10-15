@@ -36,7 +36,7 @@ export const omitTypename = <T extends Record<string, any>>(arg: T) => {
 export const mutationPromiseHandler =
   <T1, T2 extends Record<string, any>>(
     successMsg: string,
-    successCb?: (arg: T1) => void
+    successCb?: (arg: T1) => void,
   ) =>
   ({ data, error }: OperationResult<T1, T2>) => {
     if (error) {

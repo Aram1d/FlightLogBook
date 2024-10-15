@@ -13,6 +13,6 @@ export const useStore = create<{
       setLoginToken: (token) => set({ loginToken: token }),
       clientUUID: uuidv4(),
     }),
-    { name: "FLB" }
-  )
+    { name: "FLB" },
+  ),
 );

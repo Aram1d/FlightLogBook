@@ -9,17 +9,17 @@ function App() {
     <MantineProvider
       theme={{
         globalStyles: () => ({
-          body: { margin: 0 }
+          body: { margin: 0 },
         }),
         components: {
           InputWrapper: {
             styles: {
               error: {
-                position: "absolute"
-              }
-            }
-          }
-        }
+                position: "absolute",
+              },
+            },
+          },
+        },
       }}
     >
       {routing}

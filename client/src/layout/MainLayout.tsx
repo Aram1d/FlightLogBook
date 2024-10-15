@@ -10,13 +10,13 @@ export const MainLayout = () => {
     <AppShell
       padding="md"
       header={<Header height={60} />}
-      styles={theme => ({
+      styles={(theme) => ({
         main: {
           backgroundColor:
             theme.colorScheme === "dark"
               ? theme.colors.dark[8]
-              : theme.colors.gray[0]
-        }
+              : theme.colors.gray[0],
+        },
       })}
     >
       <Container maw={MAX_WIDTH}>

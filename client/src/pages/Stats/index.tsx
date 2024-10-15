@@ -1,9 +1,9 @@
- import { useState } from "react";
+import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Card, Group, Tabs } from "@mantine/core";
 import {
   useFlightStatsQuery,
-  useFromDateFlightStatsQuery
+  useFromDateFlightStatsQuery,
 } from "../../api/gqlTypes";
 import { FlightsSummary } from "./FlightsSummary";
 import { AcftStat } from "./AcftStat";
@@ -11,30 +11,33 @@ import { DcStats } from "./DcStats";
 import dayjs from "dayjs";
 
 export const FlightStats = () => {
-   const [{lastMonthDate, last3MonthsDate}] = useState(()=>{
+  const [{ lastMonthDate, last3MonthsDate }] = useState(() => {
     const today = dayjs();
-    return {lastMonthDate: today.subtract(3, "months").toDate(), last3MonthsDate: today.subtract(1, "month").toDate()};
-   });
+    return {
+      lastMonthDate: today.subtract(3, "months").toDate(),
+      last3MonthsDate: today.subtract(1, "month").toDate(),
+    };
+  });
 
   const navigate = useNavigate();
   const { tabId } = useParams();
   const [{ data }] = useFlightStatsQuery();
 
   const [{ data: lastMonth }] = useFromDateFlightStatsQuery({
-    variables: { date: lastMonthDate},
+    variables: { date: lastMonthDate },
   });
 
   const [{ data: last3Months }] = useFromDateFlightStatsQuery({
-    variables: {date: last3MonthsDate}
+    variables: { date: last3MonthsDate },
   });
 
   return (
     <Card>
       <Tabs
         value={tabId ?? "sum"}
-        onTabChange={tabId =>
+        onTabChange={(tabId) =>
           navigate(
-            "/" + (["sum", "dc", "acft"].includes(tabId || "") ? tabId : "sum")
+            "/" + (["sum", "dc", "acft"].includes(tabId || "") ? tabId : "sum"),
           )
         }
       >
@@ -47,8 +50,14 @@ export const FlightStats = () => {
         <Tabs.Panel value="sum">
           <Group>
             <FlightsSummary stats={data?.flightStats} title="Global Summary" />
-            <FlightsSummary stats={lastMonth?.fromDateFlightStats} title="Last month" />
-            <FlightsSummary stats={last3Months?.fromDateFlightStats} title="Last 3 months" />
+            <FlightsSummary
+              stats={lastMonth?.fromDateFlightStats}
+              title="Last month"
+            />
+            <FlightsSummary
+              stats={last3Months?.fromDateFlightStats}
+              title="Last 3 months"
+            />
           </Group>
         </Tabs.Panel>
         <Tabs.Panel value="dc">
@@ -61,4 +70,3 @@ export const FlightStats = () => {
     </Card>
   );
 };
-

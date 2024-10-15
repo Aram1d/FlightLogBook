@@ -11,30 +11,30 @@ export const PilotsTable = ({ setForm }: EntityTableProps) => {
   const [{ data }] = usePilotsQuery({
     variables: {
       pager: {
-        pagination: { page: pagination.page, limit: pagination.recordsPerPage }
-      }
-    }
+        pagination: { page: pagination.page, limit: pagination.recordsPerPage },
+      },
+    },
   });
 
   const columns: DataTableColumn<Omit<Pilot, "credentials" | "passwords">>[] = [
     {
       accessor: "lastName",
-      title: "Last name"
+      title: "Last name",
     },
     {
       accessor: "firstName",
-      title: "First name"
+      title: "First name",
     },
     { accessor: "username" },
     {
       accessor: "actions",
       title: "Actions",
-      render: pilot => (
+      render: (pilot) => (
         <ActionIcon>
           <IconEdit onClick={() => setForm(pilot.id)} />
         </ActionIcon>
-      )
-    }
+      ),
+    },
   ];
 
   return (
