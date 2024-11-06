@@ -1,5 +1,9 @@
 import { useRoutes } from "react-router-dom";
 import { MantineProvider } from "@mantine/core";
+import { Notifications } from "@mantine/notifications";
+import "@mantine/core/styles.layer.css";
+import "@mantine/dates/styles.css";
+import "mantine-datatable/styles.layer.css";
 import { routes } from "@config";
 
 function App() {
@@ -8,20 +12,18 @@ function App() {
   return (
     <MantineProvider
       theme={{
-        globalStyles: () => ({
-          body: { margin: 0 },
-        }),
         components: {
           InputWrapper: {
             styles: {
               error: {
-                position: "absolute",
-              },
-            },
-          },
-        },
+                position: "absolute"
+              }
+            }
+          }
+        }
       }}
     >
+      <Notifications />
       {routing}
     </MantineProvider>
   );

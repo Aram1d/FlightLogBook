@@ -2,7 +2,7 @@ import {
   ActionIcon,
   Group,
   NumberInput,
-  NumberInputProps,
+  NumberInputProps
 } from "@mantine/core";
 import { IconRefresh } from "@tabler/icons-react";
 
@@ -12,26 +12,24 @@ type DurationInputProps = NumberInputProps & {
 export const DurationInput = (props: DurationInputProps) => {
   const { onSync, ...restProps } = props;
   return (
-    <Group align="flex-end" spacing="xs" sx={{ position: "relative" }}>
+    <Group align="flex-end" gap="xs" pos="relative">
       <NumberInput
         {...restProps}
-        parser={(time) => {
-          const isNegative = time.startsWith("-");
-          const [hours, minutes] = time.replace("-", "").split(":");
-          return (
-            (isNegative ? "-" : "") +
-            (parseInt(hours) * 60 + parseInt(minutes)).toString()
-          );
-        }}
-        formatter={timeFormatter}
-        sx={{ width: "100%" }}
+        // parser={time => {
+        //   const isNegative = time.startsWith("-");
+        //   const [hours, minutes] = time.replace("-", "").split(":");
+        //   return (
+        //     (isNegative ? "-" : "") +
+        //     (parseInt(hours) * 60 + parseInt(minutes)).toString()
+        //   );
+        // }}
+        // formatter={timeFormatter}
+        width="100%"
       />
       {props.onSync && (
         <ActionIcon
-          sx={{
-            position: "absolute",
-            right: `calc(1.5rem + 0.0625rem + 0.3125rem)`,
-          }}
+          pos="absolute"
+          right={`calc(1.5rem + 0.0625rem + 0.3125rem)`}
           mb="0.25rem"
           variant="transparent"
         >

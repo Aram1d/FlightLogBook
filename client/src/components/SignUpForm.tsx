@@ -6,10 +6,9 @@ import {
   LoadingOverlay,
   PasswordInput,
   SimpleGrid,
-  SimpleGridBreakpoint,
   Stack,
   TextInput,
-  Title,
+  Title
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { sha256 } from "js-sha256";
@@ -17,10 +16,6 @@ import { useSignUpMutation } from "@api";
 import { PasswordField } from "@components";
 import { useStore } from "@hooks";
 
-export const simpleGridBreakpoints: SimpleGridBreakpoint[] = [
-  { minWidth: 800, cols: 2, spacing: "sm" },
-  { minWidth: 600, cols: 1, spacing: "sm" },
-];
 export const SignUpForm = () => {
   const navigate = useNavigate();
   const { values, getInputProps } = useForm<{
@@ -37,12 +32,12 @@ export const SignUpForm = () => {
       lastName: "",
       email: "",
       pwd: "",
-      pwd2: "",
-    },
+      pwd2: ""
+    }
   });
 
   const [{ fetching }, signUp] = useSignUpMutation();
-  const setToken = useStore((s) => s.setLoginToken);
+  const setToken = useStore(s => s.setLoginToken);
 
   const onSubmit = () => {
     signUp({
@@ -51,8 +46,8 @@ export const SignUpForm = () => {
       lastName: values.lastName,
       email: values.email,
       pwdHash: sha256(values.pwd),
-      pwdHash2: sha256(values.pwd2),
-    }).then((res) => {
+      pwdHash2: sha256(values.pwd2)
+    }).then(res => {
       if (res.data?.signUp) {
         setToken(res.data.signUp);
         navigate("/");
@@ -61,17 +56,18 @@ export const SignUpForm = () => {
   };
 
   return (
-    <Card shadow="sm" p="lg" sx={{ maxWidth: 800, margin: "auto" }}>
-      <LoadingOverlay visible={fetching} overlayBlur={2} />
-      <Title align="center">Inscription</Title>
+    <Card shadow="sm" p="lg" maw={800} m="auto">
+      <LoadingOverlay visible={fetching} />
+      <Title>Inscription</Title>
       <Stack>
-        <SimpleGrid breakpoints={simpleGridBreakpoints}>
+        <SimpleGrid cols={{ base: 1, md: 2 }}>
           <TextInput label="Nom" {...getInputProps("lastName")} />
           <TextInput label="Prénom" {...getInputProps("firstName")} />
           <TextInput label="Email" {...getInputProps("email")} />
           <TextInput label="Login" {...getInputProps("username")} />
           <PasswordField
             label="Mot de passe"
+            value=""
             {...getInputProps("pwd")}
             required
           />

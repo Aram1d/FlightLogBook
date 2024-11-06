@@ -1,0 +1,14 @@
+.headerButton {
+  display: block;
+  padding: var(--mantine-spacing-xs);
+  border-radius: var(--mantine-radius-sm);
+
+  color: light-dark(var(--mantine-colors-black), var(--mantine-colors-dark-0));
+
+  &:hover {
+    background-color: light-dark(
+      var(--mantine-colors-dark-6),
+      var(--mantine-colors-gary-0)
+    );
+  }
+}

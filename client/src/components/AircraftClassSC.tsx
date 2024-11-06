@@ -1,5 +1,6 @@
 import { Radio, RadioGroupProps, Stack } from "@mantine/core";
 import { AircraftClass } from "@api";
+import { sanitizeStringToEnum } from "@lib";
 
 type AircraftClassSCProps = Omit<
   RadioGroupProps,
@@ -9,9 +10,21 @@ type AircraftClassSCProps = Omit<
   onChange: (value: AircraftClass) => void;
 };
 
-export const AircraftClassSC = (props: AircraftClassSCProps) => {
+export const AircraftClassSC = ({
+  onChange,
+  ...props
+}: AircraftClassSCProps) => {
   return (
-    <Radio.Group label="Aircraft class" {...props}>
+    <Radio.Group
+      name="aircraft-class"
+      label="Aircraft class"
+      onChange={v =>
+        onChange(
+          sanitizeStringToEnum(AircraftClass, v, AircraftClass.SingleEngine)
+        )
+      }
+      {...props}
+    >
       <Stack mt="xs">
         <Radio
           value={AircraftClass.SingleEngine}

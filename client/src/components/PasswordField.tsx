@@ -7,15 +7,16 @@ import { compact } from "lodash-es";
 
 function PasswordRequirement({
   meets,
-  label,
+  label
 }: {
   meets: boolean;
   label: React.ReactNode;
 }) {
   return (
     <Text
-      color={meets ? "teal" : "red"}
-      sx={{ display: "flex", alignItems: "center" }}
+      c={meets ? "teal" : "red"}
+      display="flex"
+      //justify="center"
       mt={7}
       size="sm"
     >
@@ -86,7 +87,7 @@ export const pwdValidationLabelsMap: Record<
   hasSpecialCharsValid: "Inclus des caractères spéciaux",
   hasMinimumChars: "Longueur minimale atteinte",
   hasNumbersValid: "Inclus des chiffres",
-  satisfiedRules: "Toutes les règles sont satisfaites",
+  satisfiedRules: "Toutes les règles sont satisfaites"
 };
 
 export const validatePwdStrength = (pwd: string): PwdStrengthValidation => {
@@ -101,13 +102,13 @@ export const validatePwdStrength = (pwd: string): PwdStrengthValidation => {
     hasUpperCaseValid: Boolean(hasUpperCaseLetters),
     hasNumbersValid: Boolean(hasNumbers),
     hasSpecialCharsValid: Boolean(hasSpecialChars),
-    hasMinimumChars: numOfChars >= 8,
+    hasMinimumChars: numOfChars >= 8
   };
 
   return {
     ...validationObj,
     satisfiedRules:
       compact(Object.values(validationObj)).length /
-      Object.keys(validationObj).length,
+      Object.keys(validationObj).length
   };
 };

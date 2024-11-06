@@ -1,0 +1,23 @@
+import { Outlet } from "react-router-dom";
+import { AppShell, Container } from "@mantine/core";
+import { Header } from "@components";
+import classes from "./MainLayout.module.css";
+
+export const MAX_WIDTH = "100rem";
+
+export const MainLayout = () => {
+  return (
+    <AppShell
+      padding="md"
+      header={{ height: 60 }}
+      classNames={{ main: classes.main }}
+    >
+      <Header />
+      <AppShell.Main>
+        <Container maw={MAX_WIDTH}>
+          <Outlet />
+        </Container>
+      </AppShell.Main>
+    </AppShell>
+  );
+};

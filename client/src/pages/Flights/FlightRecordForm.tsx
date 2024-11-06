@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import {
   Button,
   Card,
@@ -11,19 +11,20 @@ import {
   SimpleGrid,
   Stack,
   Textarea,
-  Title,
+  Title
 } from "@mantine/core";
 import { DatePickerInput } from "@mantine/dates";
 import {
   useAddFlightMutation,
   useUpdateFlightMutation,
   useFlightQuery,
-  usePilotsListQuery,
+  usePilotsListQuery
 } from "@api";
 import {
   AircraftClassSC,
   DateOrDateTimePicker,
   DurationInput,
+  SelectCreatable
 } from "@components";
 import { useFlightRecordState, useOcaiCodes } from "@hooks";
 
@@ -37,9 +38,6 @@ const FlightRecordTitle = ({ children, ...rest }: FlightRecordFormProps) => (
 );
 
 export const FlightRecordForm = ({ form, setForm, isAdd }: EntityFormProps) => {
-  const [depSearch, setDepSearch] = useState("");
-  const [arrSearch, setArrSearch] = useState("");
-
   const [ocaiCodes, addOcai] = useOcaiCodes();
 
   const [{ data: pilotsList }] = usePilotsListQuery();
@@ -54,7 +52,7 @@ export const FlightRecordForm = ({ form, setForm, isAdd }: EntityFormProps) => {
     getInputProps,
     onSubmit,
     customHandlers,
-    acftList,
+    acftList
   } = useFlightRecordState();
 
   const {
@@ -62,7 +60,7 @@ export const FlightRecordForm = ({ form, setForm, isAdd }: EntityFormProps) => {
     acftRegs,
     selectedModel,
     setSelectedModel,
-    setAircraftId,
+    setAircraftId
   } = acftList;
 
   const [{ data }] = useFlightQuery({ variables: { id: form }, pause: isAdd });
@@ -74,7 +72,7 @@ export const FlightRecordForm = ({ form, setForm, isAdd }: EntityFormProps) => {
       setValues({
         aircraft: aircraft?.id,
         pic: pic?.id,
-        ...omitTypename(flight),
+        ...omitTypename(flight)
       });
     }
   }, [data?.flight, setValues]);
@@ -83,35 +81,29 @@ export const FlightRecordForm = ({ form, setForm, isAdd }: EntityFormProps) => {
   const [, updateFlight] = useUpdateFlightMutation();
 
   return (
-    <Card sx={{ overflow: "visible" }}>
+    <Card style={{ overflow: "visible" }}>
       <Title order={3}>{isAdd ? "Add new flight" : "Edit flight"}</Title>
       <form
-        onSubmit={onSubmit((values) => {
+        onSubmit={onSubmit(values => {
           isAdd
             ? addFlight({ flight: values }).then(
-                mutationPromiseHandler("Flight added", reset),
+                mutationPromiseHandler("Flight added", reset)
               )
             : updateFlight({ id: form, flight: values }).then(
-                mutationPromiseHandler("Flight updated", () => setForm?.(null)),
+                mutationPromiseHandler("Flight updated", () => setForm?.(null))
               );
         })}
       >
         <Grid columns={24}>
-          <Grid.Col xl={4}>
+          <Grid.Col span={4}>
             <Stack>
               <FlightRecordTitle>Departure</FlightRecordTitle>
-              <Select
+              <SelectCreatable
                 label="Place"
                 placeholder="OCAI code"
                 data={ocaiCodes}
-                searchable
-                creatable
-                getCreateLabel={(ocai) => `Add ${ocai.toUpperCase()}`}
                 onCreate={addOcai}
                 {...getInputProps("departure.place")}
-                searchValue={depSearch}
-                onSearchChange={(v) => setDepSearch(v.toUpperCase())}
-                selectOnBlur
               />
               <DateOrDateTimePicker
                 label="Date / Time"
@@ -120,21 +112,16 @@ export const FlightRecordForm = ({ form, setForm, isAdd }: EntityFormProps) => {
               />
             </Stack>
           </Grid.Col>
-          <Grid.Col xl={4}>
+          <Grid.Col span={4}>
             <Stack>
               <FlightRecordTitle>Arrival</FlightRecordTitle>
-              <Select
+              <SelectCreatable
                 label="Place"
                 placeholder="OCAI code"
                 data={ocaiCodes}
-                searchable
-                creatable
-                getCreateLabel={(ocai) => `Add ${ocai.toUpperCase()}`}
                 onCreate={addOcai}
+                value=""
                 {...getInputProps("arrival.place")}
-                searchValue={arrSearch}
-                onSearchChange={(v) => setArrSearch(v.toUpperCase())}
-                selectOnBlur
               />
               <DateOrDateTimePicker
                 label="Date / Time"
@@ -147,14 +134,14 @@ export const FlightRecordForm = ({ form, setForm, isAdd }: EntityFormProps) => {
                     getInputProps("departure.date")
                   ) {
                     getInputProps("arrival.date").onChange(
-                      getInputProps("departure.date").value,
+                      getInputProps("departure.date").value
                     );
                   }
                 }}
               />
             </Stack>
           </Grid.Col>
-          <Grid.Col xl={4}>
+          <Grid.Col span={4}>
             <Stack>
               <FlightRecordTitle>Aircraft</FlightRecordTitle>
               <Select
@@ -162,7 +149,7 @@ export const FlightRecordForm = ({ form, setForm, isAdd }: EntityFormProps) => {
                 allowDeselect
                 data={acftModels}
                 value={selectedModel}
-                onChange={(v) => {
+                onChange={v => {
                   setSelectedModel(v);
                   getInputProps("aircraft").onChange(null);
                 }}
@@ -171,7 +158,7 @@ export const FlightRecordForm = ({ form, setForm, isAdd }: EntityFormProps) => {
                 label="Registration"
                 data={acftRegs}
                 {...getInputProps("aircraft")}
-                onChange={(v) => {
+                onChange={v => {
                   setAircraftId(v);
                   getInputProps("aircraft").onChange(v);
                 }}
@@ -179,19 +166,24 @@ export const FlightRecordForm = ({ form, setForm, isAdd }: EntityFormProps) => {
             </Stack>
           </Grid.Col>
 
-          <Grid.Col xl={4}>
+          <Grid.Col span={4}>
             <Stack>
               <FlightRecordTitle>Class</FlightRecordTitle>
-              <AircraftClassSC {...getInputProps("aircraftClass")} />
+              <AircraftClassSC value="" {...getInputProps("aircraftClass")} />
             </Stack>
           </Grid.Col>
-          <Grid.Col xl={4}>
+          <Grid.Col span={4}>
             <Stack>
               <FlightRecordTitle>Flight Time / PIC Info</FlightRecordTitle>
               <DurationInput
                 label="Total flight time"
                 {...getInputProps("totalFlightTime")}
-                onChange={customHandlers.setTotalFlightTime}
+                value=""
+                onChange={v =>
+                  customHandlers.setTotalFlightTime(
+                    typeof v === "number" ? v : parseInt(v)
+                  )
+                }
               />
               <Select
                 label="PIC name"
@@ -199,15 +191,15 @@ export const FlightRecordForm = ({ form, setForm, isAdd }: EntityFormProps) => {
                   pilotsList?.pilots.items.map(
                     ({ id, firstName, lastName }) => ({
                       label: `${firstName}  ${lastName}`,
-                      value: id,
-                    }),
+                      value: id
+                    })
                   ) ?? []
                 }
                 {...getInputProps("pic")}
               />
             </Stack>
           </Grid.Col>
-          <Grid.Col xl={2}>
+          <Grid.Col span={2}>
             <Stack>
               <FlightRecordTitle>Landings</FlightRecordTitle>
               <NumberInput
@@ -221,7 +213,7 @@ export const FlightRecordForm = ({ form, setForm, isAdd }: EntityFormProps) => {
             </Stack>
           </Grid.Col>
 
-          <Grid.Col xl={4}>
+          <Grid.Col span={4}>
             <Stack>
               <FlightRecordTitle>Operational Time</FlightRecordTitle>
               <DurationInput
@@ -234,7 +226,7 @@ export const FlightRecordForm = ({ form, setForm, isAdd }: EntityFormProps) => {
               />
             </Stack>
           </Grid.Col>
-          <Grid.Col xl={6}>
+          <Grid.Col span={6}>
             <Stack>
               <FlightRecordTitle>Pilot Fn time</FlightRecordTitle>
               <SimpleGrid cols={2}>
@@ -244,7 +236,7 @@ export const FlightRecordForm = ({ form, setForm, isAdd }: EntityFormProps) => {
                   onSync={() =>
                     setFieldValue(
                       "pilotFunctionTime.pic",
-                      values.totalFlightTime,
+                      values.totalFlightTime
                     )
                   }
                 />
@@ -254,7 +246,7 @@ export const FlightRecordForm = ({ form, setForm, isAdd }: EntityFormProps) => {
                   onSync={() =>
                     setFieldValue(
                       "pilotFunctionTime.coPilot",
-                      values.totalFlightTime,
+                      values.totalFlightTime
                     )
                   }
                 />
@@ -264,7 +256,7 @@ export const FlightRecordForm = ({ form, setForm, isAdd }: EntityFormProps) => {
                   onSync={() =>
                     setFieldValue(
                       "pilotFunctionTime.dualCommand",
-                      values.totalFlightTime,
+                      values.totalFlightTime
                     )
                   }
                 />
@@ -274,14 +266,14 @@ export const FlightRecordForm = ({ form, setForm, isAdd }: EntityFormProps) => {
                   onSync={() =>
                     setFieldValue(
                       "pilotFunctionTime.instructor",
-                      values.totalFlightTime,
+                      values.totalFlightTime
                     )
                   }
                 />
               </SimpleGrid>
             </Stack>
           </Grid.Col>
-          <Grid.Col xl={6}>
+          <Grid.Col span={6}>
             <Stack>
               <FlightRecordTitle>Simulator</FlightRecordTitle>
               <Select
@@ -306,23 +298,23 @@ export const FlightRecordForm = ({ form, setForm, isAdd }: EntityFormProps) => {
               </SimpleGrid>
             </Stack>
           </Grid.Col>
-          <Grid.Col xl={6} h="100%">
+          <Grid.Col span={6} h="100%">
             <Stack>
               <FlightRecordTitle>R & E</FlightRecordTitle>
               <Textarea label="Remarks" {...getInputProps("remarks")} />
               <SegmentedControl
                 data={[
                   { label: "Departure", value: "d" },
-                  { label: "Arrival", value: "a" },
+                  { label: "Arrival", value: "a" }
                 ]}
-                onChange={(v) => setAdapter(v as "d" | "a")}
+                onChange={v => setAdapter(v as "d" | "a")}
                 value={adapter}
               />
             </Stack>
           </Grid.Col>
         </Grid>
         <Divider my="md" variant="dotted" />
-        <Group position="right">
+        <Group justify="right">
           <Button variant="subtle">Reset</Button>
           <Button
             variant="subtle"

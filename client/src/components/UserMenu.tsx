@@ -8,7 +8,7 @@ import { mutationPromiseHandler } from "@lib";
 export const UserMenu = () => {
   const navigate = useNavigate();
   const [{ data }] = useCurrentPilotQuery();
-  const setToken = useStore((state) => state.setLoginToken);
+  const setToken = useStore(state => state.setLoginToken);
 
   const currentUser = data?.currentPilot ?? null;
 
@@ -17,9 +17,9 @@ export const UserMenu = () => {
   const UserButton = (
     <Button
       variant="light"
-      leftIcon={<Avatar size="sm" radius="xl" />}
+      leftSection={<Avatar size="sm" radius="xl" />}
       radius="xl"
-      sx={{ transform: "none" }}
+      style={{ transform: "none" }}
       onClick={() => !currentUser && navigate(UrlRoutes.signin)}
     >
       {data?.currentPilot
@@ -35,7 +35,7 @@ export const UserMenu = () => {
         <Menu.Item
           onClick={() =>
             signOut({}).then(
-              mutationPromiseHandler("Good bye!", () => setToken("")),
+              mutationPromiseHandler("Good bye!", () => setToken(""))
             )
           }
         >

@@ -6,7 +6,7 @@ import {
   AddPilotInput,
   useAddPilotMutation,
   usePilotQuery,
-  useUpdatePilotMutation,
+  useUpdatePilotMutation
 } from "@api";
 
 import { EntityFormProps, mutationPromiseHandler, withoutTypeName } from "@lib";
@@ -17,7 +17,7 @@ export const PilotForm = ({ form, setForm, isAdd }: EntityFormProps) => {
       username: "",
       firstName: "",
       lastName: "",
-      email: "",
+      email: ""
     },
     validate: zodResolver(
       z.object({
@@ -33,9 +33,9 @@ export const PilotForm = ({ form, setForm, isAdd }: EntityFormProps) => {
           .string()
           .min(2, "lastname should have at least 3 characters")
           .max(30, "lastname should have at most 30 characters"),
-        email: z.string().email("Invalid email"),
-      }),
-    ),
+        email: z.string().email("Invalid email")
+      })
+    )
   });
 
   const [{ data }] = usePilotQuery({ variables: { id: form } });
@@ -44,7 +44,7 @@ export const PilotForm = ({ form, setForm, isAdd }: EntityFormProps) => {
       const { id, ...pilot } = data.pilot;
       setValues({
         ...withoutTypeName(pilot),
-        email: data.pilot.email.address,
+        email: data.pilot.email.address
       });
     }
   }, [data?.pilot]); //eslint-disable-line react-hooks/exhaustive-deps
@@ -53,17 +53,17 @@ export const PilotForm = ({ form, setForm, isAdd }: EntityFormProps) => {
   const [, updatePilot] = useUpdatePilotMutation();
 
   return (
-    <Card sx={{ overflow: "visible" }}>
+    <Card style={{ overflow: "visible" }}>
       <form
-        onSubmit={onSubmit((values) => {
+        onSubmit={onSubmit(values => {
           isAdd
             ? addPilot({ pilot: values }).then(
-                mutationPromiseHandler("Pilot successfully added", reset),
+                mutationPromiseHandler("Pilot successfully added", reset)
               )
             : updatePilot({ id: form, pilot: values }).then(
                 mutationPromiseHandler("Pilot successfully updated", () =>
-                  setForm?.(null),
-                ),
+                  setForm?.(null)
+                )
               );
         })}
       >
@@ -82,7 +82,7 @@ export const PilotForm = ({ form, setForm, isAdd }: EntityFormProps) => {
           </Grid.Col>
 
           <Grid.Col span={2}>
-            <Group position="right">
+            <Group justify="flex-end">
               <Button variant="subtle" onClick={reset}>
                 Reset
               </Button>

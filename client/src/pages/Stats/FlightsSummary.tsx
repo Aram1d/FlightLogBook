@@ -14,7 +14,7 @@ export const FlightsSummary = ({ stats, title }: FlightsSummaryProps) => {
   return (
     <Stack>
       <Title>{title}</Title>
-      <Grid columns={3} sx={{ maxWidth: "20rem" }}>
+      <Grid columns={3} maw="20rem">
         <Grid.Col span={2}>
           <Text color="dimmed">Total flight time:</Text>{" "}
         </Grid.Col>

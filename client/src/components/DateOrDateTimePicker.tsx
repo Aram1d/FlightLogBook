@@ -3,7 +3,7 @@ import { useDisclosure } from "@mantine/hooks";
 import {
   DateInput,
   DatePickerInputProps,
-  DateTimePicker,
+  DateTimePicker
 } from "@mantine/dates";
 import { IconCalendar } from "@tabler/icons-react";
 
@@ -26,7 +26,6 @@ export const DateOrDateTimePicker = (props: DateOrDateTimePickerProps) => {
       onChange={props.onChange}
     />
   ) : (
-    //@ts-expect-error shit with DateTimePicker
     <DateTimePicker
       label="Date / Time"
       rightSection={
