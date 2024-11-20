@@ -1,30 +1,50 @@
-import {
-  ActionIcon,
-  Group,
-  NumberInput,
-  NumberInputProps
-} from "@mantine/core";
+import { useEffect, useState } from "react";
+import { IMaskInput } from "react-imask";
+import { ActionIcon, Group, InputBase, InputBaseProps } from "@mantine/core";
 import { IconRefresh } from "@tabler/icons-react";
+import { noop } from "lodash-es";
+import { timeFormatter } from "@lib";
 
-type DurationInputProps = NumberInputProps & {
+const TIME_PLACEHOLDER = "-- : --";
+
+type DurationInputProps = InputBaseProps & {
+  value?: number;
+  onChange?: (value: number) => void;
   onSync?: () => void;
 };
 export const DurationInput = (props: DurationInputProps) => {
-  const { onSync, ...restProps } = props;
+  const { onSync, onChange = noop, value = 0, ...restProps } = props;
+
+  const [stringState, setStringState] = useState<string>("-- : --");
+
+  useEffect(() => {
+    setStringState(timeFormatter(value));
+  }, [value]);
+
+  const handleTimeChange = (value: string) => {
+    !value && onChange(0);
+
+    const [minutes, hours] = value.split(":").reverse().map(Number);
+    if (!isNaN(minutes)) {
+      onChange(minutes + (hours * 60 || 0));
+    }
+  };
+
   return (
-    <Group align="flex-end" gap="xs" pos="relative">
-      <NumberInput
+    <Group align="flex-end" gap="xs" pos="relative" w="100%">
+      <InputBase
         {...restProps}
-        // parser={time => {
-        //   const isNegative = time.startsWith("-");
-        //   const [hours, minutes] = time.replace("-", "").split(":");
-        //   return (
-        //     (isNegative ? "-" : "") +
-        //     (parseInt(hours) * 60 + parseInt(minutes)).toString()
-        //   );
-        // }}
-        // formatter={timeFormatter}
-        width="100%"
+        placeholder={TIME_PLACEHOLDER}
+        component={IMaskInput}
+        mask={["0000:00", "000:00", "00:00", "0:00"]}
+        value={stringState}
+        onChange={event => setStringState(event.currentTarget.value)}
+        onBlur={event => handleTimeChange(event.currentTarget.value)}
+        styles={{
+          root: {
+            width: "100%"
+          }
+        }}
       />
       {props.onSync && (
         <ActionIcon
@@ -38,16 +58,4 @@ export const DurationInput = (props: DurationInputProps) => {
       )}
     </Group>
   );
-};
-
-export const timeFormatter = (n: string | number | null | undefined) => {
-  if (!n) return "-- : --";
-  const minutes = typeof n === "number" ? n : parseFloat(n);
-  const hours = Math.abs(~~(minutes / 60));
-
-  return `${minutes < 0 ? "-" : ""}${hours
-    .toString()
-    .padStart(2, "0")}:${Math.abs(minutes % 60)
-    .toString()
-    .padStart(2, "0")}`;
 };

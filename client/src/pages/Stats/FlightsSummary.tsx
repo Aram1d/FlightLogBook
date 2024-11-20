@@ -1,6 +1,6 @@
 import { Grid, Skeleton, Stack, Text, Title } from "@mantine/core";
 import { FlightStats } from "@api";
-import { timeFormatter } from "@components";
+import { timeFormatter } from "@lib";
 
 type FlightsSummaryProps = {
   stats?: Pick<
@@ -16,7 +16,7 @@ export const FlightsSummary = ({ stats, title }: FlightsSummaryProps) => {
       <Title>{title}</Title>
       <Grid columns={3} maw="20rem">
         <Grid.Col span={2}>
-          <Text color="dimmed">Total flight time:</Text>{" "}
+          <Text c="dimmed">Total flight time:</Text>{" "}
         </Grid.Col>
         <Grid.Col span={1}>
           {stats ? (
@@ -26,19 +26,19 @@ export const FlightsSummary = ({ stats, title }: FlightsSummaryProps) => {
           )}
         </Grid.Col>
         <Grid.Col span={2}>
-          <Text color="dimmed">Total D.C flight time:</Text>{" "}
+          <Text c="dimmed">Total D.C flight time:</Text>{" "}
         </Grid.Col>
         <Grid.Col span={1}>
           {stats ? <Text>{timeFormatter(stats.totalDC)}</Text> : <Skeleton />}
         </Grid.Col>
         <Grid.Col span={2}>
-          <Text color="dimmed">Total P.I.C flight time:</Text>{" "}
+          <Text c="dimmed">Total P.I.C flight time:</Text>{" "}
         </Grid.Col>
         <Grid.Col span={1}>
           {stats ? <Text>{timeFormatter(stats?.totalPIC)}</Text> : <Skeleton />}
         </Grid.Col>
         <Grid.Col span={2}>
-          <Text color="dimmed">Flights amount:</Text>{" "}
+          <Text c="dimmed">Flights amount:</Text>{" "}
         </Grid.Col>
         <Grid.Col span={1}>
           {stats ? <Text>{stats?.flightAmount}</Text> : <Skeleton />}

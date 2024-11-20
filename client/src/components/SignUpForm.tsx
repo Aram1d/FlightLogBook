@@ -60,7 +60,7 @@ export const SignUpForm = () => {
       <LoadingOverlay visible={fetching} />
       <Title>Inscription</Title>
       <Stack>
-        <SimpleGrid cols={{ base: 1, md: 2 }}>
+        <SimpleGrid cols={{ base: 1, sm: 2 }}>
           <TextInput label="Nom" {...getInputProps("lastName")} />
           <TextInput label="Prénom" {...getInputProps("firstName")} />
           <TextInput label="Email" {...getInputProps("email")} />

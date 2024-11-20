@@ -75,7 +75,7 @@ export const FlightRecordForm = ({ form, setForm, isAdd }: EntityFormProps) => {
         ...omitTypename(flight)
       });
     }
-  }, [data?.flight, setValues]);
+  }, [data?.flight]); //eslint-disable-line
 
   const [, addFlight] = useAddFlightMutation();
   const [, updateFlight] = useUpdateFlightMutation();
@@ -178,12 +178,7 @@ export const FlightRecordForm = ({ form, setForm, isAdd }: EntityFormProps) => {
               <DurationInput
                 label="Total flight time"
                 {...getInputProps("totalFlightTime")}
-                value=""
-                onChange={v =>
-                  customHandlers.setTotalFlightTime(
-                    typeof v === "number" ? v : parseInt(v)
-                  )
-                }
+                onChange={customHandlers.setTotalFlightTime}
               />
               <Select
                 label="PIC name"
@@ -285,8 +280,7 @@ export const FlightRecordForm = ({ form, setForm, isAdd }: EntityFormProps) => {
               <SimpleGrid cols={2}>
                 <DurationInput
                   label="Time"
-                  value={values.simulatorType ? values.totalFlightTime : ""}
-                  readOnly
+                  value={values.simulatorType ? values.totalFlightTime : 0}
                   disabled={!values.simulatorType}
                 />
                 <DatePickerInput

@@ -13,9 +13,8 @@ import { DataTable, DataTableColumn } from "mantine-datatable";
 import { IconEdit } from "@tabler/icons-react";
 import dayjs from "dayjs";
 import { OwnFlightsQuery, useOwnFlightsQuery } from "@api";
-import { timeFormatter } from "@components";
 import { usePagination } from "@hooks";
-import { ArrayElement, EntityTableProps } from "@lib";
+import { ArrayElement, timeFormatter, EntityTableProps } from "@lib";
 
 type OwnFlight = ArrayElement<OwnFlightsQuery["ownFlights"]["items"]>;
 type CumulativeTotals = OwnFlightsQuery["ownFlightsTotals"];

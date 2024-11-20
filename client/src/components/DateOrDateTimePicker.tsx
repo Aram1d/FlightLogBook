@@ -17,17 +17,19 @@ export const DateOrDateTimePicker = (props: DateOrDateTimePickerProps) => {
   return dateOnly ? (
     <DateInput
       label={props.label}
+      value={props.value}
+      onChange={props.onChange}
       rightSection={
         <ActionIcon>
           <IconCalendar onClick={close} />
         </ActionIcon>
       }
-      value={props.value}
-      onChange={props.onChange}
     />
   ) : (
     <DateTimePicker
       label="Date / Time"
+      value={props.value}
+      onChange={props.onChange}
       rightSection={
         <ActionIcon>
           <IconCalendar onClick={open} />

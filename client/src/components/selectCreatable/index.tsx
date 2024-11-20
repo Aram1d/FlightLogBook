@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Combobox, InputBase, useCombobox } from "@mantine/core";
+import { Combobox, TextInput, useCombobox } from "@mantine/core";
 
 interface SelectCreatableProps {
   label: string;
@@ -22,10 +22,10 @@ export function SelectCreatable({
   const combobox = useCombobox({
     onDropdownClose: () => combobox.resetSelectedOption()
   });
-  const [search, setSearch] = useState("");
+  const [search, setSearch] = useState<string | null>(null);
 
   useEffect(() => {
-    onSearchChange?.(search);
+    onSearchChange?.(search ?? "");
   }, [search]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
@@ -36,7 +36,7 @@ export function SelectCreatable({
   const filteredOptions = exactOptionMatch
     ? data
     : data.filter(item =>
-        item.toLowerCase().includes(search.toLowerCase().trim())
+        item.toLowerCase().includes((search ?? "").toLowerCase().trim())
       );
 
   const options = filteredOptions.map(item => (
@@ -50,17 +50,18 @@ export function SelectCreatable({
       store={combobox}
       withinPortal={false}
       onOptionSubmit={val => {
-        if (val === "$create") onCreate(search.trim().toUpperCase());
-        onChange(search);
+        if (val === "$create") onCreate(search ?? "".trim().toUpperCase());
+        onChange(val);
+        setSearch(null);
         combobox.closeDropdown();
       }}
     >
       <Combobox.Target>
-        <InputBase
+        <TextInput
           label={label}
           rightSection={<Combobox.Chevron />}
-          value={search}
-          onChange={(event: any) => {
+          value={typeof search === "string" ? search : value}
+          onChange={event => {
             combobox.openDropdown();
             combobox.updateSelectedOptionIndex();
             setSearch(event.currentTarget.value);
@@ -69,7 +70,7 @@ export function SelectCreatable({
           onFocus={() => combobox.openDropdown()}
           onBlur={() => {
             combobox.closeDropdown();
-            setSearch("");
+            setSearch(null);
           }}
           placeholder="Search value"
           rightSectionPointerEvents="none"
@@ -79,9 +80,9 @@ export function SelectCreatable({
       <Combobox.Dropdown>
         <Combobox.Options>
           {options}
-          {!exactOptionMatch && search.trim().length > 0 && (
+          {!exactOptionMatch && (search ?? "").trim().length > 0 && (
             <Combobox.Option value="$create">
-              + Add {search.trim().toUpperCase()}
+              + Add {(search ?? "").trim().toUpperCase()}
             </Combobox.Option>
           )}
         </Combobox.Options>

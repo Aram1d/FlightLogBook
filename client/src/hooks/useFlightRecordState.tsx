@@ -138,7 +138,7 @@ export const useFlightRecordState = () => {
 
   useEffect(() => {
     setFieldValue("departure.date", data?.lastFlightDate ?? null);
-  }, [setFieldValue, data?.lastFlightDate]);
+  }, [data?.lastFlightDate]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const acftList = useAircraftsList();
 
@@ -154,7 +154,7 @@ export const useFlightRecordState = () => {
         );
       else setFieldValue("arrival.date", depDate);
     },
-    [values.arrival.date, setFieldValue]
+    [values.arrival.date] // eslint-disable-line react-hooks/exhaustive-deps
   );
 
   const setArrivalTime = useCallback(
@@ -167,7 +167,7 @@ export const useFlightRecordState = () => {
         );
       }
     },
-    [values.departure.date, setFieldValue]
+    [values.departure.date] //eslint-disable-line react-hooks/exhaustive-deps
   );
 
   const setTotalFlightTime = useCallback(
@@ -185,7 +185,7 @@ export const useFlightRecordState = () => {
         );
       }
     },
-    [setFieldValue, values.arrival.date, values.departure.date, adapter]
+    [values.arrival.date, values.departure.date, adapter] // eslint-disable-line react-hooks/exhaustive-deps
   );
 
   const setSimulationAcftType = useCallback(
@@ -196,7 +196,7 @@ export const useFlightRecordState = () => {
     },
 
     //acftType passed as arg
-    [setFieldValue, acftList.setSelectedModel] // eslint-disable-line react-hooks/exhaustive-deps
+    [acftList.setSelectedModel] // eslint-disable-line react-hooks/exhaustive-deps
   );
 
   return {
