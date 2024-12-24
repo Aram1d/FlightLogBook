@@ -5,7 +5,7 @@ import {
   FindOptions,
   ObjectId,
   UpdateFilter,
-  WithoutId,
+  WithoutId
 } from "mongodb";
 import {
   castArray,
@@ -15,7 +15,7 @@ import {
   get,
   isArray,
   isEmpty,
-  values,
+  values
 } from "lodash-es";
 import { castId } from "./helpers.js";
 import { PagerInput, PaginationInput, SortOrder } from "../gqlTypes.js";
@@ -104,7 +104,7 @@ Collection.prototype.existsById = async function (id) {
 Collection.prototype.create = async function (document) {
   if (isArray(document)) {
     const result = await this.insertMany(
-      document.map((document) => ({ _id: castId(), ...document }))
+      document.map(document => ({ _id: castId(), ...document }))
     );
     const docs = await this.findById(values(result.insertedIds));
     if (document.length !== docs.length)
@@ -149,7 +149,7 @@ Collection.prototype.mappedFindOne = async function (filter, key) {
 
 Collection.prototype.mappedFind = async function (filter, key) {
   const result = await this.findAll(filter, { projection: { [key]: 1 } });
-  return result.map((document) => get(document, key));
+  return result.map(document => get(document, key));
 };
 
 Collection.prototype.mappedFindById = function (id, key) {
@@ -165,7 +165,7 @@ Collection.prototype.findList = async function (filter, pager: PagerInput) {
   const sorts = pager?.sorts ?? [];
 
   const words = compact(globalSearch.split(/\s+/));
-  const activeWords = words.filter((word) => word.length > 2);
+  const activeWords = words.filter(word => word.length > 2);
   if (!isEmpty(words) && isEmpty(activeWords)) {
     return { total: 0, items: [] };
   }
@@ -175,38 +175,36 @@ Collection.prototype.findList = async function (filter, pager: PagerInput) {
       filter,
       !isEmpty(activeWords) &&
         !isEmpty(this.textSearchFields) && {
-          $or: this.textSearchFields.map((field) => ({
-            $or: activeWords.map((word) => ({
-              [field]: new RegExp(escapeRegExp(word), "i"),
-            })),
-          })),
+          $or: this.textSearchFields.map(field => ({
+            $or: activeWords.map(word => ({
+              [field]: new RegExp(escapeRegExp(word), "i")
+            }))
+          }))
         },
 
       !isEmpty(fieldSearches) &&
         fieldSearches.reduce((accum, { field, value }) => {
           return {
             ...accum,
-            [field]: { $regex: value, $options: "i" },
+            [field]: { $regex: value, $options: "i" }
           };
-        }, {}),
-    ]),
+        }, {})
+    ])
   };
 
   return {
     total: await this.countDocuments(rootFilter),
     items: await this.findAll(rootFilter, {
       ...(pagination && {
-        skip: (pagination.page - 1) * pagination.limit,
-        limit: pagination.limit,
+        skip:
+          (pagination.page - 1) * pagination.limit + (pagination.shift ?? 0),
+        limit: pagination.limit
       }),
       ...(!isEmpty(sorts) && {
         sort: fromPairs(
-          sorts.map((sort) => [
-            sort.field,
-            sort.order === SortOrder.Asc ? 1 : -1,
-          ])
-        ),
-      }),
-    }),
+          sorts.map(sort => [sort.field, sort.order === SortOrder.Asc ? 1 : -1])
+        )
+      })
+    })
   };
 };

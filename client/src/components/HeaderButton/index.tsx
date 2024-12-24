@@ -8,6 +8,7 @@ import {
   ThemeIcon
 } from "@mantine/core";
 import { UrlRoutes } from "@config";
+import { cn } from "@lib";
 
 import classes from "./HeaderButton.module.css";
 
@@ -16,10 +17,21 @@ interface HeaderButtonProps {
   icon: React.ReactNode;
   label: string;
   to: UrlRoutes | "/";
+  className?: string;
 }
 
-export const HeaderButton = ({ color, icon, label, to }: HeaderButtonProps) => (
-  <Anchor component={Link} to={to} className={classes.headerButton}>
+export const HeaderButton = ({
+  color,
+  icon,
+  label,
+  to,
+  className
+}: HeaderButtonProps) => (
+  <Anchor
+    component={Link}
+    to={to}
+    className={cn(classes.headerButton, className)}
+  >
     <Group>
       <ThemeIcon color={color} variant="light">
         {icon}

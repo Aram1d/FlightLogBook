@@ -20,6 +20,7 @@ export const typeDefs = gql`
   input PaginationInput {
     limit: Int!
     page: Int!
+    shift: Int
   }
 
   input SortInput {

@@ -1,12 +1,12 @@
 import gql from "graphql-tag";
 import { AuthenticationError, UserInputError } from "apollo-server-express";
-import { Resolvers } from "../gqlTypes";
+import { Resolvers, SortOrder } from "../gqlTypes";
 import {
   authMsg,
   flightValidator,
   nulResolverHandler,
   omitNil,
-  paginate,
+  paginate
 } from "../serverHelpers.js";
 import { Aircrafts, Flights, Pilots } from "../db/db.js";
 import { castId } from "../db/helpers.js";
@@ -165,31 +165,31 @@ export const typeDefs = gql`
 
 export const resolvers: Resolvers = {
   Flight: {
-    id: (parent) => parent._id.toHexString(),
-    aircraft: (parent) => Aircrafts.findById(parent?.aircraft ?? ""),
-    pilot: (parent) =>
+    id: parent => parent._id.toHexString(),
+    aircraft: parent => Aircrafts.findById(parent?.aircraft ?? ""),
+    pilot: parent =>
       Pilots.findById(parent.pilot).then(
         nulResolverHandler(
           `Pilot ${parent.pilot.toHexString()} is dangling ref`
         )
       ),
-    pic: (parent) =>
+    pic: parent =>
       Pilots.findById(parent.pic).then(
         nulResolverHandler(
           `Pilot ${parent.pilot.toHexString()} is dangling ref`
         )
-      ),
+      )
   },
 
   Query: {
     ocaiCodes: async () => {
       return Flights.aggregate()
         .project({
-          _id: ["$departure.place", "$arrival.place"],
+          _id: ["$departure.place", "$arrival.place"]
         })
         .unwind("$_id")
         .group({ _id: "$_id" })
-        .map((doc) => doc._id)
+        .map(doc => doc._id)
         .toArray();
     },
     lastFlightDate: async (parent, args, { requester }) => {
@@ -198,8 +198,8 @@ export const resolvers: Resolvers = {
         {
           $or: [
             { pilot: castId(requester._id) },
-            { pic: castId(requester._id) },
-          ],
+            { pic: castId(requester._id) }
+          ]
         },
         { sort: { "arrival.date": -1 } }
       );
@@ -209,21 +209,28 @@ export const resolvers: Resolvers = {
       if (!requester) throw new AuthenticationError(authMsg.userReq);
       const flight = await Flights.findOne({
         _id: castId(id),
-        $or: [{ pilot: castId(requester._id) }, { pic: castId(requester._id) }],
+        $or: [{ pilot: castId(requester._id) }, { pic: castId(requester._id) }]
       });
       if (!flight) throw new UserInputError(`Flight ${id} not found`);
       return flight;
     },
     ownFlights: (parent, { pager }, { requester }) => {
+      console.log(pager);
       if (!requester) throw new AuthenticationError(authMsg.userReq);
       return Flights.findList(
         {
           $or: [
             { pilot: castId(requester._id) },
-            { pic: castId(requester._id) },
-          ],
+            { pic: castId(requester._id) }
+          ]
         },
-        pager
+        {
+          ...pager,
+          sorts: [
+            { field: "arrival.date", order: SortOrder.Asc },
+            ...(pager?.sorts ?? [])
+          ]
+        }
       );
     },
     ownFlightsTotals: async (parent, { pager }, { requester }) => {
@@ -237,10 +244,11 @@ export const resolvers: Resolvers = {
         $match: {
           $or: [
             { pilot: castId(requester._id) },
-            { pic: castId(requester._id) },
-          ],
-        },
+            { pic: castId(requester._id) }
+          ]
+        }
       } as const;
+      const sortStage = { $sort: { "arrival.date": 1 } } as const;
 
       const makeSumStage = (id: string) => ({
         $group: {
@@ -251,12 +259,12 @@ export const resolvers: Resolvers = {
                 branches: [
                   {
                     case: { $eq: ["$aircraftClass", "singleEngine"] },
-                    then: "$totalFlightTime",
-                  },
+                    then: "$totalFlightTime"
+                  }
                 ],
-                default: 0,
-              },
-            },
+                default: 0
+              }
+            }
           },
           multiEngine: {
             $sum: {
@@ -264,12 +272,12 @@ export const resolvers: Resolvers = {
                 branches: [
                   {
                     case: { $eq: ["$aircraftClass", "multiEngine"] },
-                    then: "$totalFlightTime",
-                  },
+                    then: "$totalFlightTime"
+                  }
                 ],
-                default: 0,
-              },
-            },
+                default: 0
+              }
+            }
           },
           totalFlightTime: { $sum: "$totalFlightTime" },
           dayLandings: { $sum: "$landings.day" },
@@ -278,16 +286,17 @@ export const resolvers: Resolvers = {
           pic: { $sum: "$pilotFunctionTime.pic" },
           coPilot: { $sum: "$pilotFunctionTime.coPilot" },
           dualCommand: { $sum: "$pilotFunctionTime.dualCommand" },
-          instructor: { $sum: "$pilotFunctionTime.instructor" },
-        },
+          instructor: { $sum: "$pilotFunctionTime.instructor" }
+        }
       });
 
       const previousCumulativeTotals = skip
         ? (
             await Flights.aggregate([
               matchStage,
+              sortStage,
               { $limit: skip },
-              makeSumStage("previousCumulativeTotals"),
+              makeSumStage("previousCumulativeTotals")
             ]).toArray()
           )[0]
         : null;
@@ -295,20 +304,24 @@ export const resolvers: Resolvers = {
       const pageTotals = (
         await Flights.aggregate([
           matchStage,
+          sortStage,
           { $skip: skip },
           { $limit: limit },
-          makeSumStage("pageTotals"),
+          makeSumStage("pageTotals")
         ]).toArray()
       )[0];
 
       const actualTotals = (
         await Flights.aggregate([
           matchStage,
+          sortStage,
           {
             $limit:
-              (pager?.pagination?.limit ?? 20) * (pager?.pagination?.page ?? 1),
+              (pager?.pagination?.limit ?? 20) *
+                (pager?.pagination?.page ?? 1) +
+              (pager?.pagination?.shift ?? 0)
           },
-          makeSumStage("actualTotals"),
+          makeSumStage("actualTotals")
         ]).toArray()
       )[0];
 
@@ -317,52 +330,52 @@ export const resolvers: Resolvers = {
         singleEngine: {
           preceding: previousCumulativeTotals?.singleEngine ?? 0,
           page: pageTotals?.singleEngine ?? 0,
-          actual: actualTotals?.singleEngine ?? 0,
+          actual: actualTotals?.singleEngine ?? 0
         },
         multiEngine: {
           preceding: previousCumulativeTotals?.multiEngine ?? 0,
           page: pageTotals?.multiEngine ?? 0,
-          actual: actualTotals?.multiEngine ?? 0,
+          actual: actualTotals?.multiEngine ?? 0
         },
         totalFlightTime: {
           preceding: previousCumulativeTotals?.totalFlightTime ?? 0,
           page: pageTotals?.totalFlightTime ?? 0,
-          actual: actualTotals?.totalFlightTime ?? 0,
+          actual: actualTotals?.totalFlightTime ?? 0
         },
         landings: {
           day: {
             preceding: previousCumulativeTotals?.dayLandings ?? 0,
             page: pageTotals?.dayLandings ?? 0,
-            actual: actualTotals?.dayLandings ?? 0,
+            actual: actualTotals?.dayLandings ?? 0
           },
           night: {
             preceding: previousCumulativeTotals?.nightLandings ?? 0,
             page: pageTotals?.nightLandings ?? 0,
-            actual: actualTotals?.nightLandings ?? 0,
-          },
+            actual: actualTotals?.nightLandings ?? 0
+          }
         },
         pic: {
           preceding: previousCumulativeTotals?.pic ?? 0,
           page: pageTotals?.pic ?? 0,
-          actual: actualTotals?.pic ?? 0,
+          actual: actualTotals?.pic ?? 0
         },
         copilot: {
           preceding: previousCumulativeTotals?.coPilot ?? 0,
           page: pageTotals?.coPilot ?? 0,
-          actual: actualTotals?.coPilot ?? 0,
+          actual: actualTotals?.coPilot ?? 0
         },
         dualCommand: {
           preceding: previousCumulativeTotals?.dualCommand ?? 0,
           page: pageTotals?.dualCommand ?? 0,
-          actual: actualTotals?.dualCommand ?? 0,
+          actual: actualTotals?.dualCommand ?? 0
         },
         instructor: {
           preceding: previousCumulativeTotals?.instructor ?? 0,
           page: pageTotals?.instructor ?? 0,
-          actual: actualTotals?.instructor ?? 0,
-        },
+          actual: actualTotals?.instructor ?? 0
+        }
       };
-    },
+    }
   },
   Mutation: {
     addFlight: async (parent, { input }, { requester }) => {
@@ -390,7 +403,7 @@ export const resolvers: Resolvers = {
 
       const [pic, aircraft] = await Promise.all([
         Pilots.findById(input.pic),
-        Aircrafts.findById(input.aircraft ?? ""),
+        Aircrafts.findById(input.aircraft ?? "")
       ]);
 
       if (!pic) throw new Error("PIC id is not valid");
@@ -401,7 +414,7 @@ export const resolvers: Resolvers = {
         ...input,
         pilot: requester._id,
         aircraft: input.aircraft ? castId(input.aircraft) : null,
-        pic: castId(input.pic),
+        pic: castId(input.pic)
       });
 
       await live.invalidate(["Query.ownFlights", "Query.lastFlightDate"]);
@@ -413,14 +426,14 @@ export const resolvers: Resolvers = {
       const updated = await Flights.findOneAndUpdate(
         {
           _id: castId(id),
-          $or: [{ pilot: requester._id }, { pic: requester._id }],
+          $or: [{ pilot: requester._id }, { pic: requester._id }]
         },
         {
           $set: omitNil({
             ...input,
             aircraft: input.aircraft ? castId(input.aircraft) : null,
-            pic: input.pic ? castId(input.pic) : null,
-          }),
+            pic: input.pic ? castId(input.pic) : null
+          })
         }
       );
       if (!updated.value)
@@ -429,6 +442,6 @@ export const resolvers: Resolvers = {
         );
       live.invalidate([`Flight:${id}`]);
       return updated.value;
-    },
-  },
+    }
+  }
 };

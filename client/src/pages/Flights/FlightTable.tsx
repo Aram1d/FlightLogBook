@@ -7,7 +7,8 @@ import {
   Group,
   Stack,
   Title,
-  Text
+  Text,
+  NumberInput
 } from "@mantine/core";
 import { DataTable, DataTableColumn } from "mantine-datatable";
 import { IconEdit } from "@tabler/icons-react";
@@ -20,11 +21,16 @@ type OwnFlight = ArrayElement<OwnFlightsQuery["ownFlights"]["items"]>;
 type CumulativeTotals = OwnFlightsQuery["ownFlightsTotals"];
 
 export const FlightTable = ({ setForm }: EntityTableProps) => {
+  const [shift, setShift] = React.useState(0);
   const pagination = usePagination();
   const [{ data }] = useOwnFlightsQuery({
     variables: {
       pager: {
-        pagination: { page: pagination.page, limit: pagination.recordsPerPage }
+        pagination: {
+          page: pagination.page,
+          limit: pagination.recordsPerPage,
+          shift
+        }
       }
     }
   });
@@ -226,7 +232,19 @@ export const FlightTable = ({ setForm }: EntityTableProps) => {
           columns={columns}
           records={loadedFlights}
           totalRecords={data?.ownFlights.total}
-          recordsPerPageOptions={[10, 12, 20, 50, 100]}
+          recordsPerPageOptions={[10, 11, 12, 13, 14, 20, 50, 100]}
+          paginationText={({ from, to, totalRecords }) => (
+            <Group>
+              {`${from}-${to}/${totalRecords}`}
+              <NumberInput
+                maw={100}
+                size="xs"
+                label="shift"
+                value={shift}
+                onChange={v => setShift(parseInt(v.toString(), 10))}
+              />
+            </Group>
+          )}
           {...pagination}
         />
       </Stack>

@@ -1,6 +1,6 @@
 import { ObjectId } from "mongodb";
 import jwt from "jsonwebtoken";
-import {AddFlightInput, PaginationInput, PilotDb} from "./gqlTypes";
+import { AddFlightInput, PaginationInput, PilotDb } from "./gqlTypes";
 import { live } from "./gqlLive.js";
 import { ApolloServerContextFn } from "./contextFns.js";
 import { Pilots } from "./db/db.js";
@@ -11,7 +11,7 @@ import dayjs from "dayjs";
 
 export const authMsg = {
   guestReq: "Vous êtes déjà connecté",
-  userReq: "Vous devez être connecté pour accéder à cette page",
+  userReq: "Vous devez être connecté pour accéder à cette page"
 };
 
 export async function signIn(
@@ -31,9 +31,9 @@ export async function signIn(
           token,
           ipv4,
           userAgent,
-          lastUsed: new Date(),
-        },
-      },
+          lastUsed: new Date()
+        }
+      }
     }
   );
 
@@ -60,11 +60,14 @@ export const castNonNullable =
     return arg;
   };
 
-//Pagniation helper function
+// Pagination helper function
 export function paginate(pagination: PaginationInput | undefined | null) {
   if (!pagination?.page) return {};
   const limit = pagination?.limit ?? 10;
-  return { skip: (pagination?.page ?? 1) * limit - limit, limit };
+  return {
+    skip: (pagination?.page ?? 1) * limit - limit + (pagination.shift ?? 0),
+    limit
+  };
 }
 
 export const flightValidator = (
@@ -84,7 +87,7 @@ export const flightValidator = (
         .string()
         .nonempty("Departure place is required")
         .length(4, "Departure place should have 4 characters"),
-      date: z.date(),
+      date: z.date()
     }),
     arrival: z.object({
       place: z
@@ -96,7 +99,7 @@ export const flightValidator = (
         .min(
           dayjs(input.departure.date).add(1, "m").toDate(),
           "Arrival time should be after departure time"
-        ),
+        )
     }),
     aircraft: input.simulatorType
       ? z.string().nullable()
@@ -109,7 +112,7 @@ export const flightValidator = (
     pic: z.string().nonempty("PIC is required").nonempty("PIC is required"),
     landings: z.object({
       day: z.number().min(0, "Landings should be positive"),
-      night: z.number().min(0, "Landings should be positive"),
+      night: z.number().min(0, "Landings should be positive")
     }),
     operationalTime: z.object({
       night: z
@@ -125,7 +128,7 @@ export const flightValidator = (
         .max(
           tft,
           "Operational time should not be longer than total flight time"
-        ),
+        )
     }),
     pilotFunctionTime: z.object({
       pic: z
@@ -146,11 +149,8 @@ export const flightValidator = (
       instructor: z
         .number()
         .min(0, "Instructor time should be positive")
-        .max(
-          tft,
-          "Instructor time should not be longer than total flight time"
-        ),
-    }),
+        .max(tft, "Instructor time should not be longer than total flight time")
+    })
   });
   return [validator, tft] as const;
 };

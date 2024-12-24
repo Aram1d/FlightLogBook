@@ -312,6 +312,7 @@ export type PagerInput = {
 export type PaginationInput = {
   limit: Scalars['Int'];
   page: Scalars['Int'];
+  shift?: InputMaybe<Scalars['Int']>;
 };
 
 export type Password = {
