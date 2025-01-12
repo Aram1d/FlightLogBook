@@ -38,8 +38,12 @@ export const DurationInput = (props: DurationInputProps) => {
         component={IMaskInput}
         mask={["0000:00", "000:00", "00:00", "0:00"]}
         value={stringState}
-        onChange={event => setStringState(event.currentTarget.value)}
-        onBlur={event => handleTimeChange(event.currentTarget.value)}
+        onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+          setStringState(event.currentTarget.value)
+        }
+        onBlur={(event: React.ChangeEvent<HTMLInputElement>) =>
+          handleTimeChange(event.currentTarget.value)
+        }
         styles={{
           root: {
             width: "100%"

@@ -233,7 +233,15 @@ export const FlightTable = ({ setForm }: EntityTableProps) => {
           records={loadedFlights}
           totalRecords={data?.ownFlights.total}
           recordsPerPageOptions={[10, 11, 12, 13, 14, 20, 50, 100]}
-          paginationText={({ from, to, totalRecords }) => (
+          paginationText={({
+            from,
+            to,
+            totalRecords
+          }: {
+            from: number;
+            to: number;
+            totalRecords: number;
+          }) => (
             <Group>
               {`${from}-${to}/${totalRecords}`}
               <NumberInput

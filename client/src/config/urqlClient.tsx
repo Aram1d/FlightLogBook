@@ -51,7 +51,10 @@ const createUrqlClient = () =>
             OperationalTime: () => null,
             PilotFunctionTime: () => null,
             Landings: () => null,
-            Juncture: () => null
+            Juncture: () => null,
+            FlightsPage: () => null,
+            FlightTotals: () => null,
+            LandingTotals: () => null
           },
           storage: null as any
         })
@@ -91,7 +94,7 @@ const createUrqlClient = () =>
     }
   });
 
-export const UrqlWrapper = ({ children }: { children: JSX.Element }) => {
+export const UrqlWrapper = ({ children }: { children: React.ReactNode }) => {
   const [token] = useStore(s => s.loginToken);
   const [urqlClient, newUrqlClient] = useState<Client>(createUrqlClient());
 

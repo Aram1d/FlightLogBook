@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { ReactNode, useState } from "react";
 import { Stack } from "@mantine/core";
 
 export type EntityTableProps = {
@@ -13,8 +13,8 @@ export type EntityFormProps = {
 };
 
 type TableFormManagerProps = {
-  Form: (props: EntityFormProps) => JSX.Element | null;
-  Table: (props: EntityTableProps) => JSX.Element | null;
+  Form: (props: EntityFormProps) => ReactNode;
+  Table: (props: EntityTableProps) => ReactNode;
 };
 
 export const makeTableFormManager =
