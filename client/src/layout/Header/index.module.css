@@ -13,3 +13,7 @@
   position: absolute;
   pointer-events: none;
 }
+
+.moreDropdownTrigger {
+  color: light-dark(var(--mantine-colors-black), var(--mantine-colors-dark-0));
+}

@@ -18,7 +18,6 @@ export const useHideOverflow = ({
     if (!ref.current) return;
     const widthColl = getWidthsFromElt(ref.current);
     const collapsibleWidthColl = dropRight(widthColl, 1);
-
     const reducedWidth = width - (last(widthColl) ?? 0 + gap);
     let shownItems = 0;
     let cumulatedWidth = 0;
@@ -34,7 +33,7 @@ export const useHideOverflow = ({
       shownItems++;
     }
     setShownItems(shownItems);
-  }, [gap, width, vw, ...deps]); //eslint-disable-line react-hooks/exhaustive-deps
+  }, [gap, width, vw, ...deps]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return { ref, shownItems };
 };

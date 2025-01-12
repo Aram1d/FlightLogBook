@@ -32,7 +32,7 @@ export const HeaderButton = ({
     to={to}
     className={cn(classes.headerButton, className)}
   >
-    <Group>
+    <Group wrap="nowrap">
       <ThemeIcon color={color} variant="light">
         {icon}
       </ThemeIcon>
