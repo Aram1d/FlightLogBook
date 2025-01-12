@@ -18,7 +18,7 @@ export const useHideOverflow = ({
     if (!ref.current) return;
     const widthColl = getWidthsFromElt(ref.current);
     const collapsibleWidthColl = dropRight(widthColl, 1);
-    console.log({ collapsibleWidthColl, widthColl }); //eslint-disable-line no-console
+
     const reducedWidth = width - (last(widthColl) ?? 0 + gap);
     let shownItems = 0;
     let cumulatedWidth = 0;

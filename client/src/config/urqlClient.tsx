@@ -42,6 +42,9 @@ const createUrqlClient = () =>
         >({
           schema: introspection,
           keys: {
+            ByAircraftStats: ({ aircraft }) =>
+              `${aircraft?.brand}-${aircraft?.model}-${aircraft?.registration}`,
+            ByAircraftModelStats: ({ aircraftModel }) => aircraftModel ?? null,
             Email: ({ address }) => address ?? null,
             PilotsPage: () => null,
             AircraftsPage: () => null,
