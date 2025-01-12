@@ -8,6 +8,6 @@ export const usePagination = () => {
     page,
     onPageChange,
     recordsPerPage,
-    onRecordsPerPageChange,
+    onRecordsPerPageChange
   };
 };

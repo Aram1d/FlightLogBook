@@ -46,7 +46,7 @@ export type PartialDeepOmit<T, K> = T extends Primitive
 
 export function sanitizeStringToEnum<
   T extends Record<string, string>,
-  K extends keyof T,
+  K extends keyof T
 >(enumObj: T, value: string | undefined, fallback: T[K]) {
   for (const v in enumObj) {
     if (enumObj[v] === value) return enumObj[v];

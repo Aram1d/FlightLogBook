@@ -10,5 +10,10 @@ export default defineConfig({
       overlay: false
     }
   },
-  plugins: [react(), tsconfigPaths(), eslint()]
+  plugins: [react(), tsconfigPaths(), eslint()],
+  resolve: {
+    alias: {
+      "@tabler/icons-react": "@tabler/icons-react/dist/esm/icons/index.mjs"
+    }
+  }
 });

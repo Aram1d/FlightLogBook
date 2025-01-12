@@ -24,18 +24,18 @@ export async function commonAuthFn(token: any): Promise<PilotDb | null> {
 
         if (
           requester &&
-          requester.credentials.filter((item) => item.token === token)
-            .length === 1
+          requester.credentials.filter(item => item.token === token).length ===
+            1
         ) {
           const tokenCheck = await Pilots.findOneAndUpdate(
             { _id: requester?._id },
             {
               $set: {
-                "credentials.$[cred].lastUsed": new Date(),
-              },
+                "credentials.$[cred].lastUsed": new Date()
+              }
             },
             {
-              arrayFilters: [{ "cred.token": token }],
+              arrayFilters: [{ "cred.token": token }]
             }
           );
 
@@ -58,22 +58,22 @@ type ContextReturn = Promise<{
 //ApolloSever Context Fn:
 
 export function apolloContext({
-  req,
+  req
 }: {
   req: Request;
   res: Response;
 }): ContextReturn {
   //Info about the client for the Auth system
   const clientInfo: { ipv4: string; userAgent: string; clientUUID: string } = {
-    ipv4: req.ip.match(/(?:[0-9]{1,3}\.){3}[0-9]{1,3}$/)?.[0] ?? "- NR -",
+    ipv4: req.ip?.match(/(?:[0-9]{1,3}\.){3}[0-9]{1,3}$/)?.[0] ?? "- NR -",
     userAgent: req.headers["user-agent"] || "- NR -",
-    clientUUID: (req.headers["Correlation-ID"] as string) || "",
+    clientUUID: (req.headers["Correlation-ID"] as string) || ""
   };
 
-  return commonAuthFn(req.headers.authorization).then((requester) => ({
+  return commonAuthFn(req.headers.authorization).then(requester => ({
     requester,
     clientInfo,
-    token: req.headers.authorization || null,
+    token: req.headers.authorization || null
   }));
 }
 
@@ -92,15 +92,15 @@ export const wsServerContext = (
     ipv4:
       handShake.address.match(/(?:[0-9]{1,3}\.){3}[0-9]{1,3}$/)?.[0] ??
       "- NR -",
-    userAgent: handShake.headers["user-agent"] as string,
+    userAgent: handShake.headers["user-agent"] as string
   };
 
-  return commonAuthFn(wsToken).then((requester) => ({
+  return commonAuthFn(wsToken).then(requester => ({
     requester,
     clientInfo: {
       ...clientInfo,
-      clientUUID: clientUUID || "",
+      clientUUID: clientUUID || ""
     },
-    token: wsToken,
+    token: wsToken
   }));
 };

@@ -8,11 +8,11 @@ export const useStore = create<{
   clientUUID: string;
 }>()(
   persist(
-    (set) => ({
+    set => ({
       loginToken: "",
-      setLoginToken: (token) => set({ loginToken: token }),
-      clientUUID: uuidv4(),
+      setLoginToken: token => set({ loginToken: token }),
+      clientUUID: uuidv4()
     }),
-    { name: "FLB" },
-  ),
+    { name: "FLB" }
+  )
 );
