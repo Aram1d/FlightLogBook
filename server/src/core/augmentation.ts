@@ -16,8 +16,8 @@ import {
   isEmpty,
   values
 } from "lodash-es";
-import { castId } from "./helpers.js";
-import { PagerInput, SortOrder } from "../gqlTypes.js";
+import { castId } from "@core";
+import { PagerInput, SortOrder } from "@graphql";
 
 declare module "mongodb" {
   export type PageResult<TSchema extends Document> = {

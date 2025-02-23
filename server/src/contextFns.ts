@@ -1,9 +1,7 @@
-import type { PilotDb } from "./gqlTypes";
-import { verify } from "jsonwebtoken";
-import { Pilots } from "./db/db.js";
-import { castId } from "./db/helpers.js";
 import { Request, Response } from "express";
-import { Handshake } from "socket.io/dist/socket";
+import { verify } from "jsonwebtoken";
+import { castId, Pilots } from "@core";
+import type { PilotDb } from "@graphql";
 
 export async function commonAuthFn(token: any): Promise<PilotDb | null> {
   if (typeof token === "string") {
@@ -84,7 +82,7 @@ export type ApolloServerContextFn = ThenArg<ReturnType<typeof apolloContext>>;
 //SocketIO gql context Fn:
 
 export const wsServerContext = (
-  handShake: Handshake,
+  handShake: any,
   wsToken: string | null,
   clientUUID: string | null
 ): ContextReturn => {

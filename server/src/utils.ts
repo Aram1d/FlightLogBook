@@ -1,13 +1,14 @@
 import { ObjectId } from "mongodb";
+import { GraphQLError } from "graphql";
 import jwt from "jsonwebtoken";
-import { AddFlightInput, PaginationInput, PilotDb } from "./gqlTypes";
-import { live } from "./gqlLive.js";
-import { ApolloServerContextFn } from "./contextFns.js";
-import { Pilots } from "./db/db.js";
 import { isNil, omitBy } from "lodash-es";
 import { z } from "zod";
 import dayjs from "dayjs";
-import { GraphQLError } from "graphql";
+
+import { ApolloServerContextFn } from "./contextFns.js";
+
+import { Pilots } from "@core";
+import { AddFlightInput, PaginationInput, PilotDb, live } from "@graphql";
 
 export const authMsg = {
   guestReq: "Vous êtes déjà connecté",

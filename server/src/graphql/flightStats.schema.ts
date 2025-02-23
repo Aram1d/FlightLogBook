@@ -1,18 +1,16 @@
 import gql from "graphql-tag";
+import { compact } from "lodash-es";
+import { Flights } from "@core";
 import {
   ByAircraftModelStatsDb,
   ByAircraftStatsDb,
   ByInstructorStatsDb,
   FlightStatsDb,
-  Resolvers
-} from "../gqlTypes.js";
-import { Flights } from "../db/db.js";
-import {
+  Resolvers,
   formatFlightStats,
   mkFltStatsGroupStage,
   mkOwnFlightMatchStage
-} from "./utils/statsUtils.js";
-import { compact } from "lodash-es";
+} from "@graphql";
 
 export const typeDefs = gql`
   interface BaseFlightStats {

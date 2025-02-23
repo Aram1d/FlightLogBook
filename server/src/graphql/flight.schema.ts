@@ -1,5 +1,8 @@
+import { ObjectId } from "mongodb";
 import gql from "graphql-tag";
-import { Resolvers, SortOrder } from "../gqlTypes";
+
+import { castId, Aircrafts, Flights, Pilots } from "@core";
+import { Resolvers, SortOrder, live } from "@graphql";
 import {
   authenticationError,
   authMsg,
@@ -8,11 +11,7 @@ import {
   omitNil,
   paginate,
   userInputError
-} from "../serverHelpers.js";
-import { Aircrafts, Flights, Pilots } from "../db/db.js";
-import { castId } from "../db/helpers.js";
-import { live } from "../gqlLive.js";
-import { ObjectId } from "mongodb";
+} from "@utils";
 
 export const typeDefs = gql`
   enum AircraftClass {

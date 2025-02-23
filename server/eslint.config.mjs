@@ -34,22 +34,21 @@ export default [
         "error",
         {
           patterns: [
-            "^@tests",
-            "^react$",
-            "^react-.*",
-            "^urql$",
-            "^@urql/.*",
-            "^@urql-.*",
-            "^@mantine/.*(?!.css$)$",
-            "^@mantine/.*(?<!.css$)$",
-            "^mantine-.*",
-            "@tabler/icons-react",
+            "^http$",
+            "^socket.io$",
+            "^mongodb$",
+            "^@apollo/server$",
+            "^@apollo/server/express4$",
+            "^graphql$",
+            "^graphql-tag$",
+            "^express$",
+            "^cors$",
+            "^@n1ru4l/*",
+            "^jsonwebtoken$",
             ".*",
-            "^@api$",
-            "^@components$",
-            "^@components/",
-            "^@hooks$",
-            "^@lib$"
+            "^@core$",
+            "^@graphql$",
+            "^@utils$"
           ]
         }
       ]

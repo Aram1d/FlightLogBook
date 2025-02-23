@@ -1,15 +1,15 @@
 overwrite: true
-schema: ./src/schemas/*.schema.ts
+schema: ./src/graphql/*.schema.ts
 documents: ../client/src/api/graphql/*.graphql
 
 generates:
-  ./src/gqlTypes.ts:
+  ./src/graphql/utils/gqlTypes.ts:
     plugins:
       - "typescript"
       - "typescript-resolvers"
       - "typescript-mongodb"
     config:
-      contextType: ./contextFns#ApolloServerContextFn
+      contextType: ../../contextFns#ApolloServerContextFn
       dbTypeSuffix: Db
       enumsAsString: false
       useIndexSignature: true

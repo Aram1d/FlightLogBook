@@ -1,5 +1,5 @@
 import { AggregationCursor } from "mongodb";
-import { PilotDb } from "../../gqlTypes";
+import { PilotDb } from "@graphql";
 
 const emptyFlightStats = {
   id: "empty",

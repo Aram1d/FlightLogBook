@@ -1,14 +1,7 @@
 import gql from "graphql-tag";
-import { Aircrafts } from "../db/db.js";
-import { live } from "../gqlLive.js";
-import { Resolvers } from "../gqlTypes";
-import { castId } from "../db/helpers.js";
-import {
-  authenticationError,
-  authMsg,
-  omitNil,
-  userInputError
-} from "../serverHelpers.js";
+import { Aircrafts, castId } from "@core";
+import { Resolvers, live } from "@graphql";
+import { authenticationError, authMsg, omitNil, userInputError } from "@utils";
 
 export const typeDefs = gql`
   enum AircraftCapabilities {

@@ -1,15 +1,14 @@
 import { Document, IndexDirection, MongoClient } from "mongodb";
 import { values } from "lodash-es";
 import { config } from "dotenv";
-import "./augmentation.js";
+import { arraySchema, nullableSchema, objectSchema } from "@core";
 import {
   AircraftCapabilities,
   AircraftClass,
   AircraftDb,
   FlightDb,
   PilotDb
-} from "../gqlTypes.js";
-import { arraySchema, nullableSchema, objectSchema } from "./helpers.js";
+} from "@graphql";
 
 config();
 

@@ -1,7 +1,6 @@
 import gql from "graphql-tag";
-import { PlaceTupleStat, Resolvers } from "../gqlTypes.js";
-import { Flights } from "../db/db.js";
-import { mkOwnFlightMatchStage } from "./utils/statsUtils.js";
+import { Flights } from "@core";
+import { PlaceTupleStat, Resolvers, mkOwnFlightMatchStage } from "@graphql";
 
 export const typeDefs = gql`
   type PlaceTupleStat {
@@ -28,10 +27,10 @@ export const resolvers: Resolvers = {
             _id: { $concat: ["$departure.place", "__", "$arrival.place"] },
             departure: { $first: "$departure.place" },
             arrival: { $first: "$arrival.place" },
-            times: { $count: {} },
-          },
-        },
+            times: { $count: {} }
+          }
+        }
       ]).toArray();
-    },
-  },
+    }
+  }
 };

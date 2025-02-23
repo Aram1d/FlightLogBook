@@ -1,24 +1,24 @@
 import { createServer } from "http";
+import { Server as IOServer } from "socket.io";
 import { ApolloServer } from "@apollo/server";
 import { expressMiddleware } from "@apollo/server/express4";
+import { execute as defaultExecute, ExecutionArgs } from "graphql";
 import express from "express";
-import { makeExecutableSchema } from "@graphql-tools/schema";
 import cors from "cors";
+import { registerSocketIOGraphQLServer } from "@n1ru4l/socket-io-graphql-server";
+import { applyLiveQueryJSONPatchGenerator } from "@n1ru4l/graphql-live-query-patch-json-patch";
+
+import { flowRight, isObject } from "lodash-es";
+
 import { config } from "dotenv";
 import bodyParser from "body-parser";
 
-import { resolvers, typeDefs } from "./schema";
 import { apolloContext, wsServerContext } from "./contextFns";
-
-import { flowRight, isObject } from "lodash-es";
-import { execute as defaultExecute, ExecutionArgs } from "graphql";
-import { Server as IOServer } from "socket.io";
-import { registerSocketIOGraphQLServer } from "@n1ru4l/socket-io-graphql-server";
-import { applyLiveQueryJSONPatchGenerator } from "@n1ru4l/graphql-live-query-patch-json-patch";
-import { live } from "./gqlLive";
-import { checkMongoIntegrity, enforceMongoSchema } from "./db/integrity";
-import { allCollections } from "./db/db";
 import * as util from "util";
+
+import { checkMongoIntegrity, enforceMongoSchema, allCollections } from "@core";
+import { schema, live } from "@graphql";
+
 util.inspect.defaultOptions.depth = null;
 
 config();
@@ -34,7 +34,6 @@ const socketServer = new IOServer(server, {
   cors: { origin: "*" },
   maxHttpBufferSize: 8e6
 });
-const schema = makeExecutableSchema({ typeDefs, resolvers });
 
 const makeLazyContextExecute =
   (contextFactory: (previous: unknown) => unknown) =>
