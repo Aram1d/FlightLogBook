@@ -5,13 +5,29 @@ import { live } from "./gqlLive.js";
 import { ApolloServerContextFn } from "./contextFns.js";
 import { Pilots } from "./db/db.js";
 import { isNil, omitBy } from "lodash-es";
-import { ApolloError } from "apollo-server-express";
 import { z } from "zod";
 import dayjs from "dayjs";
+import { GraphQLError } from "graphql";
 
 export const authMsg = {
   guestReq: "Vous êtes déjà connecté",
   userReq: "Vous devez être connecté pour accéder à cette page"
+};
+
+export const userInputError = (msg?: string) => {
+  throw new GraphQLError(msg || "You entered something wrong", {
+    extensions: {
+      code: "BAD_USER_INPUT"
+    }
+  });
+};
+
+export const authenticationError = (msg?: string) => {
+  throw new GraphQLError(msg || "You cannot access this", {
+    extensions: {
+      code: "FORBIDDEN"
+    }
+  });
 };
 
 export async function signIn(
@@ -47,16 +63,16 @@ export const emailRegex =
 export const omitNil = (obj: Record<string, any>) => omitBy(obj, isNil);
 
 export const nulResolverHandler =
-  <T extends any>(errorMsg: string) =>
+  <T>(errorMsg: string) =>
   (arg: T) => {
-    if (!arg) throw new ApolloError(errorMsg);
+    if (!arg) throw userInputError(errorMsg);
     return arg;
   };
 
 export const castNonNullable =
   <T>(errorMsg: string) =>
   (arg: T | null) => {
-    if (!arg) throw new ApolloError(errorMsg);
+    if (!arg) throw userInputError(errorMsg);
     return arg;
   };
 

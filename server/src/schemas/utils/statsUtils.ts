@@ -14,7 +14,7 @@ const emptyFlightStats = {
 
 export const mkOwnFlightMatchStage = (
   requester: PilotDb,
-  additionalQuery?: {}
+  additionalQuery?: Record<string, any>
 ) => ({
   $match: {
     $or: [{ pilot: requester._id }, { pic: requester._id }],

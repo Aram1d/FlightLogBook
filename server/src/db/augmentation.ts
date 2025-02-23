@@ -2,7 +2,6 @@ import {
   Collection,
   Document,
   Filter,
-  FindOptions,
   ObjectId,
   UpdateFilter,
   WithoutId
@@ -18,7 +17,7 @@ import {
   values
 } from "lodash-es";
 import { castId } from "./helpers.js";
-import { PagerInput, PaginationInput, SortOrder } from "../gqlTypes.js";
+import { PagerInput, SortOrder } from "../gqlTypes.js";
 
 declare module "mongodb" {
   export type PageResult<TSchema extends Document> = {

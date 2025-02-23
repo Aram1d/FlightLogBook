@@ -1,17 +1,18 @@
 import gql from "graphql-tag";
 import { ObjectId } from "mongodb";
 import jwt from "jsonwebtoken";
-import { AuthenticationError, UserInputError } from "apollo-server-express";
+
 import { hash, compare } from "bcrypt";
 import { Pilots } from "../db/db.js";
 import { live } from "../gqlLive.js";
 import { Resolvers } from "../gqlTypes.js";
 import {
+  authenticationError,
   authMsg,
-  castNonNullable,
   emailRegex,
   omitNil,
-  signIn
+  signIn,
+  userInputError
 } from "../serverHelpers.js";
 import { castId } from "../db/helpers.js";
 
@@ -97,21 +98,21 @@ export const resolvers: Resolvers = {
     currentPilot: (parent, args, { requester }) =>
       requester?._id ? Pilots.findById(requester?._id) : null,
     pilot: (parent, { id }, { requester }) => {
-      if (!requester) throw new AuthenticationError(authMsg.userReq);
+      if (!requester) throw authenticationError(authMsg.userReq);
       return Pilots.findById(id).then(pilot => {
-        if (!pilot) throw new UserInputError("Pilote introuvable");
+        if (!pilot) throw userInputError("Pilote introuvable");
         return pilot;
       });
     },
 
     pilots: async (parent, { pager }, { requester }) => {
-      if (!requester) throw new AuthenticationError(authMsg.userReq);
+      if (!requester) throw authenticationError(authMsg.userReq);
       return Pilots.findList({}, pager);
     }
   },
   Mutation: {
     addPilot: async (parent, { pilot }, { requester }) => {
-      if (!requester) throw new AuthenticationError(authMsg.userReq);
+      if (!requester) throw authenticationError(authMsg.userReq);
       const { email, ...restPilot } = pilot;
       const newPilot = await Pilots.create({
         ...restPilot,
@@ -125,7 +126,7 @@ export const resolvers: Resolvers = {
     },
 
     updatePilot: async (parent, { id, pilot }, { requester }) => {
-      if (!requester) throw new AuthenticationError(authMsg.userReq);
+      if (!requester) throw authenticationError(authMsg.userReq);
       const { email, ...restPilot } = pilot;
 
       const shouldUpdateEmail =
@@ -142,18 +143,18 @@ export const resolvers: Resolvers = {
           })
         }
       );
-      if (!updated.value) throw new UserInputError("Pilot not found");
+      if (!updated) throw userInputError("Pilot not found");
       live.invalidate([`Pilot:${id}`]);
-      return updated.value;
+      return updated;
     },
 
-    signUp: async (parent, args, { requester, clientInfo }) => {
-      if (requester) throw new AuthenticationError(authMsg.guestReq);
+    signUp: async (_, args, { requester, clientInfo }) => {
+      if (requester) throw authenticationError(authMsg.guestReq);
 
       const { username, firstName, lastName, email, pwdHash, pwdHash2 } = args;
 
       if (pwdHash !== pwdHash2)
-        throw new UserInputError("Les mots de passe ne correspondent pas");
+        throw userInputError("Les mots de passe ne correspondent pas");
 
       const _id = new ObjectId();
       const token = jwt.sign(
@@ -174,12 +175,11 @@ export const resolvers: Resolvers = {
         passwords: [{ bcrypt: await hash(pwdHash, 10), createdAt: new Date() }]
       });
 
-      if (!pilot)
-        throw new UserInputError("Erreur lors de la création du compte");
+      if (!pilot) throw userInputError("Erreur lors de la création du compte");
       return token;
     },
-    signIn: async (parent, { login, pwdHash }, { requester, clientInfo }) => {
-      if (requester) throw new AuthenticationError(authMsg.guestReq);
+    signIn: async (_, { login, pwdHash }, { requester, clientInfo }) => {
+      if (requester) throw authenticationError(authMsg.guestReq);
 
       const userQuerySelector = emailRegex.test(login)
         ? { primaryEmail: login }
@@ -187,23 +187,23 @@ export const resolvers: Resolvers = {
 
       return Pilots.findOne(userQuerySelector).then(async pilot => {
         if (!pilot)
-          throw new UserInputError("Utilisateur ou mot de passe invalide");
+          throw userInputError("Utilisateur ou mot de passe invalide");
 
         if (!pilot.passwords[0]?.bcrypt)
-          throw new UserInputError(
+          throw userInputError(
             "Aucun mot de passe défini pour cet Utilisateur"
           );
 
         const valid = await compare(pwdHash, pilot.passwords[0].bcrypt);
         if (!valid)
-          throw new UserInputError("Utilisateur ou mot de passe invalide");
+          throw userInputError("Utilisateur ou mot de passe invalide");
 
         return await signIn(pilot, clientInfo);
       });
     },
 
-    signOut: async (parent, args, { requester, token, clientInfo }) => {
-      if (!requester || !token) throw new AuthenticationError(authMsg.userReq);
+    signOut: async (_, __, { requester, token, clientInfo }) => {
+      if (!requester || !token) throw authenticationError(authMsg.userReq);
 
       return Pilots.findOneAndUpdate(
         { _id: requester._id },

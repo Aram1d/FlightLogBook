@@ -1,15 +1,12 @@
 import gql from "graphql-tag";
 import {
-  AircraftDb,
   ByAircraftModelStatsDb,
   ByAircraftStatsDb,
   ByInstructorStatsDb,
-  FlightStats,
   FlightStatsDb,
   Resolvers
 } from "../gqlTypes.js";
-import { Aircrafts, Flights } from "../db/db.js";
-import dayjs from "dayjs";
+import { Flights } from "../db/db.js";
 import {
   formatFlightStats,
   mkFltStatsGroupStage,
@@ -147,7 +144,7 @@ export const resolvers: Resolvers = {
       });
     },
 
-    byAircraftModel: async (parent, args, { requester }) => {
+    byAircraftModel: async (parent, __, { requester }) => {
       if (!requester)
         throw new Error("You must be logged in to perform this action");
 
@@ -339,7 +336,7 @@ export const resolvers: Resolvers = {
         ])
       ).toArray();
     },
-    byAircraft: async (parent, args, { requester }, info) => {
+    byAircraft: async (parent, __, { requester }) => {
       if (!requester)
         throw new Error("You must be logged in to perform this action");
 

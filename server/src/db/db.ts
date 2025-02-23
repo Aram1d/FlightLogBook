@@ -7,7 +7,7 @@ import {
   AircraftClass,
   AircraftDb,
   FlightDb,
-  PilotDb,
+  PilotDb
 } from "../gqlTypes.js";
 import { arraySchema, nullableSchema, objectSchema } from "./helpers.js";
 
@@ -18,7 +18,7 @@ await client.connect();
 export const database = client.db(process.env.MONGO_DB);
 await database.command({ ping: 1 });
 
-console.log("✓ Connected to MongoDB database");
+console.info("✓ Connected to MongoDB database");
 
 type Configuration<TSchema extends Document> = {
   name: string;
@@ -55,7 +55,7 @@ export const Pilots = await getCollection<PilotDb>({
     lastName: { bsonType: String, minLength: 2, maxLength: 30 },
     email: objectSchema({
       address: { bsonType: "string" },
-      verified: { bsonType: "bool" },
+      verified: { bsonType: "bool" }
     }),
     credentials: arraySchema(
       objectSchema({
@@ -63,16 +63,16 @@ export const Pilots = await getCollection<PilotDb>({
         token: { bsonType: "string" },
         ipv4: { bsonType: "string" },
         userAgent: { bsonType: "string" },
-        lastUsed: { bsonType: "date" },
+        lastUsed: { bsonType: "date" }
       })
     ),
     passwords: arraySchema(
       objectSchema({
         bcrypt: { bsonType: "string" },
-        createdAt: { bsonType: "date" },
+        createdAt: { bsonType: "date" }
       })
-    ),
-  }),
+    )
+  })
 });
 
 export const Aircrafts = await getCollection<AircraftDb>({
@@ -84,8 +84,8 @@ export const Aircrafts = await getCollection<AircraftDb>({
     brand: { bsonType: String, minLength: 3, maxLength: 30 },
     model: { bsonType: String, minLength: 3, maxLength: 30 },
     registration: { bsonType: String, minLength: 3, maxLength: 10 },
-    capabilities: arraySchema({ enum: values(AircraftCapabilities) }),
-  }),
+    capabilities: arraySchema({ enum: values(AircraftCapabilities) })
+  })
 });
 
 export const Flights = await getCollection<FlightDb>({
@@ -97,11 +97,11 @@ export const Flights = await getCollection<FlightDb>({
     pilot: { bsonType: "objectId" },
     departure: objectSchema({
       date: { bsonType: "date" },
-      place: { bsonType: "string", minLength: 4, maxLength: 4 },
+      place: { bsonType: "string", minLength: 4, maxLength: 4 }
     }),
     arrival: objectSchema({
       date: { bsonType: "date" },
-      place: { bsonType: "string", minLength: 4, maxLength: 4 },
+      place: { bsonType: "string", minLength: 4, maxLength: 4 }
     }),
     aircraft: { bsonType: "objectId" },
     aircraftClass: { bsonType: "string", enum: Object.values(AircraftClass) },
@@ -109,22 +109,22 @@ export const Flights = await getCollection<FlightDb>({
     pic: { bsonType: "objectId" },
     landings: objectSchema({
       day: { bsonType: "int" },
-      night: { bsonType: "int" },
+      night: { bsonType: "int" }
     }),
     ifrApproaches: { bsonType: "int" },
     operationalTime: objectSchema({
       night: { bsonType: "int" },
-      ifr: { bsonType: "int" },
+      ifr: { bsonType: "int" }
     }),
     pilotFunctionTime: objectSchema({
       pic: { bsonType: "int" },
       coPilot: { bsonType: "int" },
       dualCommand: { bsonType: "int" },
-      instructor: { bsonType: "int" },
+      instructor: { bsonType: "int" }
     }),
     simulatorType: nullableSchema({ bsonType: "string" }),
-    remarks: { bsonType: "string" },
-  }),
+    remarks: { bsonType: "string" }
+  })
 });
 
 export const allCollections = [Aircrafts, Flights, Pilots];

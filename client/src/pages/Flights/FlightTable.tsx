@@ -242,12 +242,11 @@ export const FlightTable = ({ setForm }: EntityTableProps) => {
             to: number;
             totalRecords: number;
           }) => (
-            <Group>
+            <Group wrap="nowrap">
               {`${from}-${to}/${totalRecords}`}
               <NumberInput
                 maw={100}
                 size="xs"
-                label="shift"
                 value={shift}
                 onChange={v => setShift(parseInt(v.toString(), 10))}
               />

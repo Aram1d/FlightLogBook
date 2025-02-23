@@ -13,10 +13,10 @@ export async function enforceMongoSchema(
       .command({
         collMod: name,
         validator: { $jsonSchema: collection.schema },
-        validationLevel: level,
+        validationLevel: level
       })
       .catch(() => {
-        console.log(
+        console.info(
           `✗ Failed setting schema to collection ${name}, the database might not exist`
         );
       });
@@ -26,7 +26,7 @@ export async function enforceMongoSchema(
 export async function checkMongoIntegrity(collections: Collection<any>[]) {
   for (const collection of collections) {
     const mismatch = await collection.findAll({
-      $nor: [{ $jsonSchema: collection.schema }],
+      $nor: [{ $jsonSchema: collection.schema }]
     });
     if (!isEmpty(mismatch))
       throw new Error(

@@ -1,12 +1,13 @@
 import gql from "graphql-tag";
-import { AuthenticationError, UserInputError } from "apollo-server-express";
 import { Resolvers, SortOrder } from "../gqlTypes";
 import {
+  authenticationError,
   authMsg,
   flightValidator,
   nulResolverHandler,
   omitNil,
-  paginate
+  paginate,
+  userInputError
 } from "../serverHelpers.js";
 import { Aircrafts, Flights, Pilots } from "../db/db.js";
 import { castId } from "../db/helpers.js";
@@ -192,8 +193,8 @@ export const resolvers: Resolvers = {
         .map(doc => doc._id)
         .toArray();
     },
-    lastFlightDate: async (parent, args, { requester }) => {
-      if (!requester) throw new AuthenticationError(authMsg.userReq);
+    lastFlightDate: async (_, __, { requester }) => {
+      if (!requester) throw authenticationError(authMsg.userReq);
       const lastFlight = await Flights.findOne(
         {
           $or: [
@@ -205,18 +206,17 @@ export const resolvers: Resolvers = {
       );
       return lastFlight?.arrival.date;
     },
-    flight: async (parent, { id }, { requester }) => {
-      if (!requester) throw new AuthenticationError(authMsg.userReq);
+    flight: async (_, { id }, { requester }) => {
+      if (!requester) throw authenticationError(authMsg.userReq);
       const flight = await Flights.findOne({
         _id: castId(id),
         $or: [{ pilot: castId(requester._id) }, { pic: castId(requester._id) }]
       });
-      if (!flight) throw new UserInputError(`Flight ${id} not found`);
+      if (!flight) throw userInputError(`Flight ${id} not found`);
       return flight;
     },
-    ownFlights: (parent, { pager }, { requester }) => {
-      console.log(pager);
-      if (!requester) throw new AuthenticationError(authMsg.userReq);
+    ownFlights: (_, { pager }, { requester }) => {
+      if (!requester) throw authenticationError(authMsg.userReq);
       return Flights.findList(
         {
           $or: [
@@ -233,12 +233,12 @@ export const resolvers: Resolvers = {
         }
       );
     },
-    ownFlightsTotals: async (parent, { pager }, { requester }) => {
-      if (!requester) throw new AuthenticationError(authMsg.userReq);
+    ownFlightsTotals: async (_, { pager }, { requester }) => {
+      if (!requester) throw authenticationError(authMsg.userReq);
       const { skip, limit } = paginate(pager?.pagination);
 
       if (typeof skip !== "number" || typeof limit !== "number")
-        throw new UserInputError("Invalid pagination input");
+        throw userInputError("Invalid pagination input");
 
       const matchStage = {
         $match: {
@@ -379,7 +379,7 @@ export const resolvers: Resolvers = {
   },
   Mutation: {
     addFlight: async (parent, { input }, { requester }) => {
-      if (!requester) throw new AuthenticationError(authMsg.userReq);
+      if (!requester) throw authenticationError(authMsg.userReq);
 
       const { pilotFunctionTime } = input;
 
@@ -396,7 +396,7 @@ export const resolvers: Resolvers = {
           tft
         )
       )
-        throw new UserInputError("Sum of pilot fn time should equal TFT");
+        throw userInputError("Sum of pilot fn time should equal TFT");
 
       if (input.aircraft && input.simulatorType)
         throw new Error("Aircraft and simulator type are mutually exclusive");
@@ -420,8 +420,8 @@ export const resolvers: Resolvers = {
       await live.invalidate(["Query.ownFlights", "Query.lastFlightDate"]);
       return newFlight;
     },
-    updateFlight: async (parent, { id, input }, { requester }) => {
-      if (!requester) throw new AuthenticationError(authMsg.userReq);
+    updateFlight: async (_, { id, input }, { requester }) => {
+      if (!requester) throw authenticationError(authMsg.userReq);
 
       const updated = await Flights.findOneAndUpdate(
         {
@@ -436,12 +436,10 @@ export const resolvers: Resolvers = {
           })
         }
       );
-      if (!updated.value)
-        throw new UserInputError(
-          `Flight ${id} not found or not owned by yourself`
-        );
+      if (!updated)
+        throw userInputError(`Flight ${id} not found or not owned by yourself`);
       live.invalidate([`Flight:${id}`]);
-      return updated.value;
+      return updated;
     }
   }
 };

@@ -1,10 +1,14 @@
 import gql from "graphql-tag";
-import { AuthenticationError, UserInputError } from "apollo-server-express";
 import { Aircrafts } from "../db/db.js";
 import { live } from "../gqlLive.js";
 import { Resolvers } from "../gqlTypes";
 import { castId } from "../db/helpers.js";
-import { authMsg, omitNil } from "../serverHelpers.js";
+import {
+  authenticationError,
+  authMsg,
+  omitNil,
+  userInputError
+} from "../serverHelpers.js";
 
 export const typeDefs = gql`
   enum AircraftCapabilities {
@@ -52,44 +56,40 @@ export const typeDefs = gql`
 
 export const resolvers: Resolvers = {
   Aircraft: {
-    id: (parent) =>
+    id: parent =>
       parent.registration
         ? parent._id.toHexString()
-        : `${parent.brand}__${parent.model}`,
+        : `${parent.brand}__${parent.model}`
   },
   Query: {
-    aircraft: async (parent, { id }) => {
+    aircraft: async (_, { id }) => {
       const aircraft = await Aircrafts.findById(id);
       if (!aircraft) throw new Error("Aircraft not found");
       return aircraft;
     },
 
-    aircrafts: async (parent, { pager }) => {
+    aircrafts: async (_, { pager }) => {
       return Aircrafts.findList({}, pager);
-    },
+    }
   },
 
   Mutation: {
-    addAircraft: async (parent, { aircraft }, { requester }) => {
-      if (!requester) throw new AuthenticationError(authMsg.userReq);
+    addAircraft: async (_, { aircraft }, { requester }) => {
+      if (!requester) throw authenticationError(authMsg.userReq);
       const acft = await Aircrafts.create(aircraft);
       live.invalidate(["Query.aircrafts"]);
       return acft;
     },
-    updateAircraft: async (parent, { id, aircraft }, { requester }) => {
-      if (!requester) throw new AuthenticationError(authMsg.userReq);
+    updateAircraft: async (_, { id, aircraft }, { requester }) => {
+      if (!requester) throw authenticationError(authMsg.userReq);
 
       const updatedAircraft = await Aircrafts.findOneAndUpdate(
         { _id: castId(id) },
         { $set: omitNil(aircraft) }
-      ).catch((err) => {
-        console.log(err);
-        throw err;
-      });
-      if (!updatedAircraft.value)
-        throw new UserInputError(`Wrong aircraft id: ${id}`);
+      );
+      if (!updatedAircraft) throw userInputError(`Wrong aircraft id: ${id}`);
       live.invalidate([`Aircraft:${id}`]);
-      return updatedAircraft.value;
-    },
-  },
+      return updatedAircraft;
+    }
+  }
 };

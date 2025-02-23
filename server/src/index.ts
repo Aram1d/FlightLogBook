@@ -1,9 +1,11 @@
 import { createServer } from "http";
-import { ApolloServer } from "apollo-server-express";
+import { ApolloServer } from "@apollo/server";
+import { expressMiddleware } from "@apollo/server/express4";
 import express from "express";
 import { makeExecutableSchema } from "@graphql-tools/schema";
 import cors from "cors";
 import { config } from "dotenv";
+import bodyParser from "body-parser";
 
 import { resolvers, typeDefs } from "./schema";
 import { apolloContext, wsServerContext } from "./contextFns";
@@ -23,7 +25,7 @@ config();
 
 await enforceMongoSchema(allCollections);
 await checkMongoIntegrity(allCollections);
-console.log("✓ Database passed health check");
+console.info("✓ Database passed health check");
 
 const app = express();
 
@@ -76,17 +78,20 @@ if (process.env.NODE_ENV === "production")
 
 //Open listening socket
 
-const apolloServer = new ApolloServer({
-  schema,
-  context: apolloContext
-});
-
+const apolloServer = new ApolloServer({ schema });
 await apolloServer.start();
-apolloServer.applyMiddleware({ app: app, path: "/api" });
+
+app.use(
+  "/api",
+  bodyParser.json({ limit: 50e6 }),
+  expressMiddleware(apolloServer, {
+    context: apolloContext
+  })
+);
 
 if (process.env.NODE_ENV === "production") {
   app.use("/", express.static("public"));
-  app.get("*", (req, res) => {
+  app.get("*", (_, res) => {
     res.sendFile("index.html", { root: "public" });
   });
 }
