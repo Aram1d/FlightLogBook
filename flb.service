@@ -1,0 +1,28 @@
+[Unit]
+Description=Flight Logbook App
+After=network.target
+
+[Service]
+# Define the user and group
+User=root
+Group=root
+
+# Specify the working directory where the Node.js app is located
+WorkingDirectory=/var/www/flb
+
+# Path to the bun compiled app
+ExecStart=/var/www/flb/main
+
+# Automatically restart if the app crashes
+Restart=on-failure
+RestartSec=5
+
+# Output logs to the system journal
+StandardOutput=/var/log/flb.log
+StandardError=/var/log/flb.log
+
+# Environment variables for the app (optional)
+#Environment=NODE_ENV=production
+
+[Install]
+WantedBy=multi-user.target

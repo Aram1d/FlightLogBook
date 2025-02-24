@@ -1,4 +1,5 @@
 import { createServer } from "http";
+import path from "path";
 import { Server as IOServer } from "socket.io";
 import { ApolloServer } from "@apollo/server";
 import { expressMiddleware } from "@apollo/server/express4";
@@ -23,11 +24,25 @@ util.inspect.defaultOptions.depth = null;
 
 config();
 
+// DB health check
+
 await enforceMongoSchema(allCollections);
 await checkMongoIntegrity(allCollections);
 console.info("✓ Database passed health check");
 
 const app = express();
+
+// Static assets
+
+if (!Bun.env.DEV) {
+  const __dirname = Bun.env.PWD ?? "";
+  const root = path.join(__dirname, "./public");
+  app.use("/", express.static(root));
+  app.get("/*", (_, res) => res.sendFile("index.html", { root }));
+  console.info(`✓ Serving static assets from ${root}`);
+}
+
+// GQL server
 
 const server = createServer(app);
 const socketServer = new IOServer(server, {
@@ -71,10 +86,6 @@ app.use(
   })
 );
 
-//Serve the compiled React app if production mode
-if (process.env.NODE_ENV === "production")
-  app.use("/", express.static("public"));
-
 //Open listening socket
 
 const apolloServer = new ApolloServer({ schema });
@@ -87,13 +98,6 @@ app.use(
     context: apolloContext
   })
 );
-
-if (process.env.NODE_ENV === "production") {
-  app.use("/", express.static("public"));
-  app.get("*", (_, res) => {
-    res.sendFile("index.html", { root: "public" });
-  });
-}
 
 server.listen({ port: process.env.SERVER_PORT }, () => {
   console.info(

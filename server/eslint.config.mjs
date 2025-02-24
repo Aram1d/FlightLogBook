@@ -35,6 +35,7 @@ export default [
         {
           patterns: [
             "^http$",
+            "^path$",
             "^socket.io$",
             "^mongodb$",
             "^@apollo/server$",
