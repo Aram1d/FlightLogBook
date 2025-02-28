@@ -21,6 +21,7 @@ fragment FullFLight on Flight {
   }
   pic {
     id
+    username
     firstName
     lastName
   }

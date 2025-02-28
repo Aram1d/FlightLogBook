@@ -14,7 +14,7 @@ export const MainLayout = () => {
     >
       <Header />
       <AppShell.Main>
-        <Container maw={MAX_WIDTH}>
+        <Container maw={MAX_WIDTH} px={0}>
           <Outlet />
         </Container>
       </AppShell.Main>

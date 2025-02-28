@@ -61,7 +61,7 @@ export const Header = () => {
   });
 
   return (
-    <AppShell.Header p="xs">
+    <AppShell.Header mx="xs">
       <Container
         maw={MAX_WIDTH}
         component={Group}

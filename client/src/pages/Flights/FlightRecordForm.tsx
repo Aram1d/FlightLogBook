@@ -94,7 +94,7 @@ export const FlightRecordForm = ({ form, setForm, isAdd }: EntityFormProps) => {
               );
         })}
       >
-        <Grid columns={24}>
+        <Grid columns={22}>
           <Grid.Col span={4}>
             <Stack>
               <FlightRecordTitle>Departure</FlightRecordTitle>
@@ -141,7 +141,7 @@ export const FlightRecordForm = ({ form, setForm, isAdd }: EntityFormProps) => {
               />
             </Stack>
           </Grid.Col>
-          <Grid.Col span={4}>
+          <Grid.Col span={3}>
             <Stack>
               <FlightRecordTitle>Aircraft</FlightRecordTitle>
               <Select
@@ -166,7 +166,7 @@ export const FlightRecordForm = ({ form, setForm, isAdd }: EntityFormProps) => {
             </Stack>
           </Grid.Col>
 
-          <Grid.Col span={4}>
+          <Grid.Col span={5}>
             <Stack>
               <FlightRecordTitle>Class</FlightRecordTitle>
               <AircraftClassSC value="" {...getInputProps("aircraftClass")} />
@@ -197,14 +197,8 @@ export const FlightRecordForm = ({ form, setForm, isAdd }: EntityFormProps) => {
           <Grid.Col span={2}>
             <Stack>
               <FlightRecordTitle>Landings</FlightRecordTitle>
-              <NumberInput
-                label="Day landings"
-                {...getInputProps("landings.day")}
-              />
-              <NumberInput
-                label="Night landings"
-                {...getInputProps("landings.night")}
-              />
+              <NumberInput label="Day" {...getInputProps("landings.day")} />
+              <NumberInput label="Night" {...getInputProps("landings.night")} />
             </Stack>
           </Grid.Col>
 

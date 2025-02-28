@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { Button, Group, Card, Grid, TextInput } from "@mantine/core";
+import { Button, Group, Grid, TextInput } from "@mantine/core";
 import { useForm, zodResolver } from "@mantine/form";
 import { z } from "zod";
 import {
@@ -8,7 +8,7 @@ import {
   usePilotQuery,
   useUpdatePilotMutation
 } from "@api";
-
+import { StdCard } from "@components";
 import { EntityFormProps, mutationPromiseHandler, withoutTypeName } from "@lib";
 
 export const PilotForm = ({ form, setForm, isAdd }: EntityFormProps) => {
@@ -23,16 +23,16 @@ export const PilotForm = ({ form, setForm, isAdd }: EntityFormProps) => {
       z.object({
         username: z
           .string()
-          .min(3, "username should have at least 3 characters")
-          .max(30, "username should have at most 30 characters"),
+          .min(3, "Username should have at least 3 characters")
+          .max(30, "Username should have at most 30 characters"),
         firstName: z
           .string()
-          .min(2, "firstname should have at least 3 characters")
-          .max(30, "firstname should have at most 30 characters"),
+          .min(2, "First name should have at least 3 characters")
+          .max(30, "First name should have at most 30 characters"),
         lastName: z
           .string()
-          .min(2, "lastname should have at least 3 characters")
-          .max(30, "lastname should have at most 30 characters"),
+          .min(2, "Last name should have at least 3 characters")
+          .max(30, "Last name should have at most 30 characters"),
         email: z.string().email("Invalid email")
       })
     )
@@ -53,7 +53,7 @@ export const PilotForm = ({ form, setForm, isAdd }: EntityFormProps) => {
   const [, updatePilot] = useUpdatePilotMutation();
 
   return (
-    <Card style={{ overflow: "visible" }}>
+    <StdCard style={{ overflow: "visible" }}>
       <form
         onSubmit={onSubmit(values => {
           isAdd
@@ -94,6 +94,6 @@ export const PilotForm = ({ form, setForm, isAdd }: EntityFormProps) => {
           </Grid.Col>
         </Grid>
       </form>
-    </Card>
+    </StdCard>
   );
 };

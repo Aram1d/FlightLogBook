@@ -1,58 +1,58 @@
-import { ActionIcon, Button, Card, Group, Stack, Title } from "@mantine/core";
-import { DataTable, DataTableColumn } from "mantine-datatable";
+import { ActionIcon, Button, Stack, Title } from "@mantine/core";
 import { IconEdit } from "@tabler/icons-react";
+import classes from "@components/DataTable/TableRow.module.css";
 import { Pilot, usePilotsQuery } from "@api";
+import { DataTable, DataTableColumn, SpaceBetween, StdCard } from "@components";
 import { usePagination } from "@hooks";
-import { EntityTableProps } from "@lib";
+import { EntityTableProps, cn } from "@lib";
 
 export const PilotsTable = ({ setForm }: EntityTableProps) => {
-  const pagination = usePagination();
+  const [pagination, getPg] = usePagination({ pageSizes: [5, 10, 20] });
   const [{ data }] = usePilotsQuery({
     variables: {
       pager: {
-        pagination: { page: pagination.page, limit: pagination.recordsPerPage }
+        pagination
       }
     }
   });
 
   const columns: DataTableColumn<Omit<Pilot, "credentials" | "passwords">>[] = [
     {
-      accessor: "lastName",
-      title: "Last name"
+      title: "Last name",
+      render: p => p.lastName
     },
     {
-      accessor: "firstName",
-      title: "First name"
+      title: "First name",
+      render: p => p.firstName
     },
-    { accessor: "username" },
+    { title: "Username", render: p => p.username },
     {
-      accessor: "actions",
-      title: "Actions",
+      title: "",
       render: pilot => (
-        <ActionIcon>
-          <IconEdit onClick={() => setForm(pilot.id)} />
+        <ActionIcon variant="subtle" onClick={() => setForm(pilot.id)}>
+          <IconEdit />
         </ActionIcon>
       )
     }
   ];
 
   return (
-    <Card>
+    <StdCard>
       <Stack>
-        <Group justify="apart">
+        <SpaceBetween>
           <Title order={4}>Pilots</Title>
           <Button variant="light" onClick={() => setForm("Add")}>
             Add
           </Button>
-        </Group>
+        </SpaceBetween>
         <DataTable
-          recordsPerPageOptions={[5, 10, 20]}
           columns={columns}
-          records={data?.pilots.items}
-          totalRecords={data?.pilots.total}
-          {...pagination}
+          rowKey={p => p.id}
+          items={data?.pilots.items ?? []}
+          pagination={getPg(data?.pilots.total)}
+          tableProps={{ className: cn(classes.table, classes.actionColumn) }}
         />
       </Stack>
-    </Card>
+    </StdCard>
   );
 };

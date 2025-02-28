@@ -1,40 +1,29 @@
-import {
-  ActionIcon,
-  Badge,
-  Button,
-  Card,
-  Group,
-  Stack,
-  Title
-} from "@mantine/core";
-import { DataTable, DataTableColumn } from "mantine-datatable";
+import { ActionIcon, Badge, Button, Stack, Title } from "@mantine/core";
 import { IconEdit } from "@tabler/icons-react";
+import classes from "@components/DataTable/TableRow.module.css";
 import { Aircraft, useAircraftsQuery } from "@api";
+import { DataTable, DataTableColumn, SpaceBetween, StdCard } from "@components";
 import { usePagination } from "@hooks";
-import { EntityTableProps } from "@lib";
+import { cn, EntityTableProps } from "@lib";
 
 export const AircraftsTable = ({ setForm }: EntityTableProps) => {
-  const pagination = usePagination();
+  const [pagination, getPg] = usePagination({ pageSizes: [5, 10, 20] });
   const [{ data }] = useAircraftsQuery({
     variables: {
       pager: {
-        pagination: {
-          page: pagination.page,
-          limit: pagination.recordsPerPage
-        }
+        pagination
       }
     }
   });
 
   const columns: DataTableColumn<Aircraft>[] = [
     {
-      accessor: "registration",
-      title: "Registration"
+      title: "Registration",
+      render: a => a.registration
     },
-    { accessor: "brand", title: "Brand" },
-    { accessor: "model", title: "Model" },
+    { title: "Brand", render: a => a.brand },
+    { title: "Model", render: a => a.model },
     {
-      accessor: "capabilities",
       title: "Capabilities",
       render: acft =>
         acft.capabilities.length ? (
@@ -44,10 +33,9 @@ export const AircraftsTable = ({ setForm }: EntityTableProps) => {
         )
     },
     {
-      accessor: "id",
-      title: "Actions",
+      title: "",
       render: acft => (
-        <ActionIcon onClick={() => setForm(acft.id)}>
+        <ActionIcon variant="subtle" onClick={() => setForm(acft.id)}>
           <IconEdit />
         </ActionIcon>
       )
@@ -55,22 +43,22 @@ export const AircraftsTable = ({ setForm }: EntityTableProps) => {
   ];
 
   return (
-    <Card>
+    <StdCard>
       <Stack>
-        <Group justify="space-between">
+        <SpaceBetween>
           <Title order={4}>Aircrafts</Title>
           <Button variant="light" onClick={() => setForm("Add")}>
             Add
           </Button>
-        </Group>
+        </SpaceBetween>
         <DataTable
-          recordsPerPageOptions={[5, 10, 20]}
+          tableProps={{ className: cn(classes.table, classes.actionColumn) }}
+          rowKey={a => a.id}
           columns={columns}
-          records={data?.aircrafts.items}
-          totalRecords={data?.aircrafts.total}
-          {...pagination}
+          items={data?.aircrafts.items ?? []}
+          pagination={getPg(data?.aircrafts.total)}
         />
       </Stack>
-    </Card>
+    </StdCard>
   );
 };

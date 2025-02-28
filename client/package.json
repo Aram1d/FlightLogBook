@@ -6,7 +6,7 @@
   "scripts": {
     "build": "tsc && vite build",
     "lint": "eslint src --report-unused-disable-directives --max-warnings 0",
-    "dev": "bunx --bun vite",
+    "dev": "bunx --bun vite --host",
     "preview": "bunx --bun vite preview"
   },
   "dependencies": {
@@ -45,7 +45,6 @@
     "immer": "^10.0.2",
     "js-sha256": "^0.11.0",
     "lodash-es": "^4.17.21",
-    "mantine-datatable": "^7.12.4",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-imask": "^7.6.1",

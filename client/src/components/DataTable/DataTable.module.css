@@ -1,0 +1,93 @@
+.table {
+  margin-bottom: 1px;
+  background-color: var(--mantine-color-body);
+  /* To fix a bug where the bottom border of the table is sometimes masked by ScrollArea */
+}
+
+.item-row {
+  height: 43px;
+  /* To have consistent heights when tables are side by side */
+}
+
+.empty-row {
+  background-color: var(--mantine-color-body) !important;
+}
+
+.dummy-row {
+  height: 0;
+  border-bottom: none;
+}
+
+.selection-cell {
+  width: 1%;
+}
+
+.selected-row-cell {
+  background-color: var(--mantine-primary-color-light);
+}
+
+.expansion-cell {
+  padding: 0;
+}
+
+.pointer {
+  cursor: pointer;
+}
+
+.loading-overlay {
+  background-color: color-mix(
+    in srgb,
+    var(--mantine-color-body),
+    transparent 25%
+  );
+}
+
+.pss {
+  height: 26px;
+  min-height: 0;
+  line-height: 0;
+}
+
+.pssControls {
+  margin-top: 1px;
+  margin-bottom: 1px;
+  height: 24px;
+  & button {
+    height: 12px;
+    & svg {
+      height: 12px !important;
+    }
+  }
+}
+
+.shadow {
+  position: absolute;
+  pointer-events: none;
+  z-index: 3;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+
+  &.shadow-left {
+    top: 0;
+    left: 0;
+    bottom: 1px;
+    width: var(--mantine-spacing-xs);
+    background: linear-gradient(
+      to right,
+      rgba(0, 0, 0, light-dark(0.05, 0.25)),
+      rgba(0, 0, 0, 0)
+    );
+  }
+
+  &.shadow-right {
+    top: 0;
+    right: 0;
+    bottom: 1px;
+    width: var(--mantine-spacing-xs);
+    background: linear-gradient(
+      to left,
+      rgba(0, 0, 0, light-dark(0.05, 0.25)),
+      rgba(0, 0, 0, 0)
+    );
+  }
+}

@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { Button, Card, Checkbox, Grid, Group, TextInput } from "@mantine/core";
+import { Button, Checkbox, Grid, Group, TextInput } from "@mantine/core";
 import { useForm, zodResolver } from "@mantine/form";
 import { z } from "zod";
 import {
@@ -9,6 +9,7 @@ import {
   useAircraftQuery,
   useUpdateAircraftMutation
 } from "@api";
+import { StdCard } from "@components";
 import { EntityFormProps, mutationPromiseHandler, withoutTypeName } from "@lib";
 
 export const AircraftForm = ({ setForm, form, isAdd }: EntityFormProps) => {
@@ -51,7 +52,7 @@ export const AircraftForm = ({ setForm, form, isAdd }: EntityFormProps) => {
   const [, updateAircraft] = useUpdateAircraftMutation();
 
   return (
-    <Card style={{ overflow: "visible" }}>
+    <StdCard style={{ overflow: "visible" }}>
       <form
         onSubmit={onSubmit(values => {
           isAdd
@@ -113,6 +114,6 @@ export const AircraftForm = ({ setForm, form, isAdd }: EntityFormProps) => {
           </Grid.Col>
         </Grid>
       </form>
-    </Card>
+    </StdCard>
   );
 };
