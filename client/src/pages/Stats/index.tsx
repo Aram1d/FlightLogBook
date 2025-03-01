@@ -1,18 +1,23 @@
-import { useState } from "react";
+import { ReactNode, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { Card, Group, Tabs } from "@mantine/core";
+import { Box, Title, Tabs, Text, Skeleton } from "@mantine/core";
 import dayjs from "dayjs";
-import { FlightsSummary } from "./FlightsSummary";
 import { AcftStat } from "./AcftStat";
 import { DcStats } from "./DcStats";
-import { useFlightStatsQuery, useFromDateFlightStatsQuery } from "@api";
+import {
+  FlightStatsQuery,
+  useFlightStatsQuery,
+  useFromDateFlightStatsQuery
+} from "@api";
+import { timeFormatter } from "@lib";
 
 export const FlightStats = () => {
-  const [{ lastMonthDate, last3MonthsDate }] = useState(() => {
+  const [{ lastMonthDate, last3MonthsDate, lastYearDate }] = useState(() => {
     const today = dayjs();
     return {
-      lastMonthDate: today.subtract(3, "months").toDate(),
-      last3MonthsDate: today.subtract(1, "month").toDate()
+      lastMonthDate: today.subtract(1, "months").toDate(),
+      last3MonthsDate: today.subtract(3, "month").toDate(),
+      lastYearDate: today.subtract(1, "year").toDate()
     };
   });
 
@@ -28,42 +33,95 @@ export const FlightStats = () => {
     variables: { date: last3MonthsDate }
   });
 
-  return (
-    <Card>
-      <Tabs
-        value={tabId ?? "sum"}
-        onChange={tabId =>
-          navigate(
-            "/" + (["sum", "dc", "acft"].includes(tabId || "") ? tabId : "sum")
-          )
-        }
-      >
-        <Tabs.List>
-          <Tabs.Tab value="sum">Summary</Tabs.Tab>
-          <Tabs.Tab value="dc">DC stats</Tabs.Tab>
-          <Tabs.Tab value="acft">Acft stats</Tabs.Tab>
-        </Tabs.List>
+  const [{ data: lastYear }] = useFromDateFlightStatsQuery({
+    variables: { date: lastYearDate }
+  });
 
-        <Tabs.Panel value="sum">
-          <Group>
-            <FlightsSummary stats={data?.flightStats} title="Global Summary" />
-            <FlightsSummary
-              stats={lastMonth?.fromDateFlightStats}
-              title="Last month"
-            />
-            <FlightsSummary
-              stats={last3Months?.fromDateFlightStats}
-              title="Last 3 months"
-            />
-          </Group>
-        </Tabs.Panel>
-        <Tabs.Panel value="dc">
-          <DcStats />
-        </Tabs.Panel>
-        <Tabs.Panel value="acft">
-          <AcftStat />
-        </Tabs.Panel>
-      </Tabs>
-    </Card>
+  return (
+    <Tabs
+      value={tabId ?? "sum"}
+      onChange={tabId =>
+        navigate(
+          "/" + (["sum", "dc", "acft"].includes(tabId || "") ? tabId : "sum")
+        )
+      }
+    >
+      <Tabs.List>
+        <Tabs.Tab value="sum">Summary</Tabs.Tab>
+        <Tabs.Tab value="dc">DC stats</Tabs.Tab>
+        <Tabs.Tab value="acft">Acft stats</Tabs.Tab>
+      </Tabs.List>
+
+      <Tabs.Panel value="sum">
+        <Box
+          mt="md"
+          maw={800}
+          style={{
+            display: "grid",
+            gridColumn: 5,
+            gridTemplateColumns: "2fr 1fr 1fr 1fr 1fr",
+            gap: "1rem"
+          }}
+        >
+          <Box />
+          <Title order={5}>Global</Title>
+          <Title order={5}>Last month</Title>
+          <Title order={5}>Last 3 months</Title>
+          <Title order={5}>Last year</Title>
+          {generateStats(
+            data?.flightStats,
+            lastMonth?.fromDateFlightStats,
+            last3Months?.fromDateFlightStats,
+            lastYear?.fromDateFlightStats
+          )}
+        </Box>
+      </Tabs.Panel>
+      <Tabs.Panel value="dc">
+        <DcStats />
+      </Tabs.Panel>
+      <Tabs.Panel value="acft">
+        <AcftStat />
+      </Tabs.Panel>
+    </Tabs>
   );
 };
+
+function generateStats(
+  ..._stats: (FlightStatsQuery["flightStats"] | undefined)[]
+) {
+  const stats: [ReactNode[], ReactNode[], ReactNode[], ReactNode[]] = [
+    [],
+    [],
+    [],
+    []
+  ];
+  _stats.forEach(s => {
+    if (s) {
+      stats[0].push(timeFormatter(s.totalFlightTime));
+      stats[1].push(timeFormatter(s.totalDC));
+      stats[2].push(timeFormatter(s.totalPIC));
+      stats[3].push(s.flightAmount);
+    } else stats.forEach(s => s.push(<Skeleton />));
+  });
+
+  return (
+    <>
+      <Text c="dimmed">Total flight time:</Text>
+      {stats[0].map((s, i) => (
+        <Text key={i}>{s}</Text>
+      ))}
+      <Text c="dimmed">Total D.C flight time:</Text>
+      {stats[1].map((s, i) => (
+        <Text key={i}>{s}</Text>
+      ))}
+      <Text c="dimmed">Total P.I.C flight time:</Text>
+      {stats[2].map((s, i) => (
+        <Text key={i}>{s}</Text>
+      ))}
+      <Text c="dimmed">Flights amount:</Text>
+      {stats[3].map((s, i) => (
+        <Text key={i}>{s}</Text>
+      ))}
+    </>
+  );
+}

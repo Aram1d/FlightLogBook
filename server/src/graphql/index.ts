@@ -19,6 +19,11 @@ import {
 } from "./flight.schema";
 
 import {
+  typeDefs as flightStatsTypeDefs,
+  resolvers as flightStatsResolvers
+} from "./flightStats.schema";
+
+import {
   typeDefs as pilotTypeDefs,
   resolvers as pilotResolvers
 } from "./pilot.schema";
@@ -28,12 +33,14 @@ const typeDefs = mergeTypeDefs([
   aircraftTypeDefs,
   commonTypeDefs,
   flightTypeDefs,
+  flightStatsTypeDefs,
   pilotTypeDefs
 ]);
 const resolvers = mergeResolvers([
   AircraftResolvers,
   commonResolvers,
   flightResolvers,
+  flightStatsResolvers,
   pilotResolvers
 ]);
 
