@@ -17,7 +17,7 @@ export const FlightTable = ({ setForm }: EntityTableProps) => {
     pageSizes: [10, 12, 20, 50, 100],
     shift: 0
   });
-  const [{ data, fetching }] = useOwnFlightsQuery({
+  const [{ data }] = useOwnFlightsQuery({
     variables: {
       pager: {
         pagination

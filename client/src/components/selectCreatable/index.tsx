@@ -33,11 +33,9 @@ export function SelectCreatable({
   });
 
   const exactOptionMatch = data.some(item => item === search);
-  const filteredOptions = exactOptionMatch
-    ? data
-    : data.filter(item =>
-        item.toLowerCase().includes((search ?? "").toLowerCase().trim())
-      );
+  const filteredOptions = data.filter(item =>
+    item.toLowerCase().includes((search ?? "").toLowerCase().trim())
+  );
 
   const options = filteredOptions.map(item => (
     <Combobox.Option value={item} key={item}>
@@ -79,12 +77,12 @@ export function SelectCreatable({
 
       <Combobox.Dropdown>
         <Combobox.Options>
-          {options}
-          {!exactOptionMatch && (search ?? "").trim().length > 0 && (
+          {!exactOptionMatch && (search ?? "").trim().length === 4 && (
             <Combobox.Option value="$create">
               + Add {(search ?? "").trim().toUpperCase()}
             </Combobox.Option>
           )}
+          {options}
         </Combobox.Options>
       </Combobox.Dropdown>
     </Combobox>

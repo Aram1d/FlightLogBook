@@ -154,7 +154,7 @@ export const useFlightRecordState = () => {
         );
       else setFieldValue("arrival.date", depDate);
     },
-    [values.arrival.date] // eslint-disable-line react-hooks/exhaustive-deps
+    [values.arrival.date, setFieldValue]
   );
 
   const setArrivalTime = useCallback(
@@ -167,7 +167,7 @@ export const useFlightRecordState = () => {
         );
       }
     },
-    [values.departure.date] //eslint-disable-line react-hooks/exhaustive-deps
+    [values.departure.date, setFieldValue]
   );
 
   const setTotalFlightTime = useCallback(
@@ -185,7 +185,7 @@ export const useFlightRecordState = () => {
         );
       }
     },
-    [values.arrival.date, values.departure.date, adapter] // eslint-disable-line react-hooks/exhaustive-deps
+    [values.arrival.date, values.departure.date, adapter, setFieldValue]
   );
 
   const setSimulationAcftType = useCallback(
@@ -195,8 +195,7 @@ export const useFlightRecordState = () => {
       acftList.setSelectedModel(null);
     },
 
-    //acftType passed as arg
-    [acftList.setSelectedModel] // eslint-disable-line react-hooks/exhaustive-deps
+    [acftList, setFieldValue]
   );
 
   return {
