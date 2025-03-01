@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import {
   Button,
   Container,
@@ -6,7 +7,9 @@ import {
   Card,
   SimpleGrid
 } from "@mantine/core";
-import { IconPlane, IconUser, IconAirplane } from "@tabler/icons-react";
+
+import { IconPlane, IconUser } from "@tabler/icons-react";
+import { UrlRoutes } from "@config";
 
 const features = [
   {
@@ -20,24 +23,22 @@ const features = [
     description: "Keep records of pilots and their flight history."
   },
   {
-    icon: IconAirplane,
+    icon: IconPlane,
     title: "Aircrafts",
     description: "Manage aircraft details and maintenance logs."
   }
 ];
 
-export default function UnloggedHomePage() {
+export const Home = () => {
+  const navigate = useNavigate();
   return (
     <Container>
-      <Title align="center" mt={50}>
-        Welcome to Your Flight Log App
-      </Title>
-      <Text align="center" color="dimmed" size="lg" mt="md">
-        Track flights, manage pilots, and maintain aircraft records
-        effortlessly.
+      <Title mt={50}>Welcome to Your Flight Log App</Title>
+      <Text align="center" c="dimmed" size="lg" mt="md">
+        Maintain your aircraft logbook effortlessly.
       </Text>
 
-      <SimpleGrid cols={3} mt={50} breakpoints={[{ maxWidth: "sm", cols: 1 }]}>
+      <SimpleGrid cols={3} mt={50}>
         {features.map(feature => (
           <Card shadow="md" padding="lg" radius="md" key={feature.title}>
             <feature.icon size={40} stroke={1.5} />
@@ -50,13 +51,24 @@ export default function UnloggedHomePage() {
       </SimpleGrid>
 
       <div style={{ textAlign: "center", marginTop: 50 }}>
-        <Button size="lg" variant="filled" color="blue" mr="md">
+        <Button
+          onClick={() => navigate(UrlRoutes.signin)}
+          size="lg"
+          variant="filled"
+          color="blue"
+          mr="md"
+        >
           Log In
         </Button>
-        <Button size="lg" variant="outline" color="blue">
+        <Button
+          onClick={() => navigate(UrlRoutes.signup)}
+          size="lg"
+          variant="outline"
+          color="blue"
+        >
           Sign Up
         </Button>
       </div>
     </Container>
   );
-}
+};

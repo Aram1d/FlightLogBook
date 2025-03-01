@@ -24,7 +24,7 @@ export const usePagination = ({
       onLimitChange,
       total: total ?? 0,
       availableLimits: pageSizes,
-      shift,
+      shift: _shift,
       onShiftChange
     })
   ] as const;

@@ -62,6 +62,6 @@ export interface DataTablePagination extends StateHandlers<"page", number> {
   limit: number;
   onLimitChange?: (limit: number) => void;
   availableLimits?: number[];
-  shift?: number | null;
+  shift?: number | string;
   onShiftChange?: (shift: number | string) => void;
 }

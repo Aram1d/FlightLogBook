@@ -1,13 +1,12 @@
-import { useRoutes } from "react-router-dom";
 import { MantineProvider } from "@mantine/core";
 import { Notifications } from "@mantine/notifications";
 import "@mantine/core/styles.layer.css";
 import "@mantine/dates/styles.css";
 import "mantine-datatable/styles.layer.css";
-import { routes } from "@config";
+import { useAppRoutes } from "@config";
 
 function App() {
-  const routing = useRoutes(routes);
+  const routing = useAppRoutes();
 
   return (
     <MantineProvider
