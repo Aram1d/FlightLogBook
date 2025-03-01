@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { Button, Group, Grid, TextInput } from "@mantine/core";
+import { Button, Group, Grid, TextInput, Title } from "@mantine/core";
 import { useForm, zodResolver } from "@mantine/form";
 import { z } from "zod";
 import {
@@ -65,6 +65,7 @@ export const PilotForm = ({ form, setForm, isAdd }: EntityFormProps) => {
             );
       })}
     >
+      <Title order={4}>{isAdd ? "Add new pilot" : "Edit pilot"}</Title>
       <Grid columns={2}>
         <Grid.Col span={1}>
           <TextInput label="Last name" {...getInputProps("lastName")} />

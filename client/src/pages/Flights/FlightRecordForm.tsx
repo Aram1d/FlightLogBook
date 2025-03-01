@@ -91,7 +91,7 @@ export const FlightRecordForm = ({ form, setForm, isAdd }: EntityFormProps) => {
             );
       })}
     >
-      <Title order={3}>{isAdd ? "Add new flight" : "Edit flight"}</Title>
+      <Title order={4}>{isAdd ? "Add new flight" : "Edit flight"}</Title>
       <Grid columns={22}>
         <Grid.Col span={4}>
           <Stack>

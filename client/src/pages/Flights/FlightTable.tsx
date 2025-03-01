@@ -1,17 +1,11 @@
 import { useMemo } from "react";
 
-import { ActionIcon, Button, Stack, Title, Text } from "@mantine/core";
+import { ActionIcon, Stack, Text } from "@mantine/core";
 import { IconEdit } from "@tabler/icons-react";
 import dayjs from "dayjs";
 import classes from "@components/DataTable/TableRow.module.css";
 import { AircraftClass, OwnFlightsQuery, useOwnFlightsQuery } from "@api";
-import {
-  DataTable,
-  DataTableColumn,
-  DataTableFooterColumn,
-  SpaceBetween,
-  TableWrapperStack
-} from "@components";
+import { DataTable, DataTableColumn, DataTableFooterColumn } from "@components";
 import { useBreakpoint, usePagination } from "@hooks";
 import { ArrayElement, timeFormatter, EntityTableProps, cn } from "@lib";
 
@@ -114,28 +108,20 @@ export const FlightTable = ({ setForm }: EntityTableProps) => {
   );
 
   return (
-    <TableWrapperStack>
-      <SpaceBetween>
-        <Title order={4}>Flights</Title>
-        <Button variant="light" onClick={() => setForm("Add")}>
-          Add
-        </Button>
-      </SpaceBetween>
-      <DataTable
-        columns={columns}
-        rowKey={f => f.id}
-        items={loadedFlights}
-        footer={{
-          columns: footerColumns,
-          item: data?.ownFlightsTotals
-        }}
-        pagination={getPg(data?.ownFlights.total)}
-        tableProps={{
-          className: cn(classes.table, classes.actionColumn),
-          horizontalSpacing: "xs"
-        }}
-      />
-    </TableWrapperStack>
+    <DataTable
+      columns={columns}
+      rowKey={f => f.id}
+      items={loadedFlights}
+      footer={{
+        columns: footerColumns,
+        item: data?.ownFlightsTotals
+      }}
+      pagination={getPg(data?.ownFlights.total)}
+      tableProps={{
+        className: cn(classes.table, classes.actionColumn),
+        horizontalSpacing: "xs"
+      }}
+    />
   );
 };
 

@@ -1,13 +1,8 @@
-import { ActionIcon, Badge, Button, Title } from "@mantine/core";
+import { ActionIcon, Badge } from "@mantine/core";
 import { IconEdit } from "@tabler/icons-react";
 import classes from "@components/DataTable/TableRow.module.css";
 import { Aircraft, useAircraftsQuery } from "@api";
-import {
-  DataTable,
-  DataTableColumn,
-  SpaceBetween,
-  TableWrapperStack
-} from "@components";
+import { DataTable, DataTableColumn } from "@components";
 import { usePagination } from "@hooks";
 import { cn, EntityTableProps } from "@lib";
 
@@ -48,20 +43,12 @@ export const AircraftsTable = ({ setForm }: EntityTableProps) => {
   ];
 
   return (
-    <TableWrapperStack>
-      <SpaceBetween>
-        <Title order={4}>Aircrafts</Title>
-        <Button variant="light" onClick={() => setForm("Add")}>
-          Add
-        </Button>
-      </SpaceBetween>
-      <DataTable
-        tableProps={{ className: cn(classes.table, classes.actionColumn) }}
-        rowKey={a => a.id}
-        columns={columns}
-        items={data?.aircrafts.items ?? []}
-        pagination={getPg(data?.aircrafts.total)}
-      />
-    </TableWrapperStack>
+    <DataTable
+      tableProps={{ className: cn(classes.table, classes.actionColumn) }}
+      rowKey={a => a.id}
+      columns={columns}
+      items={data?.aircrafts.items ?? []}
+      pagination={getPg(data?.aircrafts.total)}
+    />
   );
 };

@@ -4,5 +4,8 @@ import { makeTableFormManager } from "@lib";
 
 export const FlightManager = makeTableFormManager({
   Form: FlightRecordForm,
-  Table: FlightTable
+  Table: FlightTable,
+  tableWrapper: {
+    title: "Flights"
+  }
 });

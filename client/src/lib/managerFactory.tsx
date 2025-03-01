@@ -1,5 +1,7 @@
 import { ReactNode, useState } from "react";
-import { FhStack } from "@components";
+import { Button, Title } from "@mantine/core";
+
+import { FhStack, SpaceBetween, TableWrapperStack } from "@components";
 
 export type EntityTableProps = {
   setForm: (arg: string) => void;
@@ -15,10 +17,13 @@ export type EntityFormProps = {
 type TableFormManagerProps = {
   Form: (props: EntityFormProps) => ReactNode;
   Table: (props: EntityTableProps) => ReactNode;
+  tableWrapper: {
+    title: ReactNode;
+  };
 };
 
 export const makeTableFormManager =
-  ({ Form, Table }: TableFormManagerProps) =>
+  ({ Form, Table, tableWrapper }: TableFormManagerProps) =>
   () => {
     const [form, setForm] = useState<string | null>(null);
 
@@ -32,7 +37,17 @@ export const makeTableFormManager =
             isAdd={form === "Add"}
           />
         )}
-        <Table setForm={setForm} />
+        <TableWrapperStack>
+          {!form && (
+            <SpaceBetween>
+              <Title order={4}>{tableWrapper.title}</Title>
+              <Button variant="light" onClick={() => setForm("Add")}>
+                Add
+              </Button>
+            </SpaceBetween>
+          )}
+          <Table setForm={setForm} />
+        </TableWrapperStack>
       </FhStack>
     );
   };

@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { Button, Checkbox, Grid, Group, TextInput } from "@mantine/core";
+import { Button, Checkbox, Grid, Group, TextInput, Title } from "@mantine/core";
 import { useForm, zodResolver } from "@mantine/form";
 import { z } from "zod";
 import {
@@ -67,6 +67,7 @@ export const AircraftForm = ({ setForm, form, isAdd }: EntityFormProps) => {
             );
       })}
     >
+      <Title order={4}>{isAdd ? "Add new aircraft" : "Edit aircraft"}</Title>
       <Grid columns={24}>
         <Grid.Col span={12}>
           <TextInput label="Brand" {...getInputProps("brand")} required />
