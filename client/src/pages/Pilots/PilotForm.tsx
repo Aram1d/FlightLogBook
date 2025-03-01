@@ -8,7 +8,6 @@ import {
   usePilotQuery,
   useUpdatePilotMutation
 } from "@api";
-import { StdCard } from "@components";
 import { EntityFormProps, mutationPromiseHandler, withoutTypeName } from "@lib";
 
 export const PilotForm = ({ form, setForm, isAdd }: EntityFormProps) => {
@@ -53,47 +52,45 @@ export const PilotForm = ({ form, setForm, isAdd }: EntityFormProps) => {
   const [, updatePilot] = useUpdatePilotMutation();
 
   return (
-    <StdCard style={{ overflow: "visible" }}>
-      <form
-        onSubmit={onSubmit(values => {
-          isAdd
-            ? addPilot({ pilot: values }).then(
-                mutationPromiseHandler("Pilot successfully added", reset)
+    <form
+      onSubmit={onSubmit(values => {
+        isAdd
+          ? addPilot({ pilot: values }).then(
+              mutationPromiseHandler("Pilot successfully added", reset)
+            )
+          : updatePilot({ id: form, pilot: values }).then(
+              mutationPromiseHandler("Pilot successfully updated", () =>
+                setForm?.(null)
               )
-            : updatePilot({ id: form, pilot: values }).then(
-                mutationPromiseHandler("Pilot successfully updated", () =>
-                  setForm?.(null)
-                )
-              );
-        })}
-      >
-        <Grid columns={2}>
-          <Grid.Col span={1}>
-            <TextInput label="Last name" {...getInputProps("lastName")} />
-          </Grid.Col>
-          <Grid.Col span={1}>
-            <TextInput label="First name" {...getInputProps("firstName")} />
-          </Grid.Col>
-          <Grid.Col span={1}>
-            <TextInput label="Username" {...getInputProps("username")} />
-          </Grid.Col>
-          <Grid.Col span={1}>
-            <TextInput label="Email" {...getInputProps("email")} />
-          </Grid.Col>
+            );
+      })}
+    >
+      <Grid columns={2}>
+        <Grid.Col span={1}>
+          <TextInput label="Last name" {...getInputProps("lastName")} />
+        </Grid.Col>
+        <Grid.Col span={1}>
+          <TextInput label="First name" {...getInputProps("firstName")} />
+        </Grid.Col>
+        <Grid.Col span={1}>
+          <TextInput label="Username" {...getInputProps("username")} />
+        </Grid.Col>
+        <Grid.Col span={1}>
+          <TextInput label="Email" {...getInputProps("email")} />
+        </Grid.Col>
 
-          <Grid.Col span={2}>
-            <Group justify="flex-end">
-              <Button variant="subtle" onClick={reset}>
-                Reset
-              </Button>
-              <Button variant="subtle" onClick={() => setForm?.(null)}>
-                Close
-              </Button>
-              <Button type="submit">{isAdd ? "Add" : "Edit"}</Button>
-            </Group>
-          </Grid.Col>
-        </Grid>
-      </form>
-    </StdCard>
+        <Grid.Col span={2}>
+          <Group justify="flex-end">
+            <Button variant="subtle" onClick={reset}>
+              Reset
+            </Button>
+            <Button variant="subtle" onClick={() => setForm?.(null)}>
+              Close
+            </Button>
+            <Button type="submit">{isAdd ? "Add" : "Edit"}</Button>
+          </Group>
+        </Grid.Col>
+      </Grid>
+    </form>
   );
 };

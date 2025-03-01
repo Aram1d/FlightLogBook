@@ -181,7 +181,7 @@ export const resolvers: Resolvers = {
 
       const userQuerySelector = emailRegex.test(login)
         ? { primaryEmail: login }
-        : { username: login.toLowerCase() };
+        : { username: login };
 
       return Pilots.findOne(userQuerySelector).then(async pilot => {
         if (!pilot)

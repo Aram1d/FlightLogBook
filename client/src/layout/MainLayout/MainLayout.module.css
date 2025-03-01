@@ -1,4 +1,6 @@
 .main {
+  height: calc(100dvh);
+  overflow: hidden;
   background-color: light-dark(
     var(--mantine-colors-dark-8),
     var(--mantine-colors-gary-0)

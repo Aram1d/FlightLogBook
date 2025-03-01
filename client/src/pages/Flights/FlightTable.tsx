@@ -10,7 +10,7 @@ import {
   DataTableColumn,
   DataTableFooterColumn,
   SpaceBetween,
-  StdCard
+  TableWrapperStack
 } from "@components";
 import { useBreakpoint, usePagination } from "@hooks";
 import { ArrayElement, timeFormatter, EntityTableProps, cn } from "@lib";
@@ -114,30 +114,28 @@ export const FlightTable = ({ setForm }: EntityTableProps) => {
   );
 
   return (
-    <StdCard>
-      <Stack>
-        <SpaceBetween>
-          <Title order={4}>Flights</Title>
-          <Button variant="light" onClick={() => setForm("Add")}>
-            Add
-          </Button>
-        </SpaceBetween>
-        <DataTable
-          columns={columns}
-          rowKey={f => f.id}
-          items={loadedFlights}
-          footer={{
-            columns: footerColumns,
-            item: data?.ownFlightsTotals
-          }}
-          pagination={getPg(data?.ownFlights.total)}
-          tableProps={{
-            className: cn(classes.table, classes.actionColumn),
-            horizontalSpacing: "xs"
-          }}
-        />
-      </Stack>
-    </StdCard>
+    <TableWrapperStack>
+      <SpaceBetween>
+        <Title order={4}>Flights</Title>
+        <Button variant="light" onClick={() => setForm("Add")}>
+          Add
+        </Button>
+      </SpaceBetween>
+      <DataTable
+        columns={columns}
+        rowKey={f => f.id}
+        items={loadedFlights}
+        footer={{
+          columns: footerColumns,
+          item: data?.ownFlightsTotals
+        }}
+        pagination={getPg(data?.ownFlights.total)}
+        tableProps={{
+          className: cn(classes.table, classes.actionColumn),
+          horizontalSpacing: "xs"
+        }}
+      />
+    </TableWrapperStack>
   );
 };
 

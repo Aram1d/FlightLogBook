@@ -9,7 +9,6 @@ import {
   useAircraftQuery,
   useUpdateAircraftMutation
 } from "@api";
-import { StdCard } from "@components";
 import { EntityFormProps, mutationPromiseHandler, withoutTypeName } from "@lib";
 
 export const AircraftForm = ({ setForm, form, isAdd }: EntityFormProps) => {
@@ -52,68 +51,66 @@ export const AircraftForm = ({ setForm, form, isAdd }: EntityFormProps) => {
   const [, updateAircraft] = useUpdateAircraftMutation();
 
   return (
-    <StdCard style={{ overflow: "visible" }}>
-      <form
-        onSubmit={onSubmit(values => {
-          isAdd
-            ? addAircraft({ aircraft: values }).then(
-                mutationPromiseHandler("Aircraft successfully added", reset)
+    <form
+      onSubmit={onSubmit(values => {
+        isAdd
+          ? addAircraft({ aircraft: values }).then(
+              mutationPromiseHandler("Aircraft successfully added", reset)
+            )
+          : updateAircraft({
+              id: form,
+              aircraft: values
+            }).then(
+              mutationPromiseHandler("Aircraft successfully updated", () =>
+                setForm?.(null)
               )
-            : updateAircraft({
-                id: form,
-                aircraft: values
-              }).then(
-                mutationPromiseHandler("Aircraft successfully updated", () =>
-                  setForm?.(null)
-                )
-              );
-        })}
-      >
-        <Grid columns={24}>
-          <Grid.Col span={12}>
-            <TextInput label="Brand" {...getInputProps("brand")} required />
-          </Grid.Col>
-          <Grid.Col span={12}>
-            <TextInput label="Model" {...getInputProps("model")} required />
-          </Grid.Col>
-          <Grid.Col span={12}>
-            <TextInput
-              label="Registration"
-              {...getInputProps("registration")}
-              required
-            />
-          </Grid.Col>
-          <Grid.Col span={12}>
-            <Checkbox.Group
-              label="Aircrafts characteristics"
-              {...getInputProps("capabilities")}
-            >
-              <Group mt="xs">
-                <Checkbox
-                  value={AircraftCapabilities.IsIfr}
-                  label="IFR flights"
-                />
-                <Checkbox
-                  value={AircraftCapabilities.IsMultiEngine}
-                  label="Multi-engines"
-                />
-              </Group>
-            </Checkbox.Group>
-          </Grid.Col>
-          <Grid.Col span={24}>
-            <Group justify="flex-end">
-              <Button variant="subtle" onClick={reset}>
-                Reset
-              </Button>
-              <Button variant="subtle" onClick={() => setForm?.(null)}>
-                Close
-              </Button>
-
-              <Button type="submit">{isAdd ? "Add" : "Update"}</Button>
+            );
+      })}
+    >
+      <Grid columns={24}>
+        <Grid.Col span={12}>
+          <TextInput label="Brand" {...getInputProps("brand")} required />
+        </Grid.Col>
+        <Grid.Col span={12}>
+          <TextInput label="Model" {...getInputProps("model")} required />
+        </Grid.Col>
+        <Grid.Col span={12}>
+          <TextInput
+            label="Registration"
+            {...getInputProps("registration")}
+            required
+          />
+        </Grid.Col>
+        <Grid.Col span={12}>
+          <Checkbox.Group
+            label="Aircrafts characteristics"
+            {...getInputProps("capabilities")}
+          >
+            <Group mt="xs">
+              <Checkbox
+                value={AircraftCapabilities.IsIfr}
+                label="IFR flights"
+              />
+              <Checkbox
+                value={AircraftCapabilities.IsMultiEngine}
+                label="Multi-engines"
+              />
             </Group>
-          </Grid.Col>
-        </Grid>
-      </form>
-    </StdCard>
+          </Checkbox.Group>
+        </Grid.Col>
+        <Grid.Col span={24}>
+          <Group justify="flex-end">
+            <Button variant="subtle" onClick={reset}>
+              Reset
+            </Button>
+            <Button variant="subtle" onClick={() => setForm?.(null)}>
+              Close
+            </Button>
+
+            <Button type="submit">{isAdd ? "Add" : "Update"}</Button>
+          </Group>
+        </Grid.Col>
+      </Grid>
+    </form>
   );
 };

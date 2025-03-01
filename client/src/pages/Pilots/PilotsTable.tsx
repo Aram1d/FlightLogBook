@@ -1,8 +1,13 @@
-import { ActionIcon, Button, Stack, Title } from "@mantine/core";
+import { ActionIcon, Button, Title } from "@mantine/core";
 import { IconEdit } from "@tabler/icons-react";
 import classes from "@components/DataTable/TableRow.module.css";
 import { Pilot, usePilotsQuery } from "@api";
-import { DataTable, DataTableColumn, SpaceBetween, StdCard } from "@components";
+import {
+  DataTable,
+  DataTableColumn,
+  SpaceBetween,
+  TableWrapperStack
+} from "@components";
 import { usePagination } from "@hooks";
 import { EntityTableProps, cn } from "@lib";
 
@@ -37,22 +42,20 @@ export const PilotsTable = ({ setForm }: EntityTableProps) => {
   ];
 
   return (
-    <StdCard>
-      <Stack>
-        <SpaceBetween>
-          <Title order={4}>Pilots</Title>
-          <Button variant="light" onClick={() => setForm("Add")}>
-            Add
-          </Button>
-        </SpaceBetween>
-        <DataTable
-          columns={columns}
-          rowKey={p => p.id}
-          items={data?.pilots.items ?? []}
-          pagination={getPg(data?.pilots.total)}
-          tableProps={{ className: cn(classes.table, classes.actionColumn) }}
-        />
-      </Stack>
-    </StdCard>
+    <TableWrapperStack>
+      <SpaceBetween>
+        <Title order={4}>Pilots</Title>
+        <Button variant="light" onClick={() => setForm("Add")}>
+          Add
+        </Button>
+      </SpaceBetween>
+      <DataTable
+        columns={columns}
+        rowKey={p => p.id}
+        items={data?.pilots.items ?? []}
+        pagination={getPg(data?.pilots.total)}
+        tableProps={{ className: cn(classes.table, classes.actionColumn) }}
+      />
+    </TableWrapperStack>
   );
 };

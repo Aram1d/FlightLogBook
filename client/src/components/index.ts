@@ -10,5 +10,5 @@ export * from "./selectCreatable";
 export * from "./SignInForm";
 export * from "./SignUpForm";
 export * from "./SpaceBetween";
-export * from "./StdCard";
+export * from "./Stacks";
 export * from "./UserMenu";

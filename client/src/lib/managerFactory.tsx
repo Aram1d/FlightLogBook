@@ -1,5 +1,5 @@
 import { ReactNode, useState } from "react";
-import { Stack } from "@mantine/core";
+import { FhStack } from "@components";
 
 export type EntityTableProps = {
   setForm: (arg: string) => void;
@@ -23,7 +23,7 @@ export const makeTableFormManager =
     const [form, setForm] = useState<string | null>(null);
 
     return (
-      <Stack>
+      <FhStack>
         {form && (
           <Form
             key={form}
@@ -33,6 +33,6 @@ export const makeTableFormManager =
           />
         )}
         <Table setForm={setForm} />
-      </Stack>
+      </FhStack>
     );
   };

@@ -22,6 +22,7 @@ import {
   ScrollArea,
   ScrollAreaProps,
   Select,
+  Stack,
   Table,
   TableProps,
   Text
@@ -216,9 +217,9 @@ export function DataTable<T, F>({
   // Render
 
   return (
-    <Box {...props}>
-      <Box pos="relative">
-        <ScrollArea viewportRef={viewportRef} {...scrollAreaProps}>
+    <Stack {...props} mih={0} flex={1}>
+      <Box pos="relative" mih={0} flex={1}>
+        <ScrollArea viewportRef={viewportRef} {...scrollAreaProps} h="100%">
           <Table
             striped
             highlightOnHover
@@ -226,7 +227,7 @@ export function DataTable<T, F>({
             {...tableProps}
             className={cn(classes.table, tableProps?.className)}
           >
-            <Table.Thead ref={headerRef}>
+            <Table.Thead ref={headerRef} pos="sticky" bg="inherit">
               <Table.Tr>
                 {visibleColumns.map(
                   ({ title, hidden, render, onCellClick, ...props }, index) => (
@@ -408,6 +409,6 @@ export function DataTable<T, F>({
           </Group>
         </SpaceBetween>
       )}
-    </Box>
+    </Stack>
   );
 }
