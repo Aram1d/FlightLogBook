@@ -20,7 +20,7 @@ import { useStore } from "@hooks";
 
 const url =
   import.meta.env.MODE === "development"
-    ? `ws://${window.location.hostname}:4000`
+    ? `ws://${window.location.hostname}:5000`
     : `${window.location.origin}`;
 
 const socket = io(url, {});
