@@ -3,7 +3,7 @@ import gql from "graphql-tag";
 import jwt from "jsonwebtoken";
 
 import { hash, compare } from "bcrypt";
-import { castId, Pilots } from "@core";
+import { castId, Flights, Pilots } from "@core";
 import { Resolvers, live } from "@graphql";
 import {
   authenticationError,
@@ -42,6 +42,7 @@ export const typeDefs = gql`
     credentials: [Credential!]! @embedded
     passwords: [Password!]! @embedded
     email: Email! @embedded
+    deletable: Boolean!
   }
 
   input AddPilotInput {
@@ -84,12 +85,17 @@ export const typeDefs = gql`
 
     addPilot(pilot: AddPilotInput!): Pilot!
     updatePilot(id: ID!, pilot: UpdatePilotInput!): Pilot!
+    deletePilot(id: ID!): Boolean
   }
 `;
 
 export const resolvers: Resolvers = {
   Pilot: {
-    id: ({ _id }) => _id.toHexString()
+    id: ({ _id }) => _id.toHexString(),
+    deletable: async ({ _id }) =>
+      !(await Flights.countDocuments({
+        $or: [{ pilot: _id }, { pic: _id }]
+      }))
   },
 
   Query: {
@@ -144,6 +150,21 @@ export const resolvers: Resolvers = {
       if (!updated) throw userInputError("Pilot not found");
       live.invalidate([`Pilot:${id}`]);
       return updated;
+    },
+
+    deletePilot: async (_, args, { requester }) => {
+      if (!requester) throw authenticationError(authMsg.userReq);
+      if (
+        await Flights.findOne({
+          $or: [{ pilot: castId(args.id) }, { pic: castId(args.id) }]
+        })
+      )
+        throw userInputError("Cannot delete a pilot with flights");
+
+      return Pilots.findOneAndDelete({ _id: castId(args.id) }).then(r => {
+        live.invalidate(["Query.pilots"]);
+        return !!r;
+      });
     },
 
     signUp: async (_, args, { requester, clientInfo }) => {

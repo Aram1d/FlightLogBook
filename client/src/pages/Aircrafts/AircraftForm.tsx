@@ -9,7 +9,7 @@ import {
   useAircraftQuery,
   useUpdateAircraftMutation
 } from "@api";
-import { EntityFormProps, mutationPromiseHandler, withoutTypeName } from "@lib";
+import { EntityFormProps, handleMutation, withoutTypeName } from "@lib";
 
 export const AircraftForm = ({ setForm, form, isAdd }: EntityFormProps) => {
   const { getInputProps, onSubmit, setValues, reset } =
@@ -42,7 +42,7 @@ export const AircraftForm = ({ setForm, form, isAdd }: EntityFormProps) => {
 
   useEffect(() => {
     if (data?.aircraft) {
-      const { id, ...acft } = data.aircraft;
+      const { id, deletable, ...acft } = data.aircraft;
       setValues(withoutTypeName(acft));
     }
   }, [data?.aircraft]); // eslint-disable-line react-hooks/exhaustive-deps
@@ -54,16 +54,19 @@ export const AircraftForm = ({ setForm, form, isAdd }: EntityFormProps) => {
     <form
       onSubmit={onSubmit(values => {
         isAdd
-          ? addAircraft({ aircraft: values }).then(
-              mutationPromiseHandler("Aircraft successfully added", reset)
-            )
-          : updateAircraft({
-              id: form,
-              aircraft: values
-            }).then(
-              mutationPromiseHandler("Aircraft successfully updated", () =>
-                setForm?.(null)
-              )
+          ? handleMutation(addAircraft({ aircraft: values }), {
+              successMsg: "Aircraft successfully added",
+              onSuccess: reset
+            })
+          : handleMutation(
+              updateAircraft({
+                id: form,
+                aircraft: values
+              }),
+              {
+                successMsg: "Aircraft successfully updated",
+                onSuccess: () => setForm?.(null)
+              }
             );
       })}
     >

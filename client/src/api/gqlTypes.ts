@@ -54,6 +54,7 @@ export type Aircraft = {
   __typename?: 'Aircraft';
   brand: Scalars['String']['output'];
   capabilities: Array<AircraftCapabilities>;
+  deletable: Scalars['Boolean']['output'];
   id: Scalars['ID']['output'];
   model: Scalars['String']['output'];
   registration: Scalars['String']['output'];
@@ -238,6 +239,8 @@ export type Mutation = {
   addAircraft: Aircraft;
   addFlight: Flight;
   addPilot: Pilot;
+  deleteAircraft?: Maybe<Scalars['Boolean']['output']>;
+  deletePilot?: Maybe<Scalars['Boolean']['output']>;
   signIn: Scalars['String']['output'];
   signOut: Scalars['Boolean']['output'];
   signUp: Scalars['String']['output'];
@@ -259,6 +262,16 @@ export type MutationAddFlightArgs = {
 
 export type MutationAddPilotArgs = {
   pilot: AddPilotInput;
+};
+
+
+export type MutationDeleteAircraftArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+export type MutationDeletePilotArgs = {
+  id: Scalars['ID']['input'];
 };
 
 
@@ -327,6 +340,7 @@ export type Password = {
 export type Pilot = {
   __typename?: 'Pilot';
   credentials: Array<Credential>;
+  deletable: Scalars['Boolean']['output'];
   email: Email;
   firstName: Scalars['String']['output'];
   id: Scalars['ID']['output'];
@@ -480,14 +494,14 @@ export type AircraftQueryVariables = Exact<{
 }>;
 
 
-export type AircraftQuery = { __typename?: 'Query', aircraft: { __typename?: 'Aircraft', id: string, brand: string, model: string, registration: string, capabilities: Array<AircraftCapabilities> } };
+export type AircraftQuery = { __typename?: 'Query', aircraft: { __typename?: 'Aircraft', id: string, brand: string, model: string, registration: string, capabilities: Array<AircraftCapabilities>, deletable: boolean } };
 
 export type AircraftsQueryVariables = Exact<{
   pager?: InputMaybe<PagerInput>;
 }>;
 
 
-export type AircraftsQuery = { __typename?: 'Query', aircrafts: { __typename?: 'AircraftsPage', total: number, items: Array<{ __typename?: 'Aircraft', id: string, brand: string, model: string, registration: string, capabilities: Array<AircraftCapabilities> }> } };
+export type AircraftsQuery = { __typename?: 'Query', aircrafts: { __typename?: 'AircraftsPage', total: number, items: Array<{ __typename?: 'Aircraft', id: string, brand: string, model: string, registration: string, capabilities: Array<AircraftCapabilities>, deletable: boolean }> } };
 
 export type AircraftsRegsQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -508,6 +522,13 @@ export type UpdateAircraftMutationVariables = Exact<{
 
 
 export type UpdateAircraftMutation = { __typename?: 'Mutation', updateAircraft: { __typename?: 'Aircraft', id: string } };
+
+export type DeleteAircraftMutationVariables = Exact<{
+  id: Scalars['ID']['input'];
+}>;
+
+
+export type DeleteAircraftMutation = { __typename?: 'Mutation', deleteAircraft?: boolean | null };
 
 export type OcaiCodesQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -592,14 +613,14 @@ export type PilotQueryVariables = Exact<{
 }>;
 
 
-export type PilotQuery = { __typename?: 'Query', pilot: { __typename?: 'Pilot', id: string, username: string, firstName: string, lastName: string, email: { __typename?: 'Email', address: string, verified: boolean } } };
+export type PilotQuery = { __typename?: 'Query', pilot: { __typename?: 'Pilot', id: string, username: string, firstName: string, lastName: string, deletable: boolean, email: { __typename?: 'Email', address: string, verified: boolean } } };
 
 export type PilotsQueryVariables = Exact<{
   pager?: InputMaybe<PagerInput>;
 }>;
 
 
-export type PilotsQuery = { __typename?: 'Query', pilots: { __typename?: 'PilotsPage', total: number, items: Array<{ __typename?: 'Pilot', id: string, username: string, firstName: string, lastName: string, email: { __typename?: 'Email', address: string, verified: boolean } }> } };
+export type PilotsQuery = { __typename?: 'Query', pilots: { __typename?: 'PilotsPage', total: number, items: Array<{ __typename?: 'Pilot', id: string, username: string, firstName: string, lastName: string, deletable: boolean, email: { __typename?: 'Email', address: string, verified: boolean } }> } };
 
 export type PilotsListQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -646,14 +667,21 @@ export type SignOutMutationVariables = Exact<{ [key: string]: never; }>;
 
 export type SignOutMutation = { __typename?: 'Mutation', signOut: boolean };
 
+export type DeletePilotMutationVariables = Exact<{
+  id: Scalars['ID']['input'];
+}>;
+
+
+export type DeletePilotMutation = { __typename?: 'Mutation', deletePilot?: boolean | null };
+
 export const FullFLightFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"FullFLight"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Flight"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"__typename"}},{"kind":"Field","name":{"kind":"Name","value":"departure"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"date"}},{"kind":"Field","name":{"kind":"Name","value":"place"}}]}},{"kind":"Field","name":{"kind":"Name","value":"arrival"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"date"}},{"kind":"Field","name":{"kind":"Name","value":"place"}}]}},{"kind":"Field","name":{"kind":"Name","value":"totalFlightTime"}},{"kind":"Field","name":{"kind":"Name","value":"pilot"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"firstName"}},{"kind":"Field","name":{"kind":"Name","value":"lastName"}}]}},{"kind":"Field","name":{"kind":"Name","value":"pic"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"username"}},{"kind":"Field","name":{"kind":"Name","value":"firstName"}},{"kind":"Field","name":{"kind":"Name","value":"lastName"}}]}},{"kind":"Field","name":{"kind":"Name","value":"aircraft"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"registration"}}]}},{"kind":"Field","name":{"kind":"Name","value":"aircraftClass"}},{"kind":"Field","name":{"kind":"Name","value":"ifrApproaches"}},{"kind":"Field","name":{"kind":"Name","value":"landings"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"day"}},{"kind":"Field","name":{"kind":"Name","value":"night"}}]}},{"kind":"Field","name":{"kind":"Name","value":"operationalTime"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"ifr"}},{"kind":"Field","name":{"kind":"Name","value":"night"}}]}},{"kind":"Field","name":{"kind":"Name","value":"pilotFunctionTime"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"pic"}},{"kind":"Field","name":{"kind":"Name","value":"instructor"}},{"kind":"Field","name":{"kind":"Name","value":"coPilot"}},{"kind":"Field","name":{"kind":"Name","value":"dualCommand"}}]}},{"kind":"Field","name":{"kind":"Name","value":"remarks"}}]}}]} as unknown as DocumentNode;
 export const AllStatsFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"AllStats"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"BaseFlightStats"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"totalFlightTime"}},{"kind":"Field","name":{"kind":"Name","value":"totalDC"}},{"kind":"Field","name":{"kind":"Name","value":"totalPIC"}},{"kind":"Field","name":{"kind":"Name","value":"totalCOPI"}},{"kind":"Field","name":{"kind":"Name","value":"totalInstructor"}},{"kind":"Field","name":{"kind":"Name","value":"flightAmount"}}]}}]} as unknown as DocumentNode;
-export const AircraftDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Aircraft"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}}],"directives":[{"kind":"Directive","name":{"kind":"Name","value":"live"}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"aircraft"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"brand"}},{"kind":"Field","name":{"kind":"Name","value":"model"}},{"kind":"Field","name":{"kind":"Name","value":"registration"}},{"kind":"Field","name":{"kind":"Name","value":"capabilities"}}]}}]}}]} as unknown as DocumentNode;
+export const AircraftDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Aircraft"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}}],"directives":[{"kind":"Directive","name":{"kind":"Name","value":"live"}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"aircraft"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"brand"}},{"kind":"Field","name":{"kind":"Name","value":"model"}},{"kind":"Field","name":{"kind":"Name","value":"registration"}},{"kind":"Field","name":{"kind":"Name","value":"capabilities"}},{"kind":"Field","name":{"kind":"Name","value":"deletable"}}]}}]}}]} as unknown as DocumentNode;
 
 export function useAircraftQuery(options: Omit<Urql.UseQueryArgs<AircraftQueryVariables>, 'query'>) {
   return Urql.useQuery<AircraftQuery, AircraftQueryVariables>({ query: AircraftDocument, ...options });
 };
-export const AircraftsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Aircrafts"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"pager"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"PagerInput"}}}],"directives":[{"kind":"Directive","name":{"kind":"Name","value":"live"}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"aircrafts"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"pager"},"value":{"kind":"Variable","name":{"kind":"Name","value":"pager"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"total"}},{"kind":"Field","name":{"kind":"Name","value":"items"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"brand"}},{"kind":"Field","name":{"kind":"Name","value":"model"}},{"kind":"Field","name":{"kind":"Name","value":"registration"}},{"kind":"Field","name":{"kind":"Name","value":"capabilities"}}]}}]}}]}}]} as unknown as DocumentNode;
+export const AircraftsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Aircrafts"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"pager"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"PagerInput"}}}],"directives":[{"kind":"Directive","name":{"kind":"Name","value":"live"}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"aircrafts"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"pager"},"value":{"kind":"Variable","name":{"kind":"Name","value":"pager"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"total"}},{"kind":"Field","name":{"kind":"Name","value":"items"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"brand"}},{"kind":"Field","name":{"kind":"Name","value":"model"}},{"kind":"Field","name":{"kind":"Name","value":"registration"}},{"kind":"Field","name":{"kind":"Name","value":"capabilities"}},{"kind":"Field","name":{"kind":"Name","value":"deletable"}}]}}]}}]}}]} as unknown as DocumentNode;
 
 export function useAircraftsQuery(options?: Omit<Urql.UseQueryArgs<AircraftsQueryVariables>, 'query'>) {
   return Urql.useQuery<AircraftsQuery, AircraftsQueryVariables>({ query: AircraftsDocument, ...options });
@@ -672,6 +700,11 @@ export const UpdateAircraftDocument = {"kind":"Document","definitions":[{"kind":
 
 export function useUpdateAircraftMutation() {
   return Urql.useMutation<UpdateAircraftMutation, UpdateAircraftMutationVariables>(UpdateAircraftDocument);
+};
+export const DeleteAircraftDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"DeleteAircraft"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"deleteAircraft"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}]}]}}]} as unknown as DocumentNode;
+
+export function useDeleteAircraftMutation() {
+  return Urql.useMutation<DeleteAircraftMutation, DeleteAircraftMutationVariables>(DeleteAircraftDocument);
 };
 export const OcaiCodesDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"OcaiCodes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"ocaiCodes"}}]}}]} as unknown as DocumentNode;
 
@@ -728,12 +761,12 @@ export const CurrentPilotDocument = {"kind":"Document","definitions":[{"kind":"O
 export function useCurrentPilotQuery(options?: Omit<Urql.UseQueryArgs<CurrentPilotQueryVariables>, 'query'>) {
   return Urql.useQuery<CurrentPilotQuery, CurrentPilotQueryVariables>({ query: CurrentPilotDocument, ...options });
 };
-export const PilotDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Pilot"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}}],"directives":[{"kind":"Directive","name":{"kind":"Name","value":"live"}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"pilot"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"username"}},{"kind":"Field","name":{"kind":"Name","value":"firstName"}},{"kind":"Field","name":{"kind":"Name","value":"lastName"}},{"kind":"Field","name":{"kind":"Name","value":"email"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"address"}},{"kind":"Field","name":{"kind":"Name","value":"verified"}}]}},{"kind":"Field","name":{"kind":"Name","value":"lastName"}}]}}]}}]} as unknown as DocumentNode;
+export const PilotDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Pilot"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}}],"directives":[{"kind":"Directive","name":{"kind":"Name","value":"live"}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"pilot"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"username"}},{"kind":"Field","name":{"kind":"Name","value":"firstName"}},{"kind":"Field","name":{"kind":"Name","value":"lastName"}},{"kind":"Field","name":{"kind":"Name","value":"email"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"address"}},{"kind":"Field","name":{"kind":"Name","value":"verified"}}]}},{"kind":"Field","name":{"kind":"Name","value":"deletable"}}]}}]}}]} as unknown as DocumentNode;
 
 export function usePilotQuery(options: Omit<Urql.UseQueryArgs<PilotQueryVariables>, 'query'>) {
   return Urql.useQuery<PilotQuery, PilotQueryVariables>({ query: PilotDocument, ...options });
 };
-export const PilotsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Pilots"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"pager"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"PagerInput"}}}],"directives":[{"kind":"Directive","name":{"kind":"Name","value":"live"}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"pilots"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"pager"},"value":{"kind":"Variable","name":{"kind":"Name","value":"pager"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"items"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"username"}},{"kind":"Field","name":{"kind":"Name","value":"firstName"}},{"kind":"Field","name":{"kind":"Name","value":"lastName"}},{"kind":"Field","name":{"kind":"Name","value":"email"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"address"}},{"kind":"Field","name":{"kind":"Name","value":"verified"}}]}},{"kind":"Field","name":{"kind":"Name","value":"lastName"}}]}},{"kind":"Field","name":{"kind":"Name","value":"total"}}]}}]}}]} as unknown as DocumentNode;
+export const PilotsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Pilots"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"pager"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"PagerInput"}}}],"directives":[{"kind":"Directive","name":{"kind":"Name","value":"live"}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"pilots"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"pager"},"value":{"kind":"Variable","name":{"kind":"Name","value":"pager"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"items"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"username"}},{"kind":"Field","name":{"kind":"Name","value":"firstName"}},{"kind":"Field","name":{"kind":"Name","value":"lastName"}},{"kind":"Field","name":{"kind":"Name","value":"email"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"address"}},{"kind":"Field","name":{"kind":"Name","value":"verified"}}]}},{"kind":"Field","name":{"kind":"Name","value":"deletable"}}]}},{"kind":"Field","name":{"kind":"Name","value":"total"}}]}}]}}]} as unknown as DocumentNode;
 
 export function usePilotsQuery(options?: Omit<Urql.UseQueryArgs<PilotsQueryVariables>, 'query'>) {
   return Urql.useQuery<PilotsQuery, PilotsQueryVariables>({ query: PilotsDocument, ...options });
@@ -767,6 +800,11 @@ export const SignOutDocument = {"kind":"Document","definitions":[{"kind":"Operat
 
 export function useSignOutMutation() {
   return Urql.useMutation<SignOutMutation, SignOutMutationVariables>(SignOutDocument);
+};
+export const DeletePilotDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"deletePilot"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"deletePilot"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}]}]}}]} as unknown as DocumentNode;
+
+export function useDeletePilotMutation() {
+  return Urql.useMutation<DeletePilotMutation, DeletePilotMutationVariables>(DeletePilotDocument);
 };
 export type WithTypename<T extends { __typename?: any }> = Partial<T> & { __typename: NonNullable<T['__typename']> };
 
@@ -814,6 +852,7 @@ export type GraphCacheResolvers = {
   Aircraft?: {
     brand?: GraphCacheResolver<WithTypename<Aircraft>, Record<string, never>, Scalars['String'] | string>,
     capabilities?: GraphCacheResolver<WithTypename<Aircraft>, Record<string, never>, Array<AircraftCapabilities | string>>,
+    deletable?: GraphCacheResolver<WithTypename<Aircraft>, Record<string, never>, Scalars['Boolean'] | string>,
     id?: GraphCacheResolver<WithTypename<Aircraft>, Record<string, never>, Scalars['ID'] | string>,
     model?: GraphCacheResolver<WithTypename<Aircraft>, Record<string, never>, Scalars['String'] | string>,
     registration?: GraphCacheResolver<WithTypename<Aircraft>, Record<string, never>, Scalars['String'] | string>
@@ -938,6 +977,7 @@ export type GraphCacheResolvers = {
   },
   Pilot?: {
     credentials?: GraphCacheResolver<WithTypename<Pilot>, Record<string, never>, Array<WithTypename<Credential> | string>>,
+    deletable?: GraphCacheResolver<WithTypename<Pilot>, Record<string, never>, Scalars['Boolean'] | string>,
     email?: GraphCacheResolver<WithTypename<Pilot>, Record<string, never>, WithTypename<Email> | string>,
     firstName?: GraphCacheResolver<WithTypename<Pilot>, Record<string, never>, Scalars['String'] | string>,
     id?: GraphCacheResolver<WithTypename<Pilot>, Record<string, never>, Scalars['ID'] | string>,
@@ -970,6 +1010,8 @@ export type GraphCacheOptimisticUpdaters = {
   addAircraft?: GraphCacheOptimisticMutationResolver<MutationAddAircraftArgs, WithTypename<Aircraft>>,
   addFlight?: GraphCacheOptimisticMutationResolver<MutationAddFlightArgs, WithTypename<Flight>>,
   addPilot?: GraphCacheOptimisticMutationResolver<MutationAddPilotArgs, WithTypename<Pilot>>,
+  deleteAircraft?: GraphCacheOptimisticMutationResolver<MutationDeleteAircraftArgs, Maybe<Scalars['Boolean']>>,
+  deletePilot?: GraphCacheOptimisticMutationResolver<MutationDeletePilotArgs, Maybe<Scalars['Boolean']>>,
   signIn?: GraphCacheOptimisticMutationResolver<MutationSignInArgs, Scalars['String']>,
   signOut?: GraphCacheOptimisticMutationResolver<Record<string, never>, Scalars['Boolean']>,
   signUp?: GraphCacheOptimisticMutationResolver<MutationSignUpArgs, Scalars['String']>,
@@ -998,6 +1040,8 @@ export type GraphCacheUpdaters = {
     addAircraft?: GraphCacheUpdateResolver<{ addAircraft: WithTypename<Aircraft> }, MutationAddAircraftArgs>,
     addFlight?: GraphCacheUpdateResolver<{ addFlight: WithTypename<Flight> }, MutationAddFlightArgs>,
     addPilot?: GraphCacheUpdateResolver<{ addPilot: WithTypename<Pilot> }, MutationAddPilotArgs>,
+    deleteAircraft?: GraphCacheUpdateResolver<{ deleteAircraft: Maybe<Scalars['Boolean']> }, MutationDeleteAircraftArgs>,
+    deletePilot?: GraphCacheUpdateResolver<{ deletePilot: Maybe<Scalars['Boolean']> }, MutationDeletePilotArgs>,
     signIn?: GraphCacheUpdateResolver<{ signIn: Scalars['String'] }, MutationSignInArgs>,
     signOut?: GraphCacheUpdateResolver<{ signOut: Scalars['Boolean'] }, Record<string, never>>,
     signUp?: GraphCacheUpdateResolver<{ signUp: Scalars['String'] }, MutationSignUpArgs>,
@@ -1009,6 +1053,7 @@ export type GraphCacheUpdaters = {
   Aircraft?: {
     brand?: GraphCacheUpdateResolver<Maybe<WithTypename<Aircraft>>, Record<string, never>>,
     capabilities?: GraphCacheUpdateResolver<Maybe<WithTypename<Aircraft>>, Record<string, never>>,
+    deletable?: GraphCacheUpdateResolver<Maybe<WithTypename<Aircraft>>, Record<string, never>>,
     id?: GraphCacheUpdateResolver<Maybe<WithTypename<Aircraft>>, Record<string, never>>,
     model?: GraphCacheUpdateResolver<Maybe<WithTypename<Aircraft>>, Record<string, never>>,
     registration?: GraphCacheUpdateResolver<Maybe<WithTypename<Aircraft>>, Record<string, never>>
@@ -1133,6 +1178,7 @@ export type GraphCacheUpdaters = {
   },
   Pilot?: {
     credentials?: GraphCacheUpdateResolver<Maybe<WithTypename<Pilot>>, Record<string, never>>,
+    deletable?: GraphCacheUpdateResolver<Maybe<WithTypename<Pilot>>, Record<string, never>>,
     email?: GraphCacheUpdateResolver<Maybe<WithTypename<Pilot>>, Record<string, never>>,
     firstName?: GraphCacheUpdateResolver<Maybe<WithTypename<Pilot>>, Record<string, never>>,
     id?: GraphCacheUpdateResolver<Maybe<WithTypename<Pilot>>, Record<string, never>>,

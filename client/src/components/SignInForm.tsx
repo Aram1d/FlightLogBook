@@ -14,7 +14,7 @@ import { useForm } from "@mantine/form";
 import { sha256 } from "js-sha256";
 import { useCurrentPilotQuery, useSignInMutation } from "@api";
 import { useStore } from "@hooks";
-import { mutationPromiseHandler } from "@lib";
+import { handleMutation } from "@lib";
 
 export const SignInForm = () => {
   const [{ data }] = useCurrentPilotQuery();
@@ -39,10 +39,12 @@ export const SignInForm = () => {
       <LoadingOverlay visible={fetching} />
       <form
         onSubmit={onSubmit(values => {
-          signIn({ email: values.email, pwdHash: sha256(values.pwd) }).then(
-            mutationPromiseHandler("Welcome back", ({ signIn }) =>
-              setLoginToken(signIn)
-            )
+          handleMutation(
+            signIn({ email: values.email, pwdHash: sha256(values.pwd) }),
+            {
+              successMsg: "Welcome back",
+              onSuccess: ({ signIn }) => setLoginToken(signIn)
+            }
           );
         })}
       >

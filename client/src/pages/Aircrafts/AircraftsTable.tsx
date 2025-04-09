@@ -1,10 +1,10 @@
 import { ActionIcon, Badge } from "@mantine/core";
-import { IconEdit } from "@tabler/icons-react";
+import { IconEdit, IconTrash } from "@tabler/icons-react";
 import classes from "@components/DataTable/TableRow.module.css";
-import { Aircraft, useAircraftsQuery } from "@api";
-import { DataTable, DataTableColumn } from "@components";
+import { Aircraft, useAircraftsQuery, useDeleteAircraftMutation } from "@api";
+import { DataTable, DataTableColumn, DeletePopover, Right } from "@components";
 import { usePagination } from "@hooks";
-import { cn, EntityTableProps } from "@lib";
+import { cn, EntityTableProps, handleMutation } from "@lib";
 
 export const AircraftsTable = ({ setForm }: EntityTableProps) => {
   const [pagination, getPg] = usePagination({ pageSizes: [5, 10, 20] });
@@ -15,6 +15,8 @@ export const AircraftsTable = ({ setForm }: EntityTableProps) => {
       }
     }
   });
+
+  const [, deleteAircraft] = useDeleteAircraftMutation();
 
   const columns: DataTableColumn<Aircraft>[] = [
     {
@@ -34,10 +36,27 @@ export const AircraftsTable = ({ setForm }: EntityTableProps) => {
     },
     {
       title: "",
-      render: acft => (
-        <ActionIcon variant="subtle" onClick={() => setForm(acft.id)}>
-          <IconEdit />
-        </ActionIcon>
+      render: a => (
+        <Right wrap="nowrap">
+          {a.deletable && (
+            <DeletePopover
+              deleteFn={() =>
+                handleMutation(deleteAircraft({ id: a.id }), {
+                  successMsg: `${a.registration} removed.`
+                })
+              }
+            >
+              {open => (
+                <ActionIcon variant="subtle" color="red" onClick={open}>
+                  <IconTrash />
+                </ActionIcon>
+              )}
+            </DeletePopover>
+          )}
+          <ActionIcon variant="subtle" onClick={() => setForm(a.id)}>
+            <IconEdit />
+          </ActionIcon>
+        </Right>
       )
     }
   ];

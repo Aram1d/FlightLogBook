@@ -3,7 +3,7 @@ import { Avatar, Button, Menu } from "@mantine/core";
 import { UrlRoutes } from "@config";
 import { useCurrentPilotQuery, useSignOutMutation } from "@api";
 import { useStore } from "@hooks";
-import { mutationPromiseHandler } from "@lib";
+import { handleMutation } from "@lib";
 
 export const UserMenu = () => {
   const navigate = useNavigate();
@@ -34,9 +34,10 @@ export const UserMenu = () => {
       <Menu.Dropdown>
         <Menu.Item
           onClick={() =>
-            signOut({}).then(
-              mutationPromiseHandler("Good bye!", () => setToken(""))
-            )
+            handleMutation(signOut({}), {
+              successMsg: "Good bye!",
+              onSuccess: () => setToken("")
+            })
           }
         >
           Logout

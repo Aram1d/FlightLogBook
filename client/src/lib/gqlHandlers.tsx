@@ -1,5 +1,5 @@
 import React from "react";
-import { showNotification } from "@mantine/notifications";
+import { notifications, showNotification } from "@mantine/notifications";
 import { CombinedError, OperationResult } from "urql";
 import { cloneDeep } from "lodash-es";
 import { DeepOmit } from "@lib";
@@ -33,19 +33,39 @@ export const omitTypename = <T extends Record<string, any>>(arg: T) => {
   return draft as DeepOmit<T, "__typename">;
 };
 
-export const mutationPromiseHandler =
-  <T1, T2 extends Record<string, any>>(
-    successMsg: string,
-    successCb?: (arg: T1) => void
-  ) =>
-  ({ data, error }: OperationResult<T1, T2>) => {
+type HandleMutationResultParams<TData> = {
+  successMsg?: string;
+  onSuccess?: (data: TData) => void;
+  onError?: (error: CombinedError) => void;
+};
+
+export async function handleMutation<
+  TVariables extends Record<string, any>,
+  TData
+>(
+  mutationPromise: Promise<OperationResult<TData, TVariables>>,
+  { successMsg, onSuccess, onError }: HandleMutationResultParams<TData>
+) {
+  await mutationPromise.then(({ data, error }) => {
     if (error) {
-      urqlErrorNotification(error);
+      const title = !error?.graphQLErrors.length ? "Network error:" : "Error:";
+      const message = error?.graphQLErrors.length
+        ? error?.graphQLErrors[0].message
+        : error?.networkError?.message;
+
+      notifications.show({ color: "red", title, message: message ?? "" });
+      onError?.(error);
     } else if (data) {
-      successNotification(successMsg);
-      successCb?.(data);
+      if (successMsg)
+        notifications.show({
+          color: "green",
+          title: "Success: ",
+          message: successMsg
+        });
+      onSuccess?.(data);
     }
-  };
+  });
+}
 
 export const withoutTypeName = (obj: Record<string, any>) => {
   const { __typename, ...rest } = obj;

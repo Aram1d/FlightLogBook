@@ -52,6 +52,7 @@ export type Aircraft = {
   __typename?: 'Aircraft';
   brand: Scalars['String']['output'];
   capabilities: Array<AircraftCapabilities>;
+  deletable: Scalars['Boolean']['output'];
   id: Scalars['ID']['output'];
   model: Scalars['String']['output'];
   registration: Scalars['String']['output'];
@@ -236,6 +237,8 @@ export type Mutation = {
   addAircraft: Aircraft;
   addFlight: Flight;
   addPilot: Pilot;
+  deleteAircraft?: Maybe<Scalars['Boolean']['output']>;
+  deletePilot?: Maybe<Scalars['Boolean']['output']>;
   signIn: Scalars['String']['output'];
   signOut: Scalars['Boolean']['output'];
   signUp: Scalars['String']['output'];
@@ -257,6 +260,16 @@ export type MutationAddFlightArgs = {
 
 export type MutationAddPilotArgs = {
   pilot: AddPilotInput;
+};
+
+
+export type MutationDeleteAircraftArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+export type MutationDeletePilotArgs = {
+  id: Scalars['ID']['input'];
 };
 
 
@@ -325,6 +338,7 @@ export type Password = {
 export type Pilot = {
   __typename?: 'Pilot';
   credentials: Array<Credential>;
+  deletable: Scalars['Boolean']['output'];
   email: Email;
   firstName: Scalars['String']['output'];
   id: Scalars['ID']['output'];
@@ -561,12 +575,12 @@ export type ResolversTypes = ResolversObject<{
   Int: ResolverTypeWrapper<Scalars['Int']['output']>;
   AddPilotInput: AddPilotInput;
   Aircraft: ResolverTypeWrapper<AircraftDb>;
+  Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
   AircraftCapabilities: AircraftCapabilities;
   AircraftClass: AircraftClass;
   AircraftsPage: ResolverTypeWrapper<Omit<AircraftsPage, 'items'> & { items: Array<ResolversTypes['Aircraft']> }>;
   BaseFlightStats: ResolverTypeWrapper<ResolversInterfaceTypes<ResolversTypes>['BaseFlightStats']>;
   ByAcftStatsInput: ByAcftStatsInput;
-  Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
   ByAircraftModelStats: ResolverTypeWrapper<ByAircraftModelStatsDb>;
   ByAircraftStats: ResolverTypeWrapper<ByAircraftStatsDb>;
   ByInstructorStats: ResolverTypeWrapper<ByInstructorStatsDb>;
@@ -616,10 +630,10 @@ export type ResolversParentTypes = ResolversObject<{
   Int: Scalars['Int']['output'];
   AddPilotInput: AddPilotInput;
   Aircraft: AircraftDb;
+  Boolean: Scalars['Boolean']['output'];
   AircraftsPage: Omit<AircraftsPage, 'items'> & { items: Array<ResolversParentTypes['Aircraft']> };
   BaseFlightStats: ResolversInterfaceTypes<ResolversParentTypes>['BaseFlightStats'];
   ByAcftStatsInput: ByAcftStatsInput;
-  Boolean: Scalars['Boolean']['output'];
   ByAircraftModelStats: ByAircraftModelStatsDb;
   ByAircraftStats: ByAircraftStatsDb;
   ByInstructorStats: ByInstructorStatsDb;
@@ -709,6 +723,7 @@ export type MapDirectiveResolver<Result, Parent, ContextType = ApolloServerConte
 export type AircraftResolvers<ContextType = ApolloServerContextFn, ParentType extends ResolversParentTypes['Aircraft'] = ResolversParentTypes['Aircraft']> = ResolversObject<{
   brand?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   capabilities?: Resolver<Array<ResolversTypes['AircraftCapabilities']>, ParentType, ContextType>;
+  deletable?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   model?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   registration?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
@@ -873,6 +888,8 @@ export type MutationResolvers<ContextType = ApolloServerContextFn, ParentType ex
   addAircraft?: Resolver<ResolversTypes['Aircraft'], ParentType, ContextType, RequireFields<MutationAddAircraftArgs, 'aircraft'>>;
   addFlight?: Resolver<ResolversTypes['Flight'], ParentType, ContextType, RequireFields<MutationAddFlightArgs, 'input'>>;
   addPilot?: Resolver<ResolversTypes['Pilot'], ParentType, ContextType, RequireFields<MutationAddPilotArgs, 'pilot'>>;
+  deleteAircraft?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<MutationDeleteAircraftArgs, 'id'>>;
+  deletePilot?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<MutationDeletePilotArgs, 'id'>>;
   signIn?: Resolver<ResolversTypes['String'], ParentType, ContextType, RequireFields<MutationSignInArgs, 'login' | 'pwdHash'>>;
   signOut?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   signUp?: Resolver<ResolversTypes['String'], ParentType, ContextType, RequireFields<MutationSignUpArgs, 'email' | 'firstName' | 'lastName' | 'pwdHash' | 'pwdHash2' | 'username'>>;
@@ -894,6 +911,7 @@ export type PasswordResolvers<ContextType = ApolloServerContextFn, ParentType ex
 
 export type PilotResolvers<ContextType = ApolloServerContextFn, ParentType extends ResolversParentTypes['Pilot'] = ResolversParentTypes['Pilot']> = ResolversObject<{
   credentials?: Resolver<Array<ResolversTypes['Credential']>, ParentType, ContextType>;
+  deletable?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   email?: Resolver<ResolversTypes['Email'], ParentType, ContextType>;
   firstName?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;

@@ -27,7 +27,7 @@ import {
 } from "@components";
 import { useFlightRecordState, useOcaiCodes } from "@hooks";
 
-import { mutationPromiseHandler, omitTypename, EntityFormProps } from "@lib";
+import { omitTypename, EntityFormProps, handleMutation } from "@lib";
 
 type FlightRecordFormProps = { children: React.ReactNode };
 const FlightRecordTitle = ({ children, ...rest }: FlightRecordFormProps) => (
@@ -83,12 +83,14 @@ export const FlightRecordForm = ({ form, setForm, isAdd }: EntityFormProps) => {
     <form
       onSubmit={onSubmit(values => {
         isAdd
-          ? addFlight({ flight: values }).then(
-              mutationPromiseHandler("Flight added", reset)
-            )
-          : updateFlight({ id: form, flight: values }).then(
-              mutationPromiseHandler("Flight updated", () => setForm?.(null))
-            );
+          ? handleMutation(addFlight({ flight: values }), {
+              successMsg: "Flight successfully added",
+              onSuccess: reset
+            })
+          : handleMutation(updateFlight({ id: form, flight: values }), {
+              successMsg: "Flight successfully updated",
+              onSuccess: () => setForm?.(null)
+            });
       })}
     >
       <Title order={4}>{isAdd ? "Add new flight" : "Edit flight"}</Title>

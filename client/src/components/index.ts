@@ -1,6 +1,7 @@
 export * from "./AircraftClassSC";
 export * from "./DataTable";
 export * from "./DateOrDateTimePicker";
+export * from "./DeletePopover";
 export * from "./DurationInput";
 export * from "./Empty";
 export * from "./HeaderButton";

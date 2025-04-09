@@ -22,7 +22,7 @@ query Pilot($id: ID!) @live {
       address
       verified
     }
-    lastName
+    deletable
   }
 }
 
@@ -37,7 +37,7 @@ query Pilots($pager: PagerInput) @live {
         address
         verified
       }
-      lastName
+      deletable
     }
     total
   }
@@ -89,4 +89,8 @@ mutation SignUp(
 
 mutation signOut {
   signOut
+}
+
+mutation deletePilot($id: ID!) {
+  deletePilot(id: $id)
 }

@@ -8,7 +8,7 @@ import {
   usePilotQuery,
   useUpdatePilotMutation
 } from "@api";
-import { EntityFormProps, mutationPromiseHandler, withoutTypeName } from "@lib";
+import { EntityFormProps, handleMutation, withoutTypeName } from "@lib";
 
 export const PilotForm = ({ form, setForm, isAdd }: EntityFormProps) => {
   const { getInputProps, onSubmit, setValues, reset } = useForm<AddPilotInput>({
@@ -38,9 +38,10 @@ export const PilotForm = ({ form, setForm, isAdd }: EntityFormProps) => {
   });
 
   const [{ data }] = usePilotQuery({ variables: { id: form } });
+
   useEffect(() => {
     if (data?.pilot) {
-      const { id, ...pilot } = data.pilot;
+      const { id, deletable, ...pilot } = data.pilot;
       setValues({
         ...withoutTypeName(pilot),
         email: data.pilot.email.address
@@ -55,14 +56,14 @@ export const PilotForm = ({ form, setForm, isAdd }: EntityFormProps) => {
     <form
       onSubmit={onSubmit(values => {
         isAdd
-          ? addPilot({ pilot: values }).then(
-              mutationPromiseHandler("Pilot successfully added", reset)
-            )
-          : updatePilot({ id: form, pilot: values }).then(
-              mutationPromiseHandler("Pilot successfully updated", () =>
-                setForm?.(null)
-              )
-            );
+          ? handleMutation(addPilot({ pilot: values }), {
+              successMsg: "Pilot successfully added",
+              onSuccess: reset
+            })
+          : handleMutation(updatePilot({ id: form, pilot: values }), {
+              successMsg: "Pilot successfully updated",
+              onSuccess: () => setForm?.(null)
+            });
       })}
     >
       <Title order={4}>{isAdd ? "Add new pilot" : "Edit pilot"}</Title>

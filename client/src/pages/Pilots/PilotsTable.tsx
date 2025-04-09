@@ -1,10 +1,10 @@
 import { ActionIcon } from "@mantine/core";
-import { IconEdit } from "@tabler/icons-react";
+import { IconEdit, IconTrash } from "@tabler/icons-react";
 import classes from "@components/DataTable/TableRow.module.css";
-import { Pilot, usePilotsQuery } from "@api";
-import { DataTable, DataTableColumn } from "@components";
+import { Pilot, useDeletePilotMutation, usePilotsQuery } from "@api";
+import { DataTable, DataTableColumn, DeletePopover, Right } from "@components";
 import { usePagination } from "@hooks";
-import { EntityTableProps, cn } from "@lib";
+import { EntityTableProps, cn, handleMutation } from "@lib";
 
 export const PilotsTable = ({ setForm }: EntityTableProps) => {
   const [pagination, getPg] = usePagination({ pageSizes: [5, 10, 20] });
@@ -15,6 +15,8 @@ export const PilotsTable = ({ setForm }: EntityTableProps) => {
       }
     }
   });
+
+  const [, deletePilot] = useDeletePilotMutation();
 
   const columns: DataTableColumn<Omit<Pilot, "credentials" | "passwords">>[] = [
     {
@@ -28,10 +30,27 @@ export const PilotsTable = ({ setForm }: EntityTableProps) => {
     { title: "Username", render: p => p.username },
     {
       title: "",
-      render: pilot => (
-        <ActionIcon variant="subtle" onClick={() => setForm(pilot.id)}>
-          <IconEdit />
-        </ActionIcon>
+      render: p => (
+        <Right wrap="nowrap">
+          {p.deletable && (
+            <DeletePopover
+              deleteFn={() =>
+                handleMutation(deletePilot({ id: p.id }), {
+                  successMsg: `${p.firstName} ${p.lastName} removed.`
+                })
+              }
+            >
+              {open => (
+                <ActionIcon variant="subtle" color="red" onClick={open}>
+                  <IconTrash />
+                </ActionIcon>
+              )}
+            </DeletePopover>
+          )}
+          <ActionIcon variant="subtle" onClick={() => setForm(p.id)}>
+            <IconEdit />
+          </ActionIcon>
+        </Right>
       )
     }
   ];

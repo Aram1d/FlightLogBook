@@ -5,6 +5,7 @@ query Aircraft($id: ID!) @live {
     model
     registration
     capabilities
+    deletable
   }
 }
 
@@ -17,6 +18,7 @@ query Aircrafts($pager: PagerInput) @live {
       model
       registration
       capabilities
+      deletable
     }
   }
 }
@@ -41,4 +43,8 @@ mutation UpdateAircraft($id: ID!, $aircraft: UpdateAircraftInput!) {
   updateAircraft(id: $id, aircraft: $aircraft) {
     id
   }
+}
+
+mutation DeleteAircraft($id: ID!) {
+  deleteAircraft(id: $id)
 }
