@@ -6,11 +6,15 @@ import { z } from "zod";
 import { AddFlightInput, AircraftClass, useLastFlightDateQuery } from "@api";
 import { useAircraftsList } from "@hooks";
 
+interface AddFlightState extends Omit<AddFlightInput, "pic"  > {
+  pic: string | null;
+}
+
 export const useFlightRecordState = () => {
   const [{ data }] = useLastFlightDateQuery();
 
   const { getInputProps, values, setFieldValue, ...restForm } =
-    useForm<AddFlightInput>({
+    useForm<AddFlightState>({
       initialValues: {
         departure: {
           place: "",
@@ -20,10 +24,10 @@ export const useFlightRecordState = () => {
           place: "",
           date: null
         },
-        aircraft: "",
+        aircraft: null,
         aircraftClass: AircraftClass.SingleEngine,
         totalFlightTime: 0,
-        pic: "",
+        pic: null,
         landings: {
           day: 0,
           night: 0
@@ -47,6 +51,11 @@ export const useFlightRecordState = () => {
           dayjs(values.departure.date),
           "minute"
         );
+
+        const castedValues = {
+          ...values,
+          pic: values.pic ?? ""
+        } satisfies AddFlightInput;
 
         return zodResolver(
           z.object({
@@ -132,7 +141,7 @@ export const useFlightRecordState = () => {
                 )
             })
           })
-        )(values);
+        )(castedValues);
       }
     });
 

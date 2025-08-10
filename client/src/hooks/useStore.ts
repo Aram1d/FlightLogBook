@@ -9,6 +9,9 @@ export const useStore = create<{
 
   deletePopoverMutex: Record<never, never> | null;
   setDeletePopoverMutex: (mutex: Record<never, never>) => void;
+
+  flightLogFormReset: boolean;
+  flightLogFormToggle: () => void;
 }>()(
   persist(
     (set, get) => ({
@@ -20,7 +23,13 @@ export const useStore = create<{
       setDeletePopoverMutex: mutex =>
         set({
           deletePopoverMutex: mutex === get().deletePopoverMutex ? null : mutex
-        })
+        }),
+
+        flightLogFormReset: false,
+        flightLogFormToggle: () =>
+          set({
+            flightLogFormReset: !get().flightLogFormReset
+          })
     }),
     { name: "FLB" }
   )
