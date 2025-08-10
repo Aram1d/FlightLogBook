@@ -5,7 +5,8 @@ import {
   Text,
   Title,
   Card,
-  SimpleGrid
+  SimpleGrid,
+  Stack
 } from "@mantine/core";
 
 import { IconPlane, IconUser } from "@tabler/icons-react";
@@ -33,10 +34,12 @@ export const Home = () => {
   const navigate = useNavigate();
   return (
     <Container>
+      <Stack align="center" gap={0}>
       <Title mt={50}>Welcome to Your Flight Log App</Title>
-      <Text align="center" c="dimmed" size="lg" mt="md">
+      <Text c="dimmed" size="lg" mt="md">
         Maintain your aircraft logbook effortlessly.
       </Text>
+      </Stack>
 
       <SimpleGrid cols={3} mt={50}>
         {features.map(feature => (

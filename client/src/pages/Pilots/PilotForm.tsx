@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { Button, Group, Grid, TextInput, Title } from "@mantine/core";
-import { useForm, zodResolver } from "@mantine/form";
+import { useForm } from "@mantine/form";
+import {zod4Resolver} from "mantine-form-zod-resolver";
 import { z } from "zod";
 import {
   AddPilotInput,
@@ -18,7 +19,7 @@ export const PilotForm = ({ form, setForm, isAdd }: EntityFormProps) => {
       lastName: "",
       email: ""
     },
-    validate: zodResolver(
+    validate: zod4Resolver(
       z.object({
         username: z
           .string()

@@ -8,7 +8,7 @@ import {
   mapExchange
 } from "urql";
 import { cacheExchange, CacheExchangeOpts } from "@urql/exchange-graphcache";
-import customScalarsExchange from "urql-custom-scalars-exchange";
+import customScalarsExchange from "urql6-custom-scalars-exchange";
 import { applyAsyncIterableIteratorToSink } from "@n1ru4l/push-pull-async-iterable-iterator";
 import { applyLiveQueryJSONPatch } from "@n1ru4l/graphql-live-query-patch-json-patch";
 import { createSocketIOGraphQLClient } from "@n1ru4l/socket-io-graphql-client";

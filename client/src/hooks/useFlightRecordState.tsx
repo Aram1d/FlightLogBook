@@ -1,10 +1,11 @@
 import { useCallback, useEffect, useState } from "react";
-import { useForm, zodResolver } from "@mantine/form";
-import { DateValue } from "@mantine/dates";
+import { useForm } from "@mantine/form";
+import {zod4Resolver} from "mantine-form-zod-resolver";
 import dayjs from "dayjs";
-import { z } from "zod";
+import { z } from "zod/v4";
 import { AddFlightInput, AircraftClass, useLastFlightDateQuery } from "@api";
 import { useAircraftsList } from "@hooks";
+
 
 interface AddFlightState extends Omit<AddFlightInput, "pic"  > {
   pic: string | null;
@@ -57,7 +58,7 @@ export const useFlightRecordState = () => {
           pic: values.pic ?? ""
         } satisfies AddFlightInput;
 
-        return zodResolver(
+        return zod4Resolver(
           z.object({
             departure: z.object({
               place: z
@@ -154,7 +155,8 @@ export const useFlightRecordState = () => {
   const [adapter, setAdapter] = useState<"a" | "d">("a");
 
   const setDepartureTime = useCallback(
-    (depDate: DateValue) => {
+    (_depDate: string | null) => {
+      const depDate = _depDate ? new Date(_depDate) : null;
       setFieldValue("departure.date", depDate);
       if (values.arrival.date)
         setFieldValue(
@@ -167,7 +169,8 @@ export const useFlightRecordState = () => {
   );
 
   const setArrivalTime = useCallback(
-    (arrDate: DateValue) => {
+    (_arrDate: string | null) => {
+      const arrDate = _arrDate ? new Date(_arrDate) : null;
       setFieldValue("arrival.date", arrDate);
       if (values.departure.date) {
         setFieldValue(

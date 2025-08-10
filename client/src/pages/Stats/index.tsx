@@ -95,33 +95,25 @@ function generateStats(
     [],
     []
   ];
-  _stats.forEach(s => {
+  _stats.forEach((s,i) => {
     if (s) {
-      stats[0].push(timeFormatter(s.totalFlightTime));
-      stats[1].push(timeFormatter(s.totalDC));
-      stats[2].push(timeFormatter(s.totalPIC));
-      stats[3].push(s.flightAmount);
-    } else stats.forEach(s => s.push(<Skeleton />));
+      stats[0].push(<Text key={i}>{timeFormatter(s.totalFlightTime)}</Text>);
+      stats[1].push(<Text key={i}>{timeFormatter(s.totalDC)}</Text>);
+      stats[2].push(<Text key={i}>{timeFormatter(s.totalPIC)}</Text>);
+      stats[3].push(<Text key={i}>{s.flightAmount}</Text>);
+    } else stats.forEach(s => s.push(<Skeleton key={i} />));
   });
 
   return (
     <>
       <Text c="dimmed">Total flight time:</Text>
-      {stats[0].map((s, i) => (
-        <Text key={i}>{s}</Text>
-      ))}
+      {stats[0]}
       <Text c="dimmed">Total D.C flight time:</Text>
-      {stats[1].map((s, i) => (
-        <Text key={i}>{s}</Text>
-      ))}
+      {stats[1]}
       <Text c="dimmed">Total P.I.C flight time:</Text>
-      {stats[2].map((s, i) => (
-        <Text key={i}>{s}</Text>
-      ))}
+      {stats[2]}
       <Text c="dimmed">Flights amount:</Text>
-      {stats[3].map((s, i) => (
-        <Text key={i}>{s}</Text>
-      ))}
+      {stats[3]}
     </>
   );
 }
