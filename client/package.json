@@ -10,7 +10,6 @@
     "preview": "bunx --bun vite preview"
   },
   "dependencies": {
-    "@atmina/urql-custom-scalars-exchange": "^1.1.1",
     "@emotion/react": "^11.14.0",
     "@eslint/compat": "^1.3.2",
     "@eslint/js": "^9.33.0",
@@ -55,7 +54,7 @@
     "typescript": "^5.9.2",
     "typescript-eslint": "^8.39.0",
     "urql": "^5.0.0",
-    "urql-custom-scalars-exchange": "^1.0.1",
+    "urql6-custom-scalars-exchange": "^1.0.0",
     "uuid": "^11.1.0",
     "vite": "^7.1.1",
     "vite-plugin-eslint": "^1.8.1",
