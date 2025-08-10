@@ -285,10 +285,11 @@ export const FlightRecordForm = ({ form, setForm, isAdd }: EntityFormProps) => {
             </SimpleGrid>
           </Stack>
         </Grid.Col>
-        <Grid.Col span={6} h="100%">
+        <Grid.Col span={6} h="fill-content">
           <Stack>
             <FlightRecordTitle>R & E</FlightRecordTitle>
-            <Textarea label="Remarks" {...getInputProps("remarks")} />
+            <Textarea label="Remarks" {...getInputProps("remarks")} rows={2} />
+            <Box flex={1} />
             <SegmentedControl
               data={[
                 { label: "Departure", value: "d" },
