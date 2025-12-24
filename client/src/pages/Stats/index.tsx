@@ -89,18 +89,22 @@ export const FlightStats = () => {
 function generateStats(
   ..._stats: (FlightStatsQuery["flightStats"] | undefined)[]
 ) {
-  const stats: [ReactNode[], ReactNode[], ReactNode[], ReactNode[]] = [
+  const stats: [ReactNode[], ReactNode[], ReactNode[], ReactNode[], ReactNode[], ReactNode[]] = [
     [],
     [],
     [],
-    []
+    [],
+    [],
+    [],
   ];
   _stats.forEach((s,i) => {
     if (s) {
       stats[0].push(<Text key={i}>{timeFormatter(s.totalFlightTime)}</Text>);
       stats[1].push(<Text key={i}>{timeFormatter(s.totalDC)}</Text>);
-      stats[2].push(<Text key={i}>{timeFormatter(s.totalPIC)}</Text>);
-      stats[3].push(<Text key={i}>{s.flightAmount}</Text>);
+      stats[2].push(<Text key={i}>{timeFormatter(s.totalCcDC)}</Text>);
+      stats[3].push(<Text key={i}>{timeFormatter(s.totalPIC)}</Text>);
+      stats[4].push(<Text key={i}>{timeFormatter(s.totalCcPIC)}</Text>);
+      stats[5].push(<Text key={i}>{s.flightAmount}</Text>);
     } else stats.forEach(s => s.push(<Skeleton key={i} />));
   });
 
@@ -110,10 +114,14 @@ function generateStats(
       {stats[0]}
       <Text c="dimmed">Total D.C flight time:</Text>
       {stats[1]}
-      <Text c="dimmed">Total P.I.C flight time:</Text>
+      <Text c="dimmed">D.C cross country flight time:</Text>
       {stats[2]}
-      <Text c="dimmed">Flights amount:</Text>
+      <Text c="dimmed">Total P.I.C flight time:</Text>
       {stats[3]}
+      <Text c="dimmed">P.I.C cross country flight time:</Text>
+      {stats[4]}
+      <Text c="dimmed">Flights amount:</Text>
+      {stats[5]}
     </>
   );
 }

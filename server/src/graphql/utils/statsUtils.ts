@@ -4,7 +4,9 @@ import { PilotDb } from "@graphql";
 const emptyFlightStats = {
   id: "empty",
   totalDC: 0,
+  totalCcDC: 0,
   totalPIC: 0,
+  totalCcPIC: 0,
   totalCOPI: 0,
   totalInstructor: 0,
   totalFlightTime: 0,
@@ -25,6 +27,24 @@ export const mkOwnFlightMatchStage = (
 export const flightStatGroupStageFields = {
   totalDC: { $sum: "$pilotFunctionTime.dualCommand" },
   totalPIC: { $sum: "$pilotFunctionTime.pic" },
+  totalCcPIC: {
+    $sum: {
+      $cond: [
+        { $ne: ["$departure.place", "$arrival.place"] },
+        "$pilotFunctionTime.pic",
+        0
+      ]
+    }
+  },
+  totalCcDC: {
+    $sum: {
+      $cond: [
+        { $ne: ["$departure.place", "$arrival.place"] },
+        "$pilotFunctionTime.dualCommand",
+        0
+      ]
+    }
+  },
   totalCOPI: { $sum: "$pilotFunctionTime.coPilot" },
   totalInstructor: { $sum: "$pilotFunctionTime.instructor" },
   totalFlightTime: { $sum: "$totalFlightTime" },

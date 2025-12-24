@@ -81,6 +81,8 @@ export type BaseFlightStats = {
   flightAmount: Scalars['Int']['output'];
   id: Scalars['ID']['output'];
   totalCOPI: Scalars['Int']['output'];
+  totalCcDC: Scalars['Int']['output'];
+  totalCcPIC: Scalars['Int']['output'];
   totalDC: Scalars['Int']['output'];
   totalFlightTime: Scalars['Int']['output'];
   totalInstructor: Scalars['Int']['output'];
@@ -99,6 +101,8 @@ export type ByAircraftModelStats = BaseFlightStats & {
   flightAmount: Scalars['Int']['output'];
   id: Scalars['ID']['output'];
   totalCOPI: Scalars['Int']['output'];
+  totalCcDC: Scalars['Int']['output'];
+  totalCcPIC: Scalars['Int']['output'];
   totalDC: Scalars['Int']['output'];
   totalFlightTime: Scalars['Int']['output'];
   totalInstructor: Scalars['Int']['output'];
@@ -113,6 +117,8 @@ export type ByAircraftStats = BaseFlightStats & {
   flightAmount: Scalars['Int']['output'];
   id: Scalars['ID']['output'];
   totalCOPI: Scalars['Int']['output'];
+  totalCcDC: Scalars['Int']['output'];
+  totalCcPIC: Scalars['Int']['output'];
   totalDC: Scalars['Int']['output'];
   totalFlightTime: Scalars['Int']['output'];
   totalInstructor: Scalars['Int']['output'];
@@ -127,6 +133,8 @@ export type ByInstructorStats = BaseFlightStats & {
   id: Scalars['ID']['output'];
   instructor: Pilot;
   totalCOPI: Scalars['Int']['output'];
+  totalCcDC: Scalars['Int']['output'];
+  totalCcPIC: Scalars['Int']['output'];
   totalDC: Scalars['Int']['output'];
   totalFlightTime: Scalars['Int']['output'];
   totalInstructor: Scalars['Int']['output'];
@@ -187,6 +195,8 @@ export type FlightStats = BaseFlightStats & {
   flightAmount: Scalars['Int']['output'];
   id: Scalars['ID']['output'];
   totalCOPI: Scalars['Int']['output'];
+  totalCcDC: Scalars['Int']['output'];
+  totalCcPIC: Scalars['Int']['output'];
   totalDC: Scalars['Int']['output'];
   totalFlightTime: Scalars['Int']['output'];
   totalInstructor: Scalars['Int']['output'];
@@ -571,32 +581,32 @@ export type UpdateFlightMutationVariables = Exact<{
 
 export type UpdateFlightMutation = { __typename?: 'Mutation', updateFlight: { __typename?: 'Flight', id: string } };
 
-type AllStats_ByAircraftModelStats_Fragment = { __typename?: 'ByAircraftModelStats', id: string, totalFlightTime: number, totalDC: number, totalPIC: number, totalCOPI: number, totalInstructor: number, flightAmount: number };
+type AllStats_ByAircraftModelStats_Fragment = { __typename?: 'ByAircraftModelStats', id: string, totalFlightTime: number, totalDC: number, totalCcDC: number, totalPIC: number, totalCcPIC: number, totalCOPI: number, totalInstructor: number, flightAmount: number };
 
-type AllStats_ByAircraftStats_Fragment = { __typename?: 'ByAircraftStats', id: string, totalFlightTime: number, totalDC: number, totalPIC: number, totalCOPI: number, totalInstructor: number, flightAmount: number };
+type AllStats_ByAircraftStats_Fragment = { __typename?: 'ByAircraftStats', id: string, totalFlightTime: number, totalDC: number, totalCcDC: number, totalPIC: number, totalCcPIC: number, totalCOPI: number, totalInstructor: number, flightAmount: number };
 
-type AllStats_ByInstructorStats_Fragment = { __typename?: 'ByInstructorStats', id: string, totalFlightTime: number, totalDC: number, totalPIC: number, totalCOPI: number, totalInstructor: number, flightAmount: number };
+type AllStats_ByInstructorStats_Fragment = { __typename?: 'ByInstructorStats', id: string, totalFlightTime: number, totalDC: number, totalCcDC: number, totalPIC: number, totalCcPIC: number, totalCOPI: number, totalInstructor: number, flightAmount: number };
 
-type AllStats_FlightStats_Fragment = { __typename?: 'FlightStats', id: string, totalFlightTime: number, totalDC: number, totalPIC: number, totalCOPI: number, totalInstructor: number, flightAmount: number };
+type AllStats_FlightStats_Fragment = { __typename?: 'FlightStats', id: string, totalFlightTime: number, totalDC: number, totalCcDC: number, totalPIC: number, totalCcPIC: number, totalCOPI: number, totalInstructor: number, flightAmount: number };
 
 export type AllStatsFragment = AllStats_ByAircraftModelStats_Fragment | AllStats_ByAircraftStats_Fragment | AllStats_ByInstructorStats_Fragment | AllStats_FlightStats_Fragment;
 
 export type FlightStatsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type FlightStatsQuery = { __typename?: 'Query', flightStats: { __typename?: 'FlightStats', id: string, totalFlightTime: number, totalDC: number, totalPIC: number, totalCOPI: number, totalInstructor: number, flightAmount: number } };
+export type FlightStatsQuery = { __typename?: 'Query', flightStats: { __typename?: 'FlightStats', id: string, totalFlightTime: number, totalDC: number, totalCcDC: number, totalPIC: number, totalCcPIC: number, totalCOPI: number, totalInstructor: number, flightAmount: number } };
 
 export type FromDateFlightStatsQueryVariables = Exact<{
   date: Scalars['Date']['input'];
 }>;
 
 
-export type FromDateFlightStatsQuery = { __typename?: 'Query', fromDateFlightStats: { __typename?: 'FlightStats', id: string, totalFlightTime: number, totalDC: number, totalPIC: number, totalCOPI: number, totalInstructor: number, flightAmount: number } };
+export type FromDateFlightStatsQuery = { __typename?: 'Query', fromDateFlightStats: { __typename?: 'FlightStats', id: string, totalFlightTime: number, totalDC: number, totalCcDC: number, totalPIC: number, totalCcPIC: number, totalCOPI: number, totalInstructor: number, flightAmount: number } };
 
 export type ByAircraftStatsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type ByAircraftStatsQuery = { __typename?: 'Query', flightStats: { __typename?: 'FlightStats', id: string, byAircraft: Array<{ __typename?: 'ByAircraftStats', id: string, totalFlightTime: number, totalDC: number, totalPIC: number, totalCOPI: number, totalInstructor: number, flightAmount: number, aircraft: { __typename?: 'Aircraft', id: string, brand: string, model: string, registration: string } }>, byAircraftModel: Array<{ __typename?: 'ByAircraftModelStats', aircraftModel: string, id: string, totalFlightTime: number, totalDC: number, totalPIC: number, totalCOPI: number, totalInstructor: number, flightAmount: number }> } };
+export type ByAircraftStatsQuery = { __typename?: 'Query', flightStats: { __typename?: 'FlightStats', id: string, byAircraft: Array<{ __typename?: 'ByAircraftStats', id: string, totalFlightTime: number, totalDC: number, totalCcDC: number, totalPIC: number, totalCcPIC: number, totalCOPI: number, totalInstructor: number, flightAmount: number, aircraft: { __typename?: 'Aircraft', id: string, brand: string, model: string, registration: string } }>, byAircraftModel: Array<{ __typename?: 'ByAircraftModelStats', aircraftModel: string, id: string, totalFlightTime: number, totalDC: number, totalCcDC: number, totalPIC: number, totalCcPIC: number, totalCOPI: number, totalInstructor: number, flightAmount: number }> } };
 
 export type ByInstructorStatsQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -675,7 +685,7 @@ export type DeletePilotMutationVariables = Exact<{
 export type DeletePilotMutation = { __typename?: 'Mutation', deletePilot?: boolean | null };
 
 export const FullFLightFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"FullFLight"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Flight"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"__typename"}},{"kind":"Field","name":{"kind":"Name","value":"departure"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"date"}},{"kind":"Field","name":{"kind":"Name","value":"place"}}]}},{"kind":"Field","name":{"kind":"Name","value":"arrival"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"date"}},{"kind":"Field","name":{"kind":"Name","value":"place"}}]}},{"kind":"Field","name":{"kind":"Name","value":"totalFlightTime"}},{"kind":"Field","name":{"kind":"Name","value":"pilot"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"firstName"}},{"kind":"Field","name":{"kind":"Name","value":"lastName"}}]}},{"kind":"Field","name":{"kind":"Name","value":"pic"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"username"}},{"kind":"Field","name":{"kind":"Name","value":"firstName"}},{"kind":"Field","name":{"kind":"Name","value":"lastName"}}]}},{"kind":"Field","name":{"kind":"Name","value":"aircraft"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"registration"}}]}},{"kind":"Field","name":{"kind":"Name","value":"aircraftClass"}},{"kind":"Field","name":{"kind":"Name","value":"ifrApproaches"}},{"kind":"Field","name":{"kind":"Name","value":"landings"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"day"}},{"kind":"Field","name":{"kind":"Name","value":"night"}}]}},{"kind":"Field","name":{"kind":"Name","value":"operationalTime"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"ifr"}},{"kind":"Field","name":{"kind":"Name","value":"night"}}]}},{"kind":"Field","name":{"kind":"Name","value":"pilotFunctionTime"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"pic"}},{"kind":"Field","name":{"kind":"Name","value":"instructor"}},{"kind":"Field","name":{"kind":"Name","value":"coPilot"}},{"kind":"Field","name":{"kind":"Name","value":"dualCommand"}}]}},{"kind":"Field","name":{"kind":"Name","value":"remarks"}}]}}]} as unknown as DocumentNode;
-export const AllStatsFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"AllStats"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"BaseFlightStats"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"totalFlightTime"}},{"kind":"Field","name":{"kind":"Name","value":"totalDC"}},{"kind":"Field","name":{"kind":"Name","value":"totalPIC"}},{"kind":"Field","name":{"kind":"Name","value":"totalCOPI"}},{"kind":"Field","name":{"kind":"Name","value":"totalInstructor"}},{"kind":"Field","name":{"kind":"Name","value":"flightAmount"}}]}}]} as unknown as DocumentNode;
+export const AllStatsFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"AllStats"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"BaseFlightStats"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"totalFlightTime"}},{"kind":"Field","name":{"kind":"Name","value":"totalDC"}},{"kind":"Field","name":{"kind":"Name","value":"totalCcDC"}},{"kind":"Field","name":{"kind":"Name","value":"totalPIC"}},{"kind":"Field","name":{"kind":"Name","value":"totalCcPIC"}},{"kind":"Field","name":{"kind":"Name","value":"totalCOPI"}},{"kind":"Field","name":{"kind":"Name","value":"totalInstructor"}},{"kind":"Field","name":{"kind":"Name","value":"flightAmount"}}]}}]} as unknown as DocumentNode;
 export const AircraftDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Aircraft"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}}],"directives":[{"kind":"Directive","name":{"kind":"Name","value":"live"}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"aircraft"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"brand"}},{"kind":"Field","name":{"kind":"Name","value":"model"}},{"kind":"Field","name":{"kind":"Name","value":"registration"}},{"kind":"Field","name":{"kind":"Name","value":"capabilities"}},{"kind":"Field","name":{"kind":"Name","value":"deletable"}}]}}]}}]} as unknown as DocumentNode;
 
 export function useAircraftQuery(options: Omit<Urql.UseQueryArgs<AircraftQueryVariables>, 'query'>) {
@@ -736,17 +746,17 @@ export const UpdateFlightDocument = {"kind":"Document","definitions":[{"kind":"O
 export function useUpdateFlightMutation() {
   return Urql.useMutation<UpdateFlightMutation, UpdateFlightMutationVariables>(UpdateFlightDocument);
 };
-export const FlightStatsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"FlightStats"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"flightStats"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"AllStats"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"AllStats"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"BaseFlightStats"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"totalFlightTime"}},{"kind":"Field","name":{"kind":"Name","value":"totalDC"}},{"kind":"Field","name":{"kind":"Name","value":"totalPIC"}},{"kind":"Field","name":{"kind":"Name","value":"totalCOPI"}},{"kind":"Field","name":{"kind":"Name","value":"totalInstructor"}},{"kind":"Field","name":{"kind":"Name","value":"flightAmount"}}]}}]} as unknown as DocumentNode;
+export const FlightStatsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"FlightStats"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"flightStats"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"AllStats"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"AllStats"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"BaseFlightStats"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"totalFlightTime"}},{"kind":"Field","name":{"kind":"Name","value":"totalDC"}},{"kind":"Field","name":{"kind":"Name","value":"totalCcDC"}},{"kind":"Field","name":{"kind":"Name","value":"totalPIC"}},{"kind":"Field","name":{"kind":"Name","value":"totalCcPIC"}},{"kind":"Field","name":{"kind":"Name","value":"totalCOPI"}},{"kind":"Field","name":{"kind":"Name","value":"totalInstructor"}},{"kind":"Field","name":{"kind":"Name","value":"flightAmount"}}]}}]} as unknown as DocumentNode;
 
 export function useFlightStatsQuery(options?: Omit<Urql.UseQueryArgs<FlightStatsQueryVariables>, 'query'>) {
   return Urql.useQuery<FlightStatsQuery, FlightStatsQueryVariables>({ query: FlightStatsDocument, ...options });
 };
-export const FromDateFlightStatsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"FromDateFlightStats"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"date"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Date"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"fromDateFlightStats"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"date"},"value":{"kind":"Variable","name":{"kind":"Name","value":"date"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"AllStats"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"AllStats"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"BaseFlightStats"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"totalFlightTime"}},{"kind":"Field","name":{"kind":"Name","value":"totalDC"}},{"kind":"Field","name":{"kind":"Name","value":"totalPIC"}},{"kind":"Field","name":{"kind":"Name","value":"totalCOPI"}},{"kind":"Field","name":{"kind":"Name","value":"totalInstructor"}},{"kind":"Field","name":{"kind":"Name","value":"flightAmount"}}]}}]} as unknown as DocumentNode;
+export const FromDateFlightStatsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"FromDateFlightStats"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"date"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Date"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"fromDateFlightStats"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"date"},"value":{"kind":"Variable","name":{"kind":"Name","value":"date"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"AllStats"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"AllStats"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"BaseFlightStats"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"totalFlightTime"}},{"kind":"Field","name":{"kind":"Name","value":"totalDC"}},{"kind":"Field","name":{"kind":"Name","value":"totalCcDC"}},{"kind":"Field","name":{"kind":"Name","value":"totalPIC"}},{"kind":"Field","name":{"kind":"Name","value":"totalCcPIC"}},{"kind":"Field","name":{"kind":"Name","value":"totalCOPI"}},{"kind":"Field","name":{"kind":"Name","value":"totalInstructor"}},{"kind":"Field","name":{"kind":"Name","value":"flightAmount"}}]}}]} as unknown as DocumentNode;
 
 export function useFromDateFlightStatsQuery(options: Omit<Urql.UseQueryArgs<FromDateFlightStatsQueryVariables>, 'query'>) {
   return Urql.useQuery<FromDateFlightStatsQuery, FromDateFlightStatsQueryVariables>({ query: FromDateFlightStatsDocument, ...options });
 };
-export const ByAircraftStatsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"byAircraftStats"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"flightStats"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"byAircraft"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"aircraft"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"brand"}},{"kind":"Field","name":{"kind":"Name","value":"model"}},{"kind":"Field","name":{"kind":"Name","value":"registration"}}]}},{"kind":"FragmentSpread","name":{"kind":"Name","value":"AllStats"}}]}},{"kind":"Field","name":{"kind":"Name","value":"byAircraftModel"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"aircraftModel"}},{"kind":"FragmentSpread","name":{"kind":"Name","value":"AllStats"}}]}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"AllStats"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"BaseFlightStats"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"totalFlightTime"}},{"kind":"Field","name":{"kind":"Name","value":"totalDC"}},{"kind":"Field","name":{"kind":"Name","value":"totalPIC"}},{"kind":"Field","name":{"kind":"Name","value":"totalCOPI"}},{"kind":"Field","name":{"kind":"Name","value":"totalInstructor"}},{"kind":"Field","name":{"kind":"Name","value":"flightAmount"}}]}}]} as unknown as DocumentNode;
+export const ByAircraftStatsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"byAircraftStats"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"flightStats"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"byAircraft"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"aircraft"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"brand"}},{"kind":"Field","name":{"kind":"Name","value":"model"}},{"kind":"Field","name":{"kind":"Name","value":"registration"}}]}},{"kind":"FragmentSpread","name":{"kind":"Name","value":"AllStats"}}]}},{"kind":"Field","name":{"kind":"Name","value":"byAircraftModel"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"aircraftModel"}},{"kind":"FragmentSpread","name":{"kind":"Name","value":"AllStats"}}]}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"AllStats"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"BaseFlightStats"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"totalFlightTime"}},{"kind":"Field","name":{"kind":"Name","value":"totalDC"}},{"kind":"Field","name":{"kind":"Name","value":"totalCcDC"}},{"kind":"Field","name":{"kind":"Name","value":"totalPIC"}},{"kind":"Field","name":{"kind":"Name","value":"totalCcPIC"}},{"kind":"Field","name":{"kind":"Name","value":"totalCOPI"}},{"kind":"Field","name":{"kind":"Name","value":"totalInstructor"}},{"kind":"Field","name":{"kind":"Name","value":"flightAmount"}}]}}]} as unknown as DocumentNode;
 
 export function useByAircraftStatsQuery(options?: Omit<Urql.UseQueryArgs<ByAircraftStatsQueryVariables>, 'query'>) {
   return Urql.useQuery<ByAircraftStatsQuery, ByAircraftStatsQueryVariables>({ query: ByAircraftStatsDocument, ...options });
@@ -868,6 +878,8 @@ export type GraphCacheResolvers = {
     flightAmount?: GraphCacheResolver<WithTypename<ByAircraftModelStats>, Record<string, never>, Scalars['Int'] | string>,
     id?: GraphCacheResolver<WithTypename<ByAircraftModelStats>, Record<string, never>, Scalars['ID'] | string>,
     totalCOPI?: GraphCacheResolver<WithTypename<ByAircraftModelStats>, Record<string, never>, Scalars['Int'] | string>,
+    totalCcDC?: GraphCacheResolver<WithTypename<ByAircraftModelStats>, Record<string, never>, Scalars['Int'] | string>,
+    totalCcPIC?: GraphCacheResolver<WithTypename<ByAircraftModelStats>, Record<string, never>, Scalars['Int'] | string>,
     totalDC?: GraphCacheResolver<WithTypename<ByAircraftModelStats>, Record<string, never>, Scalars['Int'] | string>,
     totalFlightTime?: GraphCacheResolver<WithTypename<ByAircraftModelStats>, Record<string, never>, Scalars['Int'] | string>,
     totalInstructor?: GraphCacheResolver<WithTypename<ByAircraftModelStats>, Record<string, never>, Scalars['Int'] | string>,
@@ -880,6 +892,8 @@ export type GraphCacheResolvers = {
     flightAmount?: GraphCacheResolver<WithTypename<ByAircraftStats>, Record<string, never>, Scalars['Int'] | string>,
     id?: GraphCacheResolver<WithTypename<ByAircraftStats>, Record<string, never>, Scalars['ID'] | string>,
     totalCOPI?: GraphCacheResolver<WithTypename<ByAircraftStats>, Record<string, never>, Scalars['Int'] | string>,
+    totalCcDC?: GraphCacheResolver<WithTypename<ByAircraftStats>, Record<string, never>, Scalars['Int'] | string>,
+    totalCcPIC?: GraphCacheResolver<WithTypename<ByAircraftStats>, Record<string, never>, Scalars['Int'] | string>,
     totalDC?: GraphCacheResolver<WithTypename<ByAircraftStats>, Record<string, never>, Scalars['Int'] | string>,
     totalFlightTime?: GraphCacheResolver<WithTypename<ByAircraftStats>, Record<string, never>, Scalars['Int'] | string>,
     totalInstructor?: GraphCacheResolver<WithTypename<ByAircraftStats>, Record<string, never>, Scalars['Int'] | string>,
@@ -892,6 +906,8 @@ export type GraphCacheResolvers = {
     id?: GraphCacheResolver<WithTypename<ByInstructorStats>, Record<string, never>, Scalars['ID'] | string>,
     instructor?: GraphCacheResolver<WithTypename<ByInstructorStats>, Record<string, never>, WithTypename<Pilot> | string>,
     totalCOPI?: GraphCacheResolver<WithTypename<ByInstructorStats>, Record<string, never>, Scalars['Int'] | string>,
+    totalCcDC?: GraphCacheResolver<WithTypename<ByInstructorStats>, Record<string, never>, Scalars['Int'] | string>,
+    totalCcPIC?: GraphCacheResolver<WithTypename<ByInstructorStats>, Record<string, never>, Scalars['Int'] | string>,
     totalDC?: GraphCacheResolver<WithTypename<ByInstructorStats>, Record<string, never>, Scalars['Int'] | string>,
     totalFlightTime?: GraphCacheResolver<WithTypename<ByInstructorStats>, Record<string, never>, Scalars['Int'] | string>,
     totalInstructor?: GraphCacheResolver<WithTypename<ByInstructorStats>, Record<string, never>, Scalars['Int'] | string>,
@@ -942,6 +958,8 @@ export type GraphCacheResolvers = {
     flightAmount?: GraphCacheResolver<WithTypename<FlightStats>, Record<string, never>, Scalars['Int'] | string>,
     id?: GraphCacheResolver<WithTypename<FlightStats>, Record<string, never>, Scalars['ID'] | string>,
     totalCOPI?: GraphCacheResolver<WithTypename<FlightStats>, Record<string, never>, Scalars['Int'] | string>,
+    totalCcDC?: GraphCacheResolver<WithTypename<FlightStats>, Record<string, never>, Scalars['Int'] | string>,
+    totalCcPIC?: GraphCacheResolver<WithTypename<FlightStats>, Record<string, never>, Scalars['Int'] | string>,
     totalDC?: GraphCacheResolver<WithTypename<FlightStats>, Record<string, never>, Scalars['Int'] | string>,
     totalFlightTime?: GraphCacheResolver<WithTypename<FlightStats>, Record<string, never>, Scalars['Int'] | string>,
     totalInstructor?: GraphCacheResolver<WithTypename<FlightStats>, Record<string, never>, Scalars['Int'] | string>,
@@ -1069,6 +1087,8 @@ export type GraphCacheUpdaters = {
     flightAmount?: GraphCacheUpdateResolver<Maybe<WithTypename<ByAircraftModelStats>>, Record<string, never>>,
     id?: GraphCacheUpdateResolver<Maybe<WithTypename<ByAircraftModelStats>>, Record<string, never>>,
     totalCOPI?: GraphCacheUpdateResolver<Maybe<WithTypename<ByAircraftModelStats>>, Record<string, never>>,
+    totalCcDC?: GraphCacheUpdateResolver<Maybe<WithTypename<ByAircraftModelStats>>, Record<string, never>>,
+    totalCcPIC?: GraphCacheUpdateResolver<Maybe<WithTypename<ByAircraftModelStats>>, Record<string, never>>,
     totalDC?: GraphCacheUpdateResolver<Maybe<WithTypename<ByAircraftModelStats>>, Record<string, never>>,
     totalFlightTime?: GraphCacheUpdateResolver<Maybe<WithTypename<ByAircraftModelStats>>, Record<string, never>>,
     totalInstructor?: GraphCacheUpdateResolver<Maybe<WithTypename<ByAircraftModelStats>>, Record<string, never>>,
@@ -1081,6 +1101,8 @@ export type GraphCacheUpdaters = {
     flightAmount?: GraphCacheUpdateResolver<Maybe<WithTypename<ByAircraftStats>>, Record<string, never>>,
     id?: GraphCacheUpdateResolver<Maybe<WithTypename<ByAircraftStats>>, Record<string, never>>,
     totalCOPI?: GraphCacheUpdateResolver<Maybe<WithTypename<ByAircraftStats>>, Record<string, never>>,
+    totalCcDC?: GraphCacheUpdateResolver<Maybe<WithTypename<ByAircraftStats>>, Record<string, never>>,
+    totalCcPIC?: GraphCacheUpdateResolver<Maybe<WithTypename<ByAircraftStats>>, Record<string, never>>,
     totalDC?: GraphCacheUpdateResolver<Maybe<WithTypename<ByAircraftStats>>, Record<string, never>>,
     totalFlightTime?: GraphCacheUpdateResolver<Maybe<WithTypename<ByAircraftStats>>, Record<string, never>>,
     totalInstructor?: GraphCacheUpdateResolver<Maybe<WithTypename<ByAircraftStats>>, Record<string, never>>,
@@ -1093,6 +1115,8 @@ export type GraphCacheUpdaters = {
     id?: GraphCacheUpdateResolver<Maybe<WithTypename<ByInstructorStats>>, Record<string, never>>,
     instructor?: GraphCacheUpdateResolver<Maybe<WithTypename<ByInstructorStats>>, Record<string, never>>,
     totalCOPI?: GraphCacheUpdateResolver<Maybe<WithTypename<ByInstructorStats>>, Record<string, never>>,
+    totalCcDC?: GraphCacheUpdateResolver<Maybe<WithTypename<ByInstructorStats>>, Record<string, never>>,
+    totalCcPIC?: GraphCacheUpdateResolver<Maybe<WithTypename<ByInstructorStats>>, Record<string, never>>,
     totalDC?: GraphCacheUpdateResolver<Maybe<WithTypename<ByInstructorStats>>, Record<string, never>>,
     totalFlightTime?: GraphCacheUpdateResolver<Maybe<WithTypename<ByInstructorStats>>, Record<string, never>>,
     totalInstructor?: GraphCacheUpdateResolver<Maybe<WithTypename<ByInstructorStats>>, Record<string, never>>,
@@ -1143,6 +1167,8 @@ export type GraphCacheUpdaters = {
     flightAmount?: GraphCacheUpdateResolver<Maybe<WithTypename<FlightStats>>, Record<string, never>>,
     id?: GraphCacheUpdateResolver<Maybe<WithTypename<FlightStats>>, Record<string, never>>,
     totalCOPI?: GraphCacheUpdateResolver<Maybe<WithTypename<FlightStats>>, Record<string, never>>,
+    totalCcDC?: GraphCacheUpdateResolver<Maybe<WithTypename<FlightStats>>, Record<string, never>>,
+    totalCcPIC?: GraphCacheUpdateResolver<Maybe<WithTypename<FlightStats>>, Record<string, never>>,
     totalDC?: GraphCacheUpdateResolver<Maybe<WithTypename<FlightStats>>, Record<string, never>>,
     totalFlightTime?: GraphCacheUpdateResolver<Maybe<WithTypename<FlightStats>>, Record<string, never>>,
     totalInstructor?: GraphCacheUpdateResolver<Maybe<WithTypename<FlightStats>>, Record<string, never>>,

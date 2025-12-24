@@ -15,7 +15,6 @@ export function SelectCreatable({
   label,
   data,
   value,
-  onCreate,
   onChange,
   onSearchChange
 }: SelectCreatableProps) {
@@ -48,7 +47,6 @@ export function SelectCreatable({
       store={combobox}
       withinPortal={false}
       onOptionSubmit={val => {
-        if (val === "$create") onCreate(search ?? "".trim().toUpperCase());
         onChange(val);
         setSearch(null);
         combobox.closeDropdown();
@@ -78,7 +76,7 @@ export function SelectCreatable({
       <Combobox.Dropdown>
         <Combobox.Options>
           {!exactOptionMatch && (search ?? "").trim().length === 4 && (
-            <Combobox.Option value="$create">
+            <Combobox.Option value={search ?? ""}>
               + Add {(search ?? "").trim().toUpperCase()}
             </Combobox.Option>
           )}

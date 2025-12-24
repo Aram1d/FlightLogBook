@@ -17,6 +17,8 @@ export const typeDefs = gql`
     id: ID! @id
     totalDC: Int! @column
     totalPIC: Int! @column
+    totalCcDC: Int! @column
+    totalCcPIC: Int! @column
     totalCOPI: Int! @column
     totalInstructor: Int! @column
     totalFlightTime: Int! @column
@@ -29,6 +31,8 @@ export const typeDefs = gql`
     aircraft: Aircraft! @embedded
     totalDC: Int! @column
     totalPIC: Int! @column
+    totalCcDC: Int! @column
+    totalCcPIC: Int! @column
     totalCOPI: Int! @column
     totalInstructor: Int! @column
     totalFlightTime: Int! @column
@@ -49,6 +53,8 @@ export const typeDefs = gql`
     aircraftModel: String! @column
     totalDC: Int! @column
     totalPIC: Int! @column
+    totalCcDC: Int! @column
+    totalCcPIC: Int! @column
     totalCOPI: Int! @column
     totalInstructor: Int! @column
     totalFlightTime: Int! @column
@@ -64,6 +70,8 @@ export const typeDefs = gql`
     instructor: Pilot! @embedded
     totalDC: Int! @column
     totalPIC: Int! @column
+    totalCcDC: Int! @column
+    totalCcPIC: Int! @column
     totalCOPI: Int! @column
     totalInstructor: Int! @column
     totalFlightTime: Int! @column
@@ -78,6 +86,8 @@ export const typeDefs = gql`
     id: ID! @column
     totalDC: Int! @column
     totalPIC: Int! @column
+    totalCcDC: Int! @column
+    totalCcPIC: Int! @column
     totalCOPI: Int! @column
     totalInstructor: Int! @column
     totalFlightTime: Int! @column

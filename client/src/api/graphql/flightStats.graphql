@@ -2,7 +2,9 @@ fragment AllStats on BaseFlightStats {
   id
   totalFlightTime
   totalDC
+  totalCcDC
   totalPIC
+  totalCcPIC
   totalCOPI
   totalInstructor
   flightAmount

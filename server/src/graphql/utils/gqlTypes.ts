@@ -79,6 +79,8 @@ export type BaseFlightStats = {
   flightAmount: Scalars['Int']['output'];
   id: Scalars['ID']['output'];
   totalCOPI: Scalars['Int']['output'];
+  totalCcDC: Scalars['Int']['output'];
+  totalCcPIC: Scalars['Int']['output'];
   totalDC: Scalars['Int']['output'];
   totalFlightTime: Scalars['Int']['output'];
   totalInstructor: Scalars['Int']['output'];
@@ -97,6 +99,8 @@ export type ByAircraftModelStats = BaseFlightStats & {
   flightAmount: Scalars['Int']['output'];
   id: Scalars['ID']['output'];
   totalCOPI: Scalars['Int']['output'];
+  totalCcDC: Scalars['Int']['output'];
+  totalCcPIC: Scalars['Int']['output'];
   totalDC: Scalars['Int']['output'];
   totalFlightTime: Scalars['Int']['output'];
   totalInstructor: Scalars['Int']['output'];
@@ -111,6 +115,8 @@ export type ByAircraftStats = BaseFlightStats & {
   flightAmount: Scalars['Int']['output'];
   id: Scalars['ID']['output'];
   totalCOPI: Scalars['Int']['output'];
+  totalCcDC: Scalars['Int']['output'];
+  totalCcPIC: Scalars['Int']['output'];
   totalDC: Scalars['Int']['output'];
   totalFlightTime: Scalars['Int']['output'];
   totalInstructor: Scalars['Int']['output'];
@@ -125,6 +131,8 @@ export type ByInstructorStats = BaseFlightStats & {
   id: Scalars['ID']['output'];
   instructor: Pilot;
   totalCOPI: Scalars['Int']['output'];
+  totalCcDC: Scalars['Int']['output'];
+  totalCcPIC: Scalars['Int']['output'];
   totalDC: Scalars['Int']['output'];
   totalFlightTime: Scalars['Int']['output'];
   totalInstructor: Scalars['Int']['output'];
@@ -185,6 +193,8 @@ export type FlightStats = BaseFlightStats & {
   flightAmount: Scalars['Int']['output'];
   id: Scalars['ID']['output'];
   totalCOPI: Scalars['Int']['output'];
+  totalCcDC: Scalars['Int']['output'];
+  totalCcPIC: Scalars['Int']['output'];
   totalDC: Scalars['Int']['output'];
   totalFlightTime: Scalars['Int']['output'];
   totalInstructor: Scalars['Int']['output'];
@@ -741,6 +751,8 @@ export type BaseFlightStatsResolvers<ContextType = ApolloServerContextFn, Parent
   flightAmount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   totalCOPI?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  totalCcDC?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  totalCcPIC?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   totalDC?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   totalFlightTime?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   totalInstructor?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
@@ -754,6 +766,8 @@ export type ByAircraftModelStatsResolvers<ContextType = ApolloServerContextFn, P
   flightAmount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   totalCOPI?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  totalCcDC?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  totalCcPIC?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   totalDC?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   totalFlightTime?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   totalInstructor?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
@@ -768,6 +782,8 @@ export type ByAircraftStatsResolvers<ContextType = ApolloServerContextFn, Parent
   flightAmount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   totalCOPI?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  totalCcDC?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  totalCcPIC?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   totalDC?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   totalFlightTime?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   totalInstructor?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
@@ -782,6 +798,8 @@ export type ByInstructorStatsResolvers<ContextType = ApolloServerContextFn, Pare
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   instructor?: Resolver<ResolversTypes['Pilot'], ParentType, ContextType>;
   totalCOPI?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  totalCcDC?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  totalCcPIC?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   totalDC?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   totalFlightTime?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   totalInstructor?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
@@ -846,6 +864,8 @@ export type FlightStatsResolvers<ContextType = ApolloServerContextFn, ParentType
   flightAmount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   totalCOPI?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  totalCcDC?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  totalCcPIC?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   totalDC?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   totalFlightTime?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   totalInstructor?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
@@ -1017,6 +1037,8 @@ export type ByAircraftModelStatsDb = {
   aircraftModel: string,
   flightAmount: number,
   totalCOPI: number,
+  totalCcDC: number,
+  totalCcPIC: number,
   totalDC: number,
   totalFlightTime: number,
   totalInstructor: number,
@@ -1030,6 +1052,8 @@ export type ByAircraftStatsDb = {
   flightAmount: number,
   _id: ObjectId,
   totalCOPI: number,
+  totalCcDC: number,
+  totalCcPIC: number,
   totalDC: number,
   totalFlightTime: number,
   totalInstructor: number,
@@ -1042,6 +1066,8 @@ export type ByInstructorStatsDb = {
   _id: ObjectId,
   instructor: PilotDb,
   totalCOPI: number,
+  totalCcDC: number,
+  totalCcPIC: number,
   totalDC: number,
   totalFlightTime: number,
   totalInstructor: number,
@@ -1082,6 +1108,8 @@ export type FlightStatsDb = {
   flightAmount: number,
   id: string,
   totalCOPI: number,
+  totalCcDC: number,
+  totalCcPIC: number,
   totalDC: number,
   totalFlightTime: number,
   totalInstructor: number,
