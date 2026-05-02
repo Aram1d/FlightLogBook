@@ -1,5 +1,5 @@
 import { ActionIcon } from "@mantine/core";
-import { useDisclosure } from "@mantine/hooks";
+import { useDisclosure, useMediaQuery } from "@mantine/hooks";
 import {
   DateInput,
   DatePickerInputProps,
@@ -13,6 +13,10 @@ type DateOrDateTimePickerProps = Pick<
 >;
 export const DateOrDateTimePicker = (props: DateOrDateTimePickerProps) => {
   const [dateOnly, { open, close }] = useDisclosure(false);
+  // Use a modal on touch devices (tablets / phones) to avoid focus issues in
+  // the popover on iOS Safari. Desktops with a mouse keep the popover.
+  const isTouchDevice = useMediaQuery("(pointer: coarse)");
+  const dropdownType = isTouchDevice ? "modal" : "popover";
 
   return dateOnly ? (
     <DateInput
@@ -30,6 +34,7 @@ export const DateOrDateTimePicker = (props: DateOrDateTimePickerProps) => {
       label="Date / Time"
       value={props.value}
       onChange={props.onChange}
+      dropdownType={dropdownType}
       rightSection={
         <ActionIcon>
           <IconCalendar onClick={open} />

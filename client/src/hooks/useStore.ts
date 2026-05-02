@@ -25,11 +25,11 @@ export const useStore = create<{
           deletePopoverMutex: mutex === get().deletePopoverMutex ? null : mutex
         }),
 
-        flightLogFormReset: false,
-        flightLogFormToggle: () =>
-          set({
-            flightLogFormReset: !get().flightLogFormReset
-          })
+      flightLogFormReset: false,
+      flightLogFormToggle: () =>
+        set({
+          flightLogFormReset: !get().flightLogFormReset
+        })
     }),
     { name: "FLB" }
   )

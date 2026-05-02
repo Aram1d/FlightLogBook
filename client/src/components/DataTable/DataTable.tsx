@@ -302,7 +302,7 @@ export function DataTable<T, F>({
                             colSpan={visibleColumns.length}
                             className={classes.expansionCell}
                           >
-                            <Collapse in={expanded}>
+                            <Collapse expanded={expanded}>
                               {expansion?.render(item, row)}
                             </Collapse>
                           </Table.Td>

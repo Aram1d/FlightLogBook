@@ -35,10 +35,10 @@ export const Home = () => {
   return (
     <Container>
       <Stack align="center" gap={0}>
-      <Title mt={50}>Welcome to Your Flight Log App</Title>
-      <Text c="dimmed" size="lg" mt="md">
-        Maintain your aircraft logbook effortlessly.
-      </Text>
+        <Title mt={50}>Welcome to Your Flight Log App</Title>
+        <Text c="dimmed" size="lg" mt="md">
+          Maintain your aircraft logbook effortlessly.
+        </Text>
       </Stack>
 
       <SimpleGrid cols={3} mt={50}>

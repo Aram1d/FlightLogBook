@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { Button, Checkbox, Grid, Group, TextInput, Title } from "@mantine/core";
-import { useForm,  } from "@mantine/form";
-import {zod4Resolver} from "mantine-form-zod-resolver";
+import { useForm } from "@mantine/form";
+import { zod4Resolver } from "mantine-form-zod-resolver";
 import { z } from "zod";
 import {
   AddAircraftInput,

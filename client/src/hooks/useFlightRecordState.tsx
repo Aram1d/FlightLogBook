@@ -1,13 +1,12 @@
 import { useCallback, useEffect, useState } from "react";
 import { useForm } from "@mantine/form";
-import {zod4Resolver} from "mantine-form-zod-resolver";
+import { zod4Resolver } from "mantine-form-zod-resolver";
 import dayjs from "dayjs";
 import { z } from "zod/v4";
 import { AddFlightInput, AircraftClass, useLastFlightDateQuery } from "@api";
 import { useAircraftsList } from "@hooks";
 
-
-interface AddFlightState extends Omit<AddFlightInput, "pic"  > {
+interface AddFlightState extends Omit<AddFlightInput, "pic"> {
   pic: string | null;
 }
 

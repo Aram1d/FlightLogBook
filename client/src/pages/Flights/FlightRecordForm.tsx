@@ -19,7 +19,7 @@ import {
   useAddFlightMutation,
   useUpdateFlightMutation,
   useFlightQuery,
-  usePilotsListQuery,
+  usePilotsListQuery
 } from "@api";
 import {
   AircraftClassSC,
@@ -39,7 +39,7 @@ const FlightRecordTitle = ({ children, ...rest }: FlightRecordFormProps) => (
 );
 
 export const FlightRecordForm = ({ form, setForm, isAdd }: EntityFormProps) => {
-  const  flightLogFormReset = useStore(s=>s.flightLogFormReset);
+  const flightLogFormReset = useStore(s => s.flightLogFormReset);
   const flightLogFormToggle = useStore(s => s.flightLogFormToggle);
   const [ocaiCodes, addOcai] = useOcaiCodes();
 
@@ -87,10 +87,13 @@ export const FlightRecordForm = ({ form, setForm, isAdd }: EntityFormProps) => {
     <form
       onSubmit={onSubmit(values => {
         isAdd
-          ? handleMutation(addFlight({ flight: {...values, pic: values.pic??""} }), {
-              successMsg: "Flight successfully added",
-              onSuccess: flightLogFormReset ? reset: undefined
-            })
+          ? handleMutation(
+              addFlight({ flight: { ...values, pic: values.pic ?? "" } }),
+              {
+                successMsg: "Flight successfully added",
+                onSuccess: flightLogFormReset ? reset : undefined
+              }
+            )
           : handleMutation(updateFlight({ id: form, flight: values }), {
               successMsg: "Flight successfully updated",
               onSuccess: () => setForm?.(null)
@@ -303,12 +306,12 @@ export const FlightRecordForm = ({ form, setForm, isAdd }: EntityFormProps) => {
       </Grid>
       <Divider my="md" variant="dotted" />
       <Group justify="right">
-          <Checkbox
-            checked={flightLogFormReset}
-            onChange={flightLogFormToggle}
-            label="Reset form after each submit"
-          />
-          <Box flex={1} />
+        <Checkbox
+          checked={flightLogFormReset}
+          onChange={flightLogFormToggle}
+          label="Reset form after each submit"
+        />
+        <Box flex={1} />
         <Button variant="subtle">Reset</Button>
         <Button
           variant="subtle"
