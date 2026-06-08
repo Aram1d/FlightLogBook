@@ -50,6 +50,9 @@
   "env": {
     "node": true
   },
+  "trustedDependencies": [
+    "bcrypt"
+  ],
   "prettier": {
     "trailingComma": "none",
     "arrowParens": "avoid"

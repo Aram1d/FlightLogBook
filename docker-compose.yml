@@ -1,0 +1,37 @@
+services:
+  flb:
+    build:
+      context: .
+      dockerfile_inline: |
+        # ---------- build stage ----------
+        FROM oven/bun:1 AS build
+        WORKDIR /src
+
+        COPY client ./client
+        RUN cd client && bun install && bun run build
+
+        COPY server ./server
+        RUN cd server && bun install \
+         && bun build --compile \
+              -e mock-aws-s3 -e nock -e aws-sdk \
+              ./src/index.ts \
+              --outfile /out/main
+
+        RUN mkdir -p /out/public && cp -r /src/client/dist/. /out/public/
+
+        # ---------- runtime stage (no source) ----------
+        # Use the bun base image so glibc + linker match the build stage.
+        # That keeps bcrypt's prebuilt napi binding (node-pre-gyp) loadable.
+        FROM oven/bun:1-slim
+        WORKDIR /app
+        COPY --from=build /out/main   ./main
+        COPY --from=build /out/public ./public
+        # bcrypt is a native addon: the bundled JS in `main` calls
+        # node-pre-gyp.find("/src/server/node_modules/bcrypt/package.json")
+        # at runtime, so we restore that exact path with the prebuilt .node.
+        COPY --from=build /src/server/node_modules/bcrypt /src/server/node_modules/bcrypt
+        CMD ["./main"]
+
+    expose:
+      - "${SERVER_PORT:-3000}"
+    restart: unless-stopped
